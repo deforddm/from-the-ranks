@@ -25,11 +25,9 @@ Object.assign(FIGX, {
     if (k === 1) { ctx.fillStyle = '#3a2a1a'; ctx.fillRect(-3.4, -8.6, 6.8, 1.6); }
     B2F.line(ctx, '#6a4a2a', 1.6, [[6, 4], [10.4, -6.6]]); ctx.fillStyle = '#5a3a20'; ctx.fillRect(8.4, -9.6, 5.2, 3.6); ctx.fillStyle = 'rgba(255,240,200,.18)'; ctx.fillRect(8.4, -9.6, 5.2, .8); // the mallet
     ctx.restore(); },
-  /* the pack's biggest: a Jheck wolf, too big, grey to the muzzle */
-  b5_c7_greatwolf(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.5, 1.42); FIGX.b5_jheck(ctx, h, t, o);
-    poly(ctx, [[10.4, -1.6], [14.4, -.4], [13, 1.6], [10.6, 1.4]], '#a8a49c'); ell(ctx, 12.6, -1.2, .7, .6, '#f0d878'); // the grey muzzle, the eye
-    ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i = 0; i < 4; i++) { ctx.moveTo(-5 + i*2.6, -2.6); ctx.lineTo(-4.4 + i*2.6, 0); } ctx.stroke(); // the ruff
-    ctx.restore(); },
+  /* the pack's biggest: a Jheck wolf, too big, grey to the muzzle (v13.51.0: on the shared wolf, 017b) */
+  b5_c7_greatwolf(ctx, h, t, o){ const g = o.still ? 0 : Math.sin(t/190 + (o.phase || 0));
+    ctx.save(); ctx.translate(-1.5, 12.4); ctx.scale(.84, .96); drawWolf(ctx, {fur:'#6c6962', dark:'#2a2826', pale:'#b4aea2', g, snarl:true, eye:'#f0d468', grey:1}); ctx.restore(); },
   /* the Drownings court's man: thin, a long dark coat, the court's brass tag, a folded list */
   b5_c7_courtman(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .9, 1.08);
     poly(ctx, [[-5.4, -6], [5.4, -6], [6.6, 11], [-6.6, 11]], h.armor('#2e3038', '#101116')); h.legs('#1a1a1e');

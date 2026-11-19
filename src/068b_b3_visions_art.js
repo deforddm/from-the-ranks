@@ -77,8 +77,7 @@ const B3VB = {
   fire(ctx, x, y, T, k = 1){ const f = REDUCE() ? 1 : .86 + Math.sin(T/120)*.07 + Math.sin(T/47)*.05; glow(ctx, x, y - 4*k, 46*k, '#e07a30', .3*f); poly(ctx, [[x - 5*k, y],[x - 2*k, y - 10*k*f],[x, y - 4*k],[x + 2*k, y - 13*k*f],[x + 5*k, y]], '#d8642a'); poly(ctx, [[x - 2.4*k, y],[x, y - 7*k*f],[x + 2.4*k, y]], '#ffc060'); },
   /* a rider seen from the side, small: a horse at a walk and a man on it with a lance; dir 1 faces right */
   rider(ctx, x, y, s, col, T, ph = 0, dir = 1, lance = true){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s, s); const g = REDUCE() ? 0 : Math.sin(T/180 + ph);
-    ctx.fillStyle = col; ell(ctx, 0, -7, 6, 2.6, col); ctx.fillRect(4, -11, 2.2, 4.6); ell(ctx, 6.4, -11, 2.4, 1.3, col); // body, neck, head
-    ctx.strokeStyle = col; ctx.lineWidth = 1.1; ctx.beginPath(); [[-4, g], [-2.6, -g], [3, -g], [4.4, g]].forEach(([lx, k]) => { ctx.moveTo(lx, -5.6); ctx.lineTo(lx + k*1.4, 0); }); ctx.moveTo(-6, -7.4); ctx.lineTo(-8, -3.6); ctx.stroke(); // legs, tail
+    ctx.save(); ctx.scale(1.06, 1.06); beastHorse(ctx, col, {g}); ctx.restore(); ctx.fillStyle = col; ctx.strokeStyle = col; // v13.51.0: the shared horse (017b)
     ctx.fillRect(-1.4, -14.6, 2.8, 6); ell(ctx, 0, -16, 1.5, 1.5, col); // the rider
     if (lance) { ctx.lineWidth = .7; ctx.beginPath(); ctx.moveTo(-1, -9); ctx.lineTo(2.4, -24); ctx.stroke(); }
     ctx.restore(); },

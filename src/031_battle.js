@@ -80,7 +80,8 @@ function mkParty(id, x, y){
   ['quorl','shadowstep','shadowlash','argument','quickshot','ropeswing','anvil','stakeline'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
-  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
+  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld];
+  if (t.attacks > 1 && !(B && B.def.nomagic && u.magic)) { u.attacks = t.attacks; const d2 = t.dmg2 || t.dmg; u.dmg2 = [d2[0], d2[1], (d2[2] || 0) + ld]; u.verb2 = t.verb2; } // v13.51: a blade in each hand. The off hand keeps its own dice whatever the main hand is given to carry // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.soak = squadSoak(id); // v10.2 (31c)
   u.hp = u.maxhp; const w = DIFF().carry ? woundOf(id) : null; if (w != null) u.hp = clamp(w, 1, u.maxhp); // Bridgeburner: the wounds the squad carried in
   return u;
@@ -464,7 +465,9 @@ function battleTap(x, y){
     if (a.tiles(u).some(q => q === t || (q.x === x && q.y === y))) return useAb(B.mode, x, y);
     B.mode = 'act'; return updBattleUI();
   }
-  if (t && t.side === 'e' && !B.acted && cheb(u,t) <= u.rng && canShoot(u,t)) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; B.busy = true; attack(u, t); later(() => { B.busy = false; afterAct(); }, pace(380)); updBattleUI(); return; }
+  if (t && t.side === 'e' && !B.acted && cheb(u,t) <= u.rng && canShoot(u,t)) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; B.busy = true; attack(u, t); const nb = u.attacks || 1;
+    for (let i = 1; i < nb; i++) later(() => { if (!B || B.over || u.hp <= 0 || B.cur !== u) return; const nx = t.hp > 0 && cheb(u,t) <= u.rng ? t : foes().filter(f => f.hp > 0 && cheb(u,f) <= u.rng && canShoot(u,f)).sort((p, q) => p.hp - q.hp)[0]; if (nx) { attack(u, nx, {dmg:u.dmg2, verb:u.verb2 || 'cuts again at'}); updBattleUI(); } }, pace(380) * i); // v13.51: the off hand
+    later(() => { B.busy = false; afterAct(); }, pace(380) * nb); updBattleUI(); return; }
   if (t) { B.ping = {u:t, t:performance.now()}; blog(`${t.name}: ${t.hp}/${t.maxhp} health, armour ${t.ac}${t.soak ? `, soak ${t.soak}` : ''}${t.ward ? `, ward ${t.ward}` : ''}${t.rng > 1 ? `, range ${t.rng}` : ''}${t.side === 'e' && !B.acted ? (cheb(u,t) > u.rng ? ' · out of range' : !canShoot(u,t) ? ' · ' + noShotWhy(u,t) : '') : ''}.`); return; }
   if (!B.moved && B.reach && B.reach.has(K(x,y)) && !(x === u.x && y === u.y)) moveCur(x, y);
 }
@@ -642,7 +645,7 @@ async function aiTurn(u, turnId){
   const tg = inRange().sort((a,b) => (flanked(u,b) - flanked(u,a)) || (a.hp - b.hp))[0];
   if (tg) { attack(u, tg); await wait(650); if (gone()) return;
     for (let i = 1; i < (u.attacks || 1); i++) { if (gone() || B.over || u.hp <= 0) break; // more than one blow a turn
-      const nx = tg.hp > 0 && cheb(u, tg) <= u.rng && canShoot(u, tg) ? tg : inRange().sort((a,b) => a.hp - b.hp)[0]; if (!nx) break; attack(u, nx, {verb:u.verb2 || 'cuts again at'}); await wait(650); } }
+      const nx = tg.hp > 0 && cheb(u, tg) <= u.rng && canShoot(u, tg) ? tg : inRange().sort((a,b) => a.hp - b.hp)[0]; if (!nx) break; attack(u, nx, {verb:u.verb2 || 'cuts again at', dmg:u.dmg2}); await wait(650); } }
   if (gone()) return;
   if (u.side === 'e') { await foeAfter(u, gone); if (gone()) return; }
   done();

@@ -366,12 +366,7 @@ SCENEX.b2_after = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ?
    the bank, lamps in their windows. 'dawn': first light, and the ford full of people from bank to bank, and nothing yet coming down the river.
    'cross': the afternoon after the bridges, the Seventh wading over last between the drifting wreckage, the column sitting down in heaps on
    the far bank at the edge of the wood, and on this side what the slaughter left: carts on their sides, arrows in the mud, crows. */
-function b2Horse(x, cx, cy, s, col, d, down){ x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'round';
-  x.beginPath(); x.ellipse(cx, cy - 6*s, 5*s, 2.3*s, 0, 0, 7); x.fill(); // the barrel
-  x.lineWidth = 1*s; [[3.4, 3.8], [2.2, 2.4], [-3.2, -3.4], [-4.2, -4.6]].forEach(([a, b]) => { x.beginPath(); x.moveTo(cx + a*d*s, cy - 5*s); x.lineTo(cx + b*d*s, cy); x.stroke(); });
-  x.lineWidth = 2*s; x.beginPath(); x.moveTo(cx + 3.6*d*s, cy - 7*s); if (down) x.quadraticCurveTo(cx + 7*d*s, cy - 7.4*s, cx + 7.6*d*s, cy - 1.8*s); else x.lineTo(cx + 6.6*d*s, cy - 11*s); x.stroke(); // the neck, down to the water or up
-  x.beginPath(); if (down) x.ellipse(cx + 7.8*d*s, cy - 1.2*s, 1*s, 1.9*s, .3*d, 0, 7); else x.ellipse(cx + 7.6*d*s, cy - 11*s, 1.9*s, 1*s, .5*d, 0, 7); x.fill();
-  x.lineWidth = .9*s; x.beginPath(); x.moveTo(cx - 4.8*d*s, cy - 6.6*s); x.quadraticCurveTo(cx - 6.6*d*s, cy - 5*s, cx - 6.4*d*s, cy - 2.4*s); x.stroke(); x.lineCap = 'butt'; } // the tail
+function b2Horse(x, cx, cy, s, col, d, down){ x.save(); x.translate(cx, cy); x.scale(d*s, s); beastHorse(x, col, {down}); x.restore(); x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'butt'; } // v13.51.0: the shared horse (017b), head up or down to the water
 /* a carriage of the Nobles' Council, side on: a high box with a curved roof, two big wheels, a shaft with nothing in it yet */
 function b2Carriage(x, cx, cy, s, col, d){ x.fillStyle = col; x.strokeStyle = col; x.beginPath(); x.moveTo(cx - 9*s, cy - 6*s); x.lineTo(cx - 9*s, cy - 17*s); x.quadraticCurveTo(cx, cy - 21*s, cx + 9*s, cy - 17*s); x.lineTo(cx + 9*s, cy - 6*s); x.closePath(); x.fill();
   x.fillRect(cx - 11*s, cy - 7*s, 22*s, 1.6*s); x.fillRect(cx + (d > 0 ? 9 : -13)*s, cy - 12*s, 4*s, 1.4*s); // the bed, the driver's box

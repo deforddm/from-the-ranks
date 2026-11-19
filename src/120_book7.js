@@ -163,7 +163,7 @@ Object.entries(B5_ABX).forEach(([k, x]) => { const a = AB[k]; if (!a) return;
 
 /* ---- the recruits (plan question 7; names checked, rg-canon §11). Base numbers; the roster brings them to the squad's level. ---- */
 Object.assign(TPL, {
-  doss:{name:'Doss', role:'Indebted farmhand', sig:'D', col:'#a89a6a', hp:20, ac:12, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['bash', 'salve'],
+  doss:{name:'Doss', role:'Indebted farmhand', sig:'D', col:'#a89a6a', hp:20, ac:12, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['sweep', 'salve'],
     epithet:'"You burned the book. I watched you do it. I have been waiting my whole life for somebody to do that."', origin:'A factor\'s holding on the Lether coast', age:26, service:'None. A threshing flail, and twenty-six years of the factor\'s fields',
     weapon:'A threshing flail with an iron-bound swingle, and a sickle in his belt', armour:'A leather jerkin the squad found him, and a quilted cap',
     bio:'Born Indebted on a factor\'s holding a day inland from the coast, to parents who were Indebted before him. He walked into the column\'s camp the night the squad burned the factor\'s ledger, and asked what the Malazans pay. They told him. He said it was more than nothing, which was what he had.',

@@ -231,14 +231,9 @@ TILEX.ridge = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => b2Ridge(ctx
 
 /* ---------------- backdrops: inside the tunnel, Gelor from below, the charge ---------------- */
 /* a horse and rider at the gallop, side on, facing d (1 right, -1 left); legs in one of two strides */
-function b2Rider(x, cx, cy, s, col, d, k, lance){ x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'round';
-  x.beginPath(); x.ellipse(cx, cy - 6*s, 5.4*s, 2.4*s, 0, 0, 7); x.fill(); // the barrel
-  x.lineWidth = 1.6*s; x.beginPath(); x.moveTo(cx + 4*d*s, cy - 7*s); x.lineTo(cx + 7*d*s, cy - 10.4*s); x.stroke(); x.beginPath(); x.ellipse(cx + 8*d*s, cy - 10.2*s, 2*s, 1*s, .5*d, 0, 7); x.fill(); // neck stretched, head
-  x.lineWidth = .9*s; const L = k ? [[3.6, 6, -3, 8.4, -1.6], [4.4, 5.6, -2.4, 7, -.3], [-3.6, -6, -3.2, -8.6, -1.4], [-4.4, -5.4, -2.4, -7, -.2]] : [[3.6, 3.4, -2.6, 1.4, 0], [4.4, 5, -2.4, 3.2, -.2], [-3.6, -1.6, -2.8, .6, 0], [-4.4, -3, -2.4, -1.4, -.2]]; // stretched out, or gathered under
-  L.forEach(([hx, kx, ky, fx, fy]) => { x.beginPath(); x.moveTo(cx + hx*d*s, cy - 5*s); x.lineTo(cx + kx*d*s, cy + ky*s); x.lineTo(cx + fx*d*s, cy + fy*s); x.stroke(); });
-  x.lineWidth = 1*s; x.beginPath(); x.moveTo(cx - 5*d*s, cy - 7*s); x.quadraticCurveTo(cx - 8*d*s, cy - 7*s, cx - 9*d*s, cy - 4*s); x.stroke(); // tail out behind
-  x.beginPath(); x.ellipse(cx, cy - 11*s, 1.4*s, 3*s, -.25*d, 0, 7); x.fill(); x.beginPath(); x.arc(cx + .6*d*s, cy - 14.6*s, 1.1*s, 0, 7); x.fill(); // the rider, leaning in
-  if (lance) { x.lineWidth = .6*s; x.beginPath(); x.moveTo(cx - 6*d*s, cy - 13*s); x.lineTo(cx + 16*d*s, cy - 9*s); x.stroke(); }
+function b2Rider(x, cx, cy, s, col, d, k, lance){ x.save(); x.translate(cx, cy); x.scale(d*s*1.06, s*1.06); beastHorse(x, col, {run:k ? 1 : 2}); x.restore(); x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'round'; // v13.51.0: the shared horse (017b), stretched out or gathered under
+  x.beginPath(); x.ellipse(cx + .4*d*s, cy - 11.8*s, 1.4*s, 3*s, -.25*d, 0, 7); x.fill(); x.beginPath(); x.arc(cx + 1*d*s, cy - 15.4*s, 1.1*s, 0, 7); x.fill(); // the rider, leaning in
+  if (lance) { x.lineWidth = .6*s; x.beginPath(); x.moveTo(cx - 6*d*s, cy - 13.8*s); x.lineTo(cx + 16*d*s, cy - 9.8*s); x.stroke(); }
   x.lineCap = 'butt'; }
 
 SCENEX.b2_tunnel = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, vx = W*.56, vy = H*.44, p = (Math.sin(t/900) + 1)/2;

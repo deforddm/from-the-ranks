@@ -98,11 +98,7 @@ function b92aBarrels(x, cx, cy, s, when){ const N = when === 'night', st = N ? '
   [[-12, 0], [0, 0], [12, 0], [-6, 1], [6, 1], [0, 2]].forEach(([dx, r]) => { const bx = cx + dx*s, by = cy - 3*s - r*8*s - 4*s; ell(x, bx, by, 5*s, 4*s, st); x.fillStyle = hoop; x.fillRect(bx - 5*s, by - 1.4*s, 10*s, .8*s); x.fillRect(bx - 5*s, by + .8*s, 10*s, .8*s); });
   x.strokeStyle = N ? 'rgba(120,110,90,.3)' : 'rgba(180,160,120,.5)'; x.lineWidth = Math.max(1, s*.6); x.beginPath(); x.moveTo(cx - 17*s, cy - 3*s); x.lineTo(cx, cy - 26*s); x.lineTo(cx + 17*s, cy - 3*s); x.stroke(); } // the rope over
 /* an ox, side on, small: a heavy body, a hump, short horns, head low */
-function b92aOx(x, cx, cy, s, col, dir){ x.save(); x.translate(cx, cy); x.scale(dir || 1, 1); x.fillStyle = col;
-  x.beginPath(); x.ellipse(0, -6*s, 8*s, 4*s, 0, 0, 7); x.fill(); x.beginPath(); x.ellipse(-4*s, -9*s, 3*s, 2*s, 0, 0, 7); x.fill(); // the body, the hump
-  x.fillRect(-7*s, -4*s, 1.8*s, 4*s); x.fillRect(-3*s, -4*s, 1.8*s, 4*s); x.fillRect(3*s, -4*s, 1.8*s, 4*s); x.fillRect(6*s, -4*s, 1.8*s, 4*s); // legs
-  x.beginPath(); x.ellipse(-10*s, -5.4*s, 2.6*s, 2*s, .3, 0, 7); x.fill(); // the head, low
-  x.strokeStyle = 'rgba(220,210,180,.6)'; x.lineWidth = Math.max(1, s*.6); x.beginPath(); x.moveTo(-10*s, -7*s); x.quadraticCurveTo(-12*s, -9.6*s, -13.4*s, -8.4*s); x.stroke(); x.restore(); }
+function b92aOx(x, cx, cy, s, col, dir){ x.save(); x.translate(cx, cy); x.scale(-(dir || 1)*s, s); beastOx(x, col, {horn:'rgba(220,210,180,.7)'}); x.restore(); x.fillStyle = col; } // v13.51.0: the shared ox (017b). The old one faced -x at dir 1, so this one is flipped to match
 /* a tent of the escort, from the side: new canvas, the old battalion mark painted out */
 function b92aTent(x, cx, by, s, when){ const c = {eve:['#7a6e60', '#3e362e'], day:['#b8ac94', '#7a7060'], night:['#2a2a2e', '#14141a'], dawn:['#8a7e6c', '#4a4238']}[when];
   x.fillStyle = c[0]; x.beginPath(); x.moveTo(cx - 12*s, by); x.lineTo(cx - 2*s, by - 11*s); x.lineTo(cx + 2*s, by - 11*s); x.lineTo(cx + 12*s, by); x.closePath(); x.fill();

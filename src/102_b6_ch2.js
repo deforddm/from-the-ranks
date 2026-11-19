@@ -234,7 +234,7 @@ const B6CH2 = {
     if (f.b6_c2_villageDone) x.push('In a village where the dead were left, the squad drove off the people robbing them, street and yard.');
     if (f.b6_c2_roadDone) x.push('Bandits on the plague road came up out of the ditch for the squad\'s boots, and did not get them.');
     if (f.b6_c2_shrineDone) x.push('On the headland, the squad drove looters off a shrine of D\'rek whose priests were already dead.');
-    if (f.b6_brannocDone === 1 && b6In('brannoc')) x.push('Brannoc of Sweetcreek\'s Falari walks with the Fourth, loaned to make up the Seventh\'s numbers, with his axe and his tin whistle.');
+    if (f.b6_brannocDone === 1 && b6In('brannoc')) x.push('Brannoc of Sweetcreek\'s Falari walks with the Fourth, loaned to make up the Seventh\'s numbers, with his axes and his tin whistle.');
     else if (f.b6_brannocDone === 2) x.push('Brannoc of Sweetcreek\'s Falari waits with his own lines for now. The roster can bring him in.');
     if (f.b6_c2_weatherOk) x.push('An old Falari sail-mender on the shore taught the squad to feel the break in a squall before it comes.');
     if (f.b6_c2_onearm) x.push(f.b6_c2_key === 'pass' ? 'High Fist Dujek walked down the column on foot, and asked the Fourth which end of the village died first. He wrote the village down as burned.' : 'High Fist Dujek walked down the column on foot, and asked the Fourth which end of the village died first. South, it told him.');
@@ -306,7 +306,7 @@ ${b62Say({brisk:`Brisk looks at the half-built palisade, and at the slope, and a
 
     /* ---- Brannoc, by the horse lines: the recruit ---- */
     b6_c2_brannoc:()=>({sp:'A Falari soldier', scene:'b6_coast', txt:
-`By the horse lines a big red-haired soldier in mail is sitting on an upturned bucket in the rain, playing a tin whistle, badly. He has a Falari axe across his knees and a red beard braided in two, and he stops when he sees the Fourth's shields and stands up, which takes a while.
+`By the horse lines a big red-haired soldier in mail is sitting on an upturned bucket in the rain, playing a tin whistle, badly. He has a pair of Falari boarding axes across his knees and a coil of tarred line at his feet and a red beard braided in two, and he stops when he sees the Fourth's shields and stands up, which takes a while.
 
 "Brannoc," he says. "Sweetcreek's. Loaned to the Seventh, the captain says, to make up the numbers. Which squad's short?" He looks the Fourth over. "Ah. All of them. Well."
 
@@ -324,7 +324,7 @@ ${b62Say({brisk:`Brisk looks him up and down, from the beard to the boots. "Shie
 `"Six of you already," Brannoc says, looking along the line. "Well. I'll be with the Falari, then. Send for me." He picks up the whistle again.`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
     b6_c2_brannoc_wait:()=>({sp:'Brannoc', scene:'b6_coast', txt:
-`"Fair," Brannoc says. "Sweetcreek's lines are down by the boats. I'll be there, being loaned to nobody." He tucks the axe under his arm. "Send a runner. Or whistle. I'll hear it."`,
+`"Fair," Brannoc says. "Sweetcreek's lines are down by the boats. I'll be there, being loaned to nobody." He tucks the axes under his arm. "Send a runner. Or whistle. I'll hear it."`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
     b6_c2_brannoc_away:()=>({sp:'Brannoc', scene:'b6_coast', txt:
 `Brannoc shrugs, a large shrug. "Somebody else's by morning, the captain said. He'll be pleased he was right." He goes off down the slope toward the Falari lines, whistling, badly.`,
@@ -657,7 +657,7 @@ The Fourth makes a small fire by the broken wall of the empty hamlet, to dry its
 
 ${b62Say({ellis:'Ellis stops, and puts a hand up. "Ditch," she says. "Both sides. Breathing."', kettle:'Kettle stops. "Ditch," she says, very low. "Left side. I can smell their fire, they put it out too late."', _:'Something moves in the ditch on the left, and something answers it in the ditch on the right.'})}
 
-They have been waiting for whoever runs from the villages. Tonight it is the Fourth, a mile behind the Host, with packs and boots and full water-skins.${b62If('brannoc', `\n\nBrannoc puts his helm on and takes the axe off his shoulder. "Oh good," he says.`)}`,
+They have been waiting for whoever runs from the villages. Tonight it is the Fourth, a mile behind the Host, with packs and boots and full water-skins.${b62If('brannoc', `\n\nBrannoc puts his helm on and takes an axe in each hand. "Oh good," he says.`)}`,
       ch:[{t:'"Shields." Walk on, and let them come.', go:()=>startBattle('b6_c2_road', {})},
           {t:'Get off the road and into the ditch first, before they are ready.', check:['might', 16],
             edges:id=>[id === 'brisk' && ['she is through a ditch before most people are into it', 2], id === 'brannoc' && ['he is very large and quite fast', 1], id === 'sgt' && ['you have done this on a road before', 1], id === 'tuft' && ['she is small and the ditch is deep', -2], id === 'ohl' && ['he is fifty-eight', -2]],

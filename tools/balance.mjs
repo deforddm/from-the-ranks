@@ -405,6 +405,13 @@ const INIT = () => {
       if (can(u, 'stakeline') && minD(u, opp) >= 3) { const t = AB.stakeline.tiles(u).map(p => ({ ...p, d: minD(p, opp), q: minD(p, sq) })).filter(p => p.d >= 1 && p.d <= 3 && p.q >= 1 && p.q <= 2).sort((a, b) => a.d - b.d)[0]; if (t) return tryAb('stakeline', t.x, t.y); }
       // munitions and the quorl
       for (const k of ['cusser', 'sharper', 'burner', 'quorl', 'smoker']) { const t = bestThrow(u, k, spec); if (t) return tryAb(k, t.x, t.y); }
+      // v13.51: the reworked recruits' kits. Drives and the swap where a squadmate gets the free swing; the line as Vell's hook; the howl on two or more; the rest on whatever is worth it
+      for (const k of ['gatedrive', 'maul', 'turnload']) if (can(u, k)) { const t = AB[k].tiles(u).filter(e => !e.heavy && !e.immortal && sq.some(p => p !== u && cheb(p, e) === 1)).sort((a, b) => danger(b) - danger(a))[0]; if (t) return tryAb(k, t.x, t.y); }
+      if (can(u, 'boardline')) { const t = AB.boardline.tiles(u).filter(e => !e.heavy && !e.immortal && cheb(e, u) >= 2 && (e.rng > 1 || danger(e) >= 6 || sq.some(p => p !== u && cheb(p, u) <= 1))).sort((a, b) => danger(b) - danger(a))[0]; if (t) return tryAb('boardline', t.x, t.y); }
+      if (can(u, 'wolfhowl') && opp.filter(e => !e.stun && cheb(e, u) <= 2).length >= 2) { const r = tryAb('wolfhowl', u.x, u.y); if (r) return r; }
+      if (can(u, 'sweep') && AB.sweep.tiles(u).length >= 1) { const t = AB.sweep.tiles(u).sort((a, b) => danger(b) - danger(a))[0]; return tryAb('sweep', t.x, t.y); }
+      if (can(u, 'breaker')) { const t = AB.breaker.tiles(u).filter(e => e.hp >= 12 || e.boss).sort((a, b) => danger(b) - danger(a))[0]; if (t) return tryAb('breaker', t.x, t.y); }
+      if (can(u, 'hoofknife')) { const t = AB.hoofknife.tiles(u).filter(e => !e.immortal && !(e.bleed > 0) && e.hp >= 10).sort((a, b) => danger(b) - danger(a))[0]; if (t) return tryAb('hoofknife', t.x, t.y); }
       // the sergeant's Shield Drive: when a squadmate stands beside the same enemy, drive it out of their reach for the free swing
       if (can(u, 'shove')) { const t = AB.shove.tiles(u).filter(e => !e.heavy && !e.immortal && sq.some(p => p !== u && cheb(p, e) === 1)).sort((a, b) => danger(b) - danger(a))[0];
         if (t) return tryAb('shove', t.x, t.y); }

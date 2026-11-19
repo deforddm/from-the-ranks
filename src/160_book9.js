@@ -203,9 +203,9 @@ Object.entries(B5_ABX).forEach(([k, x]) => { const a = AB[k]; if (!a) return;
 
 /* ---- the recruits (canon sheet §6: names checked). Base numbers; the roster brings them to the squad's level. ---- */
 Object.assign(TPL, {
-  brask:{name:'Brask', role:'Heavy of the 9th', sig:'B', col:'#8a8270', hp:26, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
+  brask:{name:'Brask', role:'Heavy of the 9th', sig:'B', col:'#8a8270', hp:26, ac:14, atk:4, dmg:[1,8,1], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, attacks:2, dmg2:[1,6,1], verb2:'brings the mace round into', ab:['salve'],
     epithet:'"My squad got broken up in Letheras and dealt out like cards. I was the card nobody wanted. You lot will do."', origin:'Gris, Quon Tali', age:35, service:'Twelve years, the last six in the heavies, all of it on foot',
-    weapon:'A heavy infantry sword and a mace on a thong, for when the sword is stuck in something', armour:'A heavy\'s scale, double at the shoulders, and a helm with the cheek-guards bent back',
+    weapon:'A heavy infantry sword in one hand and a mace in the other. He stopped carrying a shield in Letheras, and says the mace argues better', armour:'A heavy\'s scale, double at the shoulders, and a helm with the cheek-guards bent back',
     bio:'A heavy of the 9th whose squad came apart in Letheras: two dead on the river, one in the Letherii healers\' house, and a sergeant who took the new emperor\'s coin and a post at a gate. Brask was what was left. The Adjunct\'s clerks folded him into the Third on a list, and he walked over with his kit on his back and asked which end of the line was his.',
     traits:['Eats standing up', 'Sharpens the sword at every halt, whether it needs it or not', 'Has opinions about marines, and keeps most of them'], gear:['A heavy\'s sword', 'His old squad\'s tally-stick, with four notches filed flat'],
     get quest(){ return 'East, as far as the Adjunct goes. He has stopped asking where. He would like the squad he is in now to still be a squad when they get there.'; }},
@@ -215,7 +215,7 @@ Object.assign(TPL, {
     bio:'A Barghast woman of a small clan that walked away from the great host on the plains when the host went to war. Her clan went west. She did not. She came to the Malazan column with water-lore to sell and a reason she does not give, and the sergeants decided that a guide who knows where the dry washes hold water is worth a reason left unsaid.',
     traits:['Never says her clan\'s name', 'Reads the ground before she reads a face', 'Laughs at the heavies\' marching songs, and then sings them'], gear:['Two throwing-axes', 'A gourd that has never once been empty when it mattered'],
     get quest(){ return 'East, for now, because east is away from the host. After that she has not said. She says the Wastes have not finished saying things either.'; }},
-  brennet:{name:'Brennet', role:'Supply carter', sig:'N', col:'#9a7a5a', hp:20, ac:12, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:2, guile:0}, ab:['bash', 'salve'],
+  brennet:{name:'Brennet', role:'Supply carter', sig:'N', col:'#9a7a5a', hp:20, ac:12, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:2, guile:0}, ab:['turnload', 'salve'],
     epithet:'"I was Indebted to the wagon. Then the emperor tore the books up. Now the wagon and I are just friends."', origin:'A carter\'s yard outside the Letheras landward gate', age:31, service:'Nine years on the supply roads, the last month of it free',
     weapon:'A wagon-pin as long as his arm, and a carter\'s knife', armour:'A leather carter\'s apron with iron studs sewn on, and a padded cap',
     bio:'Born Indebted to a carting house and set to the reins at twelve. The new emperor\'s law freed him on a Tuesday. On the Wednesday the escort\'s quartermasters came round the yards asking for carters who could keep a wagon moving in country with no roads, and Brennet found that free meant he could say yes, so he did.',
@@ -230,7 +230,7 @@ Object.assign(TPL, {
 });
 Object.assign(VERB, {brask:'brings the heavy sword down on', tegra:'throws an axe at', brennet:'swings the wagon-pin at', kaedra:'looses an arrow at'});
 Object.assign(STATUP, {brask:['might', 'wits'], tegra:['might', 'wits'], brennet:['might', 'wits'], kaedra:['guile', 'wits']});
-Object.assign(TPL_ROLES, {brask:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], tegra:['light', 'blade', 'reach', 'ranged'], brennet:['heavy', 'blade', 'heavyweapon'], kaedra:['light', 'blade', 'ranged']});
+Object.assign(TPL_ROLES, {brask:['heavy', 'mail', 'blade', 'heavyweapon'], tegra:['light', 'blade', 'reach', 'ranged'], brennet:['heavy', 'blade', 'heavyweapon'], kaedra:['light', 'blade', 'ranged']});
 Object.assign(PICKS[3], {
   brask:[['holdline', 'The Heavies\' Wall', 'Brask\'s free swings are unlimited and hit +2. The heavies do not give ground. That is the whole of the job.'], ['shieldwall', 'Shoulder to Shoulder', 'Squadmates standing next to Brask get +2 armour. Six years in the heavies\' line, and he still closes up without being told.']],
   tegra:[['snare', 'The Plains Cord', 'Whatever Tegra catches is tangled: −2 to hit and −2 armour through its next turn. Her clan hunts with cord before it hunts with iron.'], ['ghost', 'Out of the Grass', 'Enemies take −2 to hit Tegra. On the plains, standing still is a way of hiding.']],

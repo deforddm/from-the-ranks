@@ -88,10 +88,8 @@ const B4VB = {
   /* flat ash, with drifts */
   ash(ctx, W, H, y, c, T){ ctx.fillStyle = c; ctx.fillRect(0, y, W, H - y); for (let i=0;i<40;i++) ell(ctx, hash(i, 31)*W, y + hash(i, 32)*(H - y), 8 + hash(i, 33)*30, 1.2, 'rgba(30,28,26,.16)'); },
   /* a horse running far off, a silhouette (dir 1 faces right) */
-  horse(ctx, x, y, s, col, T, ph = 0, dir = 1, mane = null){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s, s); const g = REDUCE() ? 0 : Math.sin(T/110 + ph);
-    ell(ctx, 0, -6, 6.4, 2.6, col); poly(ctx, [[4,-7],[6.6,-11.6],[9,-12],[9.6,-10.6],[6.6,-6]], col);
-    ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.beginPath(); [[-4.4, g], [-3, -g], [3, -g], [4.4, g]].forEach(([lx, k]) => { ctx.moveTo(lx, -4.6); ctx.lineTo(lx + k*2.2, 0); }); ctx.moveTo(-6.2, -6.6); ctx.lineTo(-9, -4 - g); ctx.stroke();
-    if (mane) poly(ctx, [[4,-7.6],[6.4,-12],[7.6,-12.4],[6,-8]], mane); ctx.restore(); },
+  horse(ctx, x, y, s, col, T, ph = 0, dir = 1, mane = null){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s*1.1, s*1.1); const g = REDUCE() ? 0 : Math.sin(T/110 + ph);
+    beastHorse(ctx, col, {g, mane}); ctx.restore(); }, // v13.51.0: the shared horse (017b)
   /* a fire glow on the ground */
   fire(ctx, x, y, T, k = 1, col = '#ff8a30'){ const f = REDUCE() ? 1 : .86 + Math.sin(T/120 + x)*.07 + Math.sin(T/47)*.05; glow(ctx, x, y - 4*k, 40*k, col, .3*f); poly(ctx, [[x - 4*k, y],[x - 1.6*k, y - 9*k*f],[x, y - 3.6*k],[x + 1.8*k, y - 11*k*f],[x + 4*k, y]], '#e0642a'); poly(ctx, [[x - 2*k, y],[x, y - 6*k*f],[x + 2*k, y]], '#ffc060'); },
   /* a lamp with a halo */

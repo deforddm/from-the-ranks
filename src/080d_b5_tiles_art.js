@@ -141,12 +141,9 @@ Object.assign(FIGX, {
   b5_wraith(ctx, h, t, o){ const fl = o.still ? 0 : Math.sin(t/240 + (o.phase || 0));
     ctx.globalAlpha *= .8; poly(ctx, [[-6,-14],[6,-14],[7.4,4 + fl],[4,10],[1,6 + fl],[-2,11],[-5,6],[-7.4,4 - fl]], 'rgba(16,14,22,.92)'); ell(ctx, 0, -14, 4.4, 4.6, 'rgba(16,14,22,.95)');
     ctx.fillStyle = 'rgba(210,220,255,.75)'; ctx.fillRect(-2, -14.6, 1.2, 1); ctx.fillRect(1, -14.6, 1.2, 1); ctx.globalAlpha = 1; },
-  /* a Jheck wolf: big, grey, low, head forward */
-  b5_jheck(ctx, h, t, o){ const g = o.still ? 0 : Math.sin(t/160 + (o.phase || 0));
-    ell(ctx, 0, 2, 9, 4.6, '#6a6660'); ell(ctx, -1, 1, 8, 3.6, '#8a847c'); // the body
-    poly(ctx, [[7,-1],[13,-3],[14.4,0],[12,2],[8,3]], '#6a6660'); poly(ctx, [[9,-3],[10,-6],[11,-3]], '#5a5650'); ell(ctx, 12.6, -1.2, .6, .5, '#e8d080'); // the head, ears, an eye
-    poly(ctx, [[-8.6,0],[-13,-3 + g],[-12,1]], '#6a6660'); // the tail
-    ctx.fillStyle = '#5a5650'; [-6, -3, 3, 6].forEach((x, i) => ctx.fillRect(x + (i % 2 ? g : -g)*.6, 4, 1.6, 8)); },
+  /* a Jheck wolf: big, grey, low, head forward (v13.51.0: on the shared wolf, 017b; three coats so a pack is not one wolf five times) */
+  b5_jheck(ctx, h, t, o){ const g = o.still ? 0 : Math.sin(t/160 + (o.phase || 0)), c = b2Pick(o, [['#77736c', '#3a3733', '#b8b2a6'], ['#6a6862', '#2e2c2a', '#a8a49c'], ['#857c6e', '#40382e', '#c4b8a4']]);
+    ctx.save(); ctx.translate(-1, 12.4); ctx.scale(.56, .66); drawWolf(ctx, {fur:c[0], dark:c[1], pale:c[2], g, snarl:!o.still, eye:'#e8c850'}); ctx.restore(); },
   /* a bound demon (Kenryll'ah): huge, armoured in plates, a crested head, no face anyone wants to look at */
   b5_demon(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.7, 1.6);
     h.legs('#2a2220'); poly(ctx, [[-8,-7],[8,-7],[9,8],[-9,8]], h.armor('#6a4a3a', '#1a100c')); ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = .6; ctx.beginPath(); for (let i = 0; i < 5; i++) { ctx.moveTo(-8.4, -5 + i*2.6); ctx.lineTo(8.4, -5 + i*2.6); } ctx.stroke(); // the plates

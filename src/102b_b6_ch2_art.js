@@ -1,6 +1,6 @@
 /* ============ Book Six, Chapter 2 art: The North Coast — the Host's camp above the sea in the rain, the empty villages inland ============ */
 /* Figures (FIGX) in the ~32px frame of 18/47b/80d, lit from the left: Brannoc, Falari, loaned to the Seventh (red hair, a red beard he is
-   proud of, mail under the Host's blue-grey, the broad Falari axe, a tin whistle at his throat); and the followers of the Chosen (b6_cultist):
+   proud of, mail under the Host's blue-grey, two Falari boarding axes and a coil of tarred line (v13.51), a tin whistle at his throat); and the followers of the Chosen (b6_cultist):
    ragged ash-grey robes, faces wrapped to the eyes, a cord of prayer-knots, a hooked knife; never sick in close-up, nothing shown under the
    wrappings. Brannoc's portrait (POR) in the bust style of 019. Two backdrops replacing the borrowed placeholders (SCENEX, sceneLayer for the
    still parts, REDUCE() holding the rest still): b6_coast (the Host's tents in rows above a grey beach at night, rain on the sea, transports
@@ -12,15 +12,17 @@
 /* ---------------- figures ---------------- */
 Object.assign(FIGX, {
   /* Brannoc: a big Falari, red hair tied back and a red beard to the collarbone; mail under a blue-grey surcoat (the Host's colour, Sweetcreek's
-     red edging at the hem); the broad-bladed Falari axe held up on the shoulder; a tin whistle on a cord at his throat */
+     red edging at the hem); a Falari boarding axe on the shoulder and its twin in the left fist, the tarred line coiled at the belt (v13.51); a tin whistle on a cord at his throat */
   brannoc(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.08, 1.04);
-    B2F.line(ctx, '#6a4a2c', 1.6, [[5.4, 6], [9.6, -15]]); ctx.fillStyle = '#7a3a22'; ctx.fillRect(5.6, 2.6, 1.8, 2.4); // the haft, wrapped red at the grip
-    poly(ctx, [[8.4,-13],[14.6,-17.6],[15.4,-11.6],[13.4,-8.4],[10.4,-9.4]], '#9a9890'); poly(ctx, [[14.6,-17.6],[15.4,-11.6],[14.4,-10.4],[13.8,-15.8]], '#d8d4c8'); ctx.fillStyle = '#b8642a'; ctx.fillRect(8.6, -13.4, 2, 1.2); // the broad blade, its lit edge; a copper band
+    B2F.line(ctx, '#6a4a2c', 1.5, [[5.4, 6], [9.4, -14.4]]); ctx.fillStyle = '#7a3a22'; ctx.fillRect(5.6, 2.6, 1.8, 2.4); // the haft, wrapped red at the grip
+    poly(ctx, [[8.4,-13],[12.8,-16.2],[13.6,-11.4],[12,-9],[10,-9.8]], '#9a9890'); poly(ctx, [[12.8,-16.2],[13.6,-11.4],[12.8,-10.4],[12.2,-14.8]], '#d8d4c8'); poly(ctx, [[8.4,-13.6],[5.2,-14.8],[8,-11.4]], '#8a8880'); ctx.fillStyle = '#b8642a'; ctx.fillRect(8.4, -13.2, 1.8, 1.1); // a boarding axe: the short bit, its lit edge, the spike behind; a copper band (v13.51)
     h.legs('#2e2c2a'); ctx.fillStyle = '#1a1614'; ctx.fillRect(-4.6, 10.6, 3.6, 2.4); ctx.fillRect(1, 10.6, 3.6, 2.4); // boots
     h.torso('#9a968c', '#34322e', 7.2); ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i = 0; i < 4; i++){ ctx.moveTo(-7, -4 + i*2.4); ctx.lineTo(7, -4 + i*2.4); } ctx.stroke(); // mail
     poly(ctx, [[-4.6,-5.6],[4.6,-5.6],[5.4,7.6],[-5.4,7.6]], h.armor('#6e7e8c', '#26303a')); ctx.fillStyle = '#8a3a24'; ctx.fillRect(-5.4, 6.4, 10.8, 1.2); ctx.fillStyle = 'rgba(220,230,240,.12)'; ctx.fillRect(-4.4, -5, 1.2, 11); // the blue-grey surcoat, red at the hem
     ctx.fillStyle = '#4a3420'; ctx.fillRect(-5.6, 2, 11.2, 1.3); ctx.fillStyle = '#b8a070'; ctx.fillRect(-.8, 1.9, 1.6, 1.5); // the belt
     ctx.fillStyle = '#c49c80'; ctx.fillRect(-9, -4.6, 2.2, 5.6); ell(ctx, 6.6, 3.4, 1.7, 1.5, '#c49c80'); // a bare forearm, the fist on the haft
+    B2F.line(ctx, '#6a4a2c', 1.4, [[-7.6, 3.6], [-10, -9.4]]); poly(ctx, [[-10.2,-9.6],[-13.8,-11.2],[-14.2,-6.8],[-11.2,-5.6]], '#9a9890'); poly(ctx, [[-13.8,-11.2],[-14.2,-6.8],[-13.4,-6.6],[-13,-10.6]], '#d8d4c8'); poly(ctx, [[-9.6,-9.4],[-6.8,-10.6],[-9.2,-7.4]], '#8a8880'); ell(ctx, -7.9, 1.2, 1.5, 1.4, '#c49c80'); // the second axe, head up in the left fist
+    ctx.strokeStyle = '#1e1810'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(3.4, 5.2, 1.9, 2.6, 0, 0, Math.PI*2); ctx.stroke(); ctx.strokeStyle = '#4a3a26'; ctx.lineWidth = .5; ctx.beginPath(); ctx.ellipse(3.4, 5.2, 1.2, 1.9, 0, 0, Math.PI*2); ctx.stroke(); // the boarding line, coiled at the belt
     h.head('#c89e80', 4.6, -11.2); h.look('rgba(24,14,10,.85)', -11.6); ctx.fillStyle = 'rgba(160,80,50,.35)'; ctx.fillRect(-2.4, -10.4, 1, .6); ctx.fillRect(2.6, -10.2, 1, .6); // freckles under the eyes
     poly(ctx, [[-4.4,-9.4],[4.6,-9.4],[4.4,-6.4],[2.6,-3.4],[0,-2.6],[-2.6,-3.4],[-4.2,-6.4]], '#b4482a'); ctx.fillStyle = 'rgba(240,150,90,.35)'; ctx.fillRect(-3.6, -8.6, 1.2, 4); ctx.fillStyle = '#6a2414'; ctx.fillRect(-1.6, -8, 3.4, .7); // the red beard, the mouth in it
     B2F.cap(ctx, '#c0502e', 4.8, -12.2, 1.02, 1.98); ctx.fillStyle = '#c0502e'; ctx.fillRect(-5.6, -12.4, 1.8, 4.8); ell(ctx, -6.4, -7, 1.3, 1.6, '#a8402a'); ctx.fillStyle = 'rgba(255,190,130,.35)'; ctx.fillRect(-3.6, -16.2, 3.4, .7); // red hair, tied back
@@ -46,17 +48,20 @@ if (FOES.b6_cultist) FOES.b6_cultist.kind = 'b6_cultist'; // the engine borrowed
 
 /* ---------------- Brannoc's portrait (019's bust units: about 120 tall, shoulders at y = 0, the lantern on the left) ---------------- */
 POR.brannoc = function(ctx){ const F = {cy:-75, w:14.8, h:20.8, jaw:.94, chin:6.4, skin:'#caa082', iris:'#5a7a8a', lip:'#a0604c', browCol:'#a0442a', browW:1.7, arch:.9, browL:.6, browR:.3, rim:'#e0a060', rimA:.22, nose:1.2, look:.2, open:1, smileL:.55, smileR:.75, mouthW:4.2, teeth:1, flush:'#d07a60', age:.2};
-  /* the Falari axe over his right shoulder: an ash haft wrapped with red leather, and a broad bearded blade up beside his head */
-  ctx.save(); ctx.translate(30, 6); ctx.rotate(.24); ctx.lineCap = 'butt';
-    ctx.strokeStyle = PR.lin(ctx, -2, 0, 2, 0, [[0, '#b8925e'], [.5, '#6a4c2c'], [1, '#1e140a']]); ctx.lineWidth = 4.2; ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(0, -108); ctx.stroke();
-    ctx.fillStyle = PR.lin(ctx, -2.4, 0, 2.4, 0, [[0, '#c86a3a'], [.5, '#7a321a'], [1, '#2a0e06']]); ctx.fillRect(-2.4, -34, 4.8, 22); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { for (let i = 0; i < 9; i++){ ctx.moveTo(-2.4, -33 + i*2.5); ctx.lineTo(2.4, -31.6 + i*2.5); } }); // the red grip-wrap
-    ctx.fillStyle = PR.lin(ctx, -3, 0, 3, 0, [[0, '#f0b070'], [.5, '#b8642a'], [1, '#4a2008']]); ctx.fillRect(-2.8, -98, 5.6, 3.4); ctx.fillRect(-2.8, -84, 5.6, 2.4); // copper bands at the eye
-    const blade = () => { ctx.beginPath(); ctx.moveTo(1.6, -100); ctx.bezierCurveTo(10, -102, 18, -110, 22, -120); ctx.quadraticCurveTo(28, -100, 25, -76); ctx.bezierCurveTo(19, -80, 12, -84, 6, -82); ctx.lineTo(1.6, -84); ctx.closePath(); };
-    blade(); ctx.fillStyle = PR.lin(ctx, 2, -110, 26, -80, [[0, '#d8d6d0'], [.4, '#8e8c86'], [1, '#26241f']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .6; blade(); ctx.stroke();
-    PR.stroke(ctx, 'rgba(255,255,250,.7)', .8, () => { ctx.moveTo(22.4, -118); ctx.quadraticCurveTo(27.4, -100, 24.6, -78); }); // the edge, honed bright
-    ctx.save(); blade(); ctx.clip(); const r = PR.rng(211); for (let i = 0; i < 10; i++) PR.soft(ctx, 6 + r()*16, -110 + r()*30, 1 + r()*2, .6 + r(), '#3a2414', .35, r()*3); ctx.restore(); // the rust of a wet coast, scrubbed at
-    PR.stroke(ctx, 'rgba(60,40,30,.6)', .5, () => { ctx.moveTo(6, -96); ctx.bezierCurveTo(10, -96, 14, -100, 16, -104); ctx.moveTo(7, -91); ctx.bezierCurveTo(11, -91, 15, -94, 17, -98); }); // a wave cut in the steel, Falari work
-  ctx.restore();
+  /* a Falari boarding axe slung behind each shoulder, the hafts leaning in (v13.51): ash hafts wrapped with red leather, a short bearded bit and a spike behind it for the other ship's planking */
+  const axe = sx => { ctx.save(); ctx.translate(41*sx, 6); ctx.scale(sx, 1); ctx.rotate(-.2); ctx.lineCap = 'butt';
+    ctx.strokeStyle = PR.lin(ctx, -2, 0, 2, 0, [[0, '#b8925e'], [.5, '#6a4c2c'], [1, '#1e140a']]); ctx.lineWidth = 3.8; ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(0, -106); ctx.stroke();
+    ctx.fillStyle = PR.lin(ctx, -2.2, 0, 2.2, 0, [[0, '#c86a3a'], [.5, '#7a321a'], [1, '#2a0e06']]); ctx.fillRect(-2.2, -34, 4.4, 22); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { for (let i = 0; i < 9; i++){ ctx.moveTo(-2.2, -33 + i*2.5); ctx.lineTo(2.2, -31.6 + i*2.5); } }); // the red grip-wrap
+    ctx.fillStyle = PR.lin(ctx, -3, 0, 3, 0, [[0, '#f0b070'], [.5, '#b8642a'], [1, '#4a2008']]); ctx.fillRect(-2.6, -99, 5.2, 3); ctx.fillRect(-2.6, -86, 5.2, 2.2); // copper bands at the eye
+    const blade = () => { ctx.beginPath(); ctx.moveTo(1.6, -99); ctx.bezierCurveTo(8, -100, 13, -106, 16, -113); ctx.quadraticCurveTo(20.6, -98, 18, -80); ctx.bezierCurveTo(14, -84, 10, -87, 6, -86); ctx.lineTo(1.6, -86); ctx.closePath(); };
+    const spike = () => { ctx.beginPath(); ctx.moveTo(-1.6, -98); ctx.lineTo(-14, -93.6); ctx.lineTo(-1.6, -88.4); ctx.closePath(); };
+    spike(); ctx.fillStyle = PR.lin(ctx, -14, -98, -2, -88, [[0, '#c8c6c0'], [1, '#3a3832']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .6; spike(); ctx.stroke();
+    blade(); ctx.fillStyle = PR.lin(ctx, 2, -108, 20, -82, [[0, '#d8d6d0'], [.4, '#8e8c86'], [1, '#26241f']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .6; blade(); ctx.stroke();
+    PR.stroke(ctx, 'rgba(255,255,250,.7)', .8, () => { ctx.moveTo(16.4, -111); ctx.quadraticCurveTo(20, -98, 17.6, -82); }); // the edge, honed bright
+    ctx.save(); blade(); ctx.clip(); const r = PR.rng(211 + (sx < 0 ? 7 : 0)); for (let i = 0; i < 8; i++) PR.soft(ctx, 5 + r()*12, -106 + r()*22, 1 + r()*2, .6 + r(), '#3a2414', .35, r()*3); ctx.restore(); // the rust of a wet coast, scrubbed at
+    PR.stroke(ctx, 'rgba(60,40,30,.6)', .5, () => { ctx.moveTo(5, -96); ctx.bezierCurveTo(8, -96, 11, -99, 12.6, -102); ctx.moveTo(6, -91.6); ctx.bezierCurveTo(9, -91.6, 12, -94, 13.6, -97); }); // a wave cut in the steel, Falari work
+  ctx.restore(); };
+  axe(-1); axe(1);
   BP.back(ctx, F, '#b4482a', '#3a1206', 20, 2); PR.neck(ctx, F, 11.2);
   /* mail to the throat under a blue-grey surcoat, a padded collar, a leather baldric */
   const B = BP.body(ctx, F, {wide:58, drop:1, trap:7, ny:F.cy + 15.8, cb:F.cy + 21, c1:'#94908a', c2:'#2a2826'}); ctx.save(); B.path(); ctx.clip();
@@ -65,6 +70,7 @@ POR.brannoc = function(ctx){ const F = {cy:-75, w:14.8, h:20.8, jaw:.94, chin:6.
     PR.stroke(ctx, 'rgba(220,232,240,.3)', .6, () => { ctx.moveTo(-29, -28); ctx.lineTo(-32, 2); }); PR.soft(ctx, -20, -18, 8, 14, '#dfe8f0', .1); const r2 = PR.rng(223); for (let i = 0; i < 18; i++) PR.soft(ctx, -30 + r2()*60, -32 + r2()*32, .6 + r2()*1.4, .6 + r2()*1.4, '#c8dce8', .25); // rain on it
     ctx.fillStyle = PR.lit(ctx, '#9a3a22', '#3a1006', -34, 30); PR.path(ctx, [[-34, -4], [34, -4], [34, 4], [-34, 4]]); ctx.fill(); // Sweetcreek's red at the hem
     ctx.fillStyle = PR.lit(ctx, '#6a4a2e', '#22160a', -30, 30); PR.path(ctx, [[-34, -38], [-28, -42], [38, 2], [30, 2]]); ctx.fill(); PR.stitch(ctx, 'rgba(220,180,120,.4)', .35, () => { ctx.moveTo(-31, -38.6); ctx.lineTo(33.6, 1.4); }); // the baldric
+    { const rr = PR.rng(241); for (let k = 0; k < 4; k++){ const o = 5.4 + k*3.1; PR.stroke(ctx, '#17120c', 2.7, () => { ctx.moveTo(-36, -37 + o); ctx.lineTo(36, 3 + o); }); PR.stroke(ctx, 'rgba(150,120,84,.5)', .5, () => { for (let q = 0; q < 20; q++){ const x = -34 + q*3.5 + rr(); ctx.moveTo(x, -36.6 + o + (x + 36)*.555); ctx.lineTo(x + 1.5, -37.4 + o + (x + 37.5)*.555); } }); } } // the boarding line, tarred, coiled bandolier-wise under the baldric (v13.51)
     ctx.fillStyle = '#b8642a'; ctx.fillRect(2, -19, 5, 5); ctx.fillStyle = '#3a1a08'; ctx.fillRect(3.2, -17.8, 2.6, 2.6); // a copper buckle
   ctx.restore(); BP.light(ctx, F, B);
   BP.spaulder(ctx, {wide:58, drop:1, rise:3, n:3, c:['#a88458', '#6a4a2c', '#2a1a0c'], style:'leather', rivet:'#e0b880'}); // boiled-leather shoulders, riveted with copper

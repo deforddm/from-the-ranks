@@ -223,11 +223,9 @@ SCENEX.b4_c1_market = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
 
 /* the quay: three ships warped in against the stone, horses coming down the gangplanks with their eyes covered, dogs, riders in black;
    along the quay a boy standing straight by a grey mare with some forty youths behind him, and the riders walking past */
-function b41Horse(x, cx, cy, s, col, blind, step){ const lg = step || 0; x.fillStyle = col; x.beginPath(); x.ellipse(cx, cy, 7*s, 3.4*s, 0, 0, 7); x.fill(); // the barrel
-  x.fillRect(cx - 6*s, cy, 1.4*s, 6*s + lg); x.fillRect(cx - 3.6*s, cy, 1.4*s, 6*s - lg); x.fillRect(cx + 3*s, cy, 1.4*s, 6*s - lg); x.fillRect(cx + 5.2*s, cy, 1.4*s, 6*s + lg); // legs
-  x.beginPath(); x.moveTo(cx + 5*s, cy - 2*s); x.lineTo(cx + 9*s, cy - 8*s); x.lineTo(cx + 11.6*s, cy - 7*s); x.lineTo(cx + 8*s, cy); x.closePath(); x.fill(); x.beginPath(); x.ellipse(cx + 11*s, cy - 7.4*s, 2.6*s, 1.4*s, .4, 0, 7); x.fill(); // the neck and head
-  if (blind) { x.fillStyle = '#d8ccb0'; x.fillRect(cx + 9.6*s, cy - 9*s, 2.6*s, 1.6*s); } // the eye-cloth
-  x.fillStyle = col; x.beginPath(); x.moveTo(cx - 7*s, cy - 1*s); x.quadraticCurveTo(cx - 10*s, cy + 1*s, cx - 9*s, cy + 5*s); x.lineTo(cx - 8*s, cy + 1*s); x.fill(); } // the tail
+function b41Horse(x, cx, cy, s, col, blind, step){ const k = s*1.2; x.save(); x.translate(cx, cy + 6*s); x.scale(k, k); beastHorse(x, col, {g:Math.max(-1, Math.min(1, (step || 0)/(k*1.6)))}); // v13.51.0: the shared horse (017b)
+  if (blind) { x.fillStyle = '#d8ccb0'; x.beginPath(); x.moveTo(6.6, -12.5); x.lineTo(8.3, -11.4); x.lineTo(7.7, -10.5); x.lineTo(6.2, -11.5); x.closePath(); x.fill(); } // the eye-cloth
+  x.restore(); x.fillStyle = col; }
 SCENEX.b4_c1_quay = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.34, wl = H*.6, qy = wl + H*.06;
   ctx.drawImage(sceneLayer('b41:quay', W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, hz, [[0,'#5a7896'],[.6,'#b8bcb8'],[1,'#e4d6b8']]); x.fillRect(0, 0, W, wl); glow(x, W*.85, hz*.4, W*.4, '#ffe4b8', .4); for (let i = 0; i < 3; i++) cloud(x, W*(.2 + hash(i, 841)*.6), hz*(.25 + i*.15), W*.22, 2, '#ffffff', .12);

@@ -163,12 +163,7 @@ POR.mehet = function(ctx){ const F = {cy:-76, w:11.8, h:20, jaw:.78, chin:4.6, s
 function b61Bush(x, bx, by, s, col){ x.fillStyle = col; for (let i = 0; i < 4; i++) { x.beginPath(); x.ellipse(bx + (i - 1.5)*3*s, by - 1.6*s - (i % 2)*1.2*s, 3.4*s, 2.2*s, 0, 0, 7); x.fill(); }
   x.strokeStyle = col; x.lineWidth = Math.max(.4, .4*s); x.beginPath(); for (let i = 0; i < 5; i++) { const a = -2.4 + i*.4; x.moveTo(bx, by - 2*s); x.lineTo(bx + Math.cos(a)*7*s, by - 2*s + Math.sin(a)*6*s); } x.stroke(); }
 /* a picket horse in silhouette, head down or up */
-function b61Horse(ctx, hx, hy, s, col, up){ ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(hx, hy - 10*s, 8.4*s, 3.8*s, 0, 0, 7); ctx.fill();
-  [[-6.4, 0], [-4.6, .4], [4.6, 0], [6.4, .4]].forEach(([dx, k]) => ctx.fillRect(hx + dx*s - .7*s, hy - 8*s, 1.4*s, 8*s + k*s));
-  poly(ctx, up ? [[hx + 5*s, hy - 12.4*s], [hx + 8.6*s, hy - 19*s], [hx + 9.6*s, hy - 21*s], [hx + 13.6*s, hy - 18.6*s], [hx + 13*s, hy - 17*s], [hx + 10.4*s, hy - 17.4*s], [hx + 8.6*s, hy - 9*s]]
-    : [[hx + 5*s, hy - 12.6*s], [hx + 9.4*s, hy - 11*s], [hx + 12.4*s, hy - 4.6*s], [hx + 13.4*s, hy - 2*s], [hx + 11*s, hy - 1.4*s], [hx + 9.6*s, hy - 4.6*s], [hx + 7*s, hy - 8*s]], col); // neck and head
-  if (up) poly(ctx, [[hx + 9.6*s, hy - 21*s], [hx + 9.8*s, hy - 23*s], [hx + 10.8*s, hy - 21*s]], col); // an ear
-  ctx.beginPath(); ctx.moveTo(hx - 8*s, hy - 11*s); ctx.quadraticCurveTo(hx - 11*s, hy - 8*s, hx - 10*s, hy - 3*s); ctx.lineWidth = 1.4*s; ctx.strokeStyle = col; ctx.stroke(); } // the tail
+function b61Horse(ctx, hx, hy, s, col, up){ const k = s*1.55; ctx.save(); ctx.translate(hx, hy); ctx.scale(k, k); beastHorse(ctx, col, up ? {up:true} : {down:true}); ctx.restore(); ctx.fillStyle = col; ctx.strokeStyle = col; } // v13.51.0: the shared horse (017b): head thrown up, or down to the ground
 
 /* the Fourteenth's first night camp on the Lato Odhan (100's caption; the Deck's table, B6DECK[1]): stars over flat scrub, a far low line
    of hills, and on the horizon ahead a dark long shape with three faint lights in it, the old city waiting; cook-fires in a long line

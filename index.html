@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.50.3';
+const VERSION = '13.51.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1579,9 +1579,9 @@ const TPL = {
     get quest(){ return squadQuest('ellis', `Toc said the Claw was done with her. The Claw has not said so. Somewhere in Darujhistan there is a house with her name in a ledger, and she means to find out which way it is written.`); },
     banter:[`"You took me on because a one-eyed Claw told you to. I'd think about that, Sergeant."`,`"Six years I counted sentries for people who never said thank you. This lot say it. I'm not used to it. Don't stop."`,`"If the Claw come for me, they'll come at night and they'll come quiet. I'll hear them. I'm telling you so you'll know it wasn't your fault."`],
     rel:{brisk:'Brisk watched her walk for a day and then stopped watching. That is a promotion.',kettle:'They trade: arrows for trip-cord, and neither has said what for.',tuft:'Ellis watches her the way she watched sentries. Tuft has noticed and, oddly, does not mind.',ohl:'He asked about the glove. She said "later." He wrote nothing down, and she noticed.'}},
-  vell:{name:'Vell',role:'Rope man · Guild journeyman',sig:'V',col:'#b0a0c8',hp:15,ac:13,atk:4,dmg:[1,6,1],rng:1,mv:6,init:4,st:{might:1,wits:1,guile:3},ab:['grapple','salve'],
+  vell:{name:'Vell',role:'Rope man · Guild journeyman',sig:'V',col:'#b0a0c8',hp:15,ac:13,atk:4,dmg:[1,4,1],rng:1,mv:6,init:4,st:{might:1,wits:1,guile:3},attacks:2, dmg2:[1,4,1], verb2:'puts the other knife into', ab:['grapple','salve'],
     epithet:'"I carry rope. That\'s all I do."',origin:'Darujhistan, the Daru District',age:17,service:'Four years carrying rope for Ocelot\'s clan. A week with the Fourth.',height:'Not tall yet. All elbows. Lands like a cat.',
-    weapon:'A rope-and-hook, forty feet of tarred line, and a knife he is still learning which end of',armour:'A Guild runner\'s coat the colour of slate at night, and three sets of Ohl\'s stitches',
+    weapon:'A rope-and-hook, forty feet of tarred line, and two Guild knives he is still learning which end of',armour:'A Guild runner\'s coat the colour of slate at night, and three sets of Ohl\'s stitches',
     bio:`A journeyman of the Assassins' Guild who has never killed anybody, and says so to everyone, by way of introduction. Strings the lines the clans cross the roofs on. Talks when he is frightened, which is often, and climbs when he is more frightened than that.`,
     bio2:`Born in a Daru stairwell, taken onto the roofs at thirteen because he was light and didn't look down. The Fourth stood between him and a Tiste Andii on a roof one night, for no reason anyone could give him, and he has been trying to work out what he owes for it ever since. The Guild keeps its debts longer than anyone. So, it turns out, does Vell.`,
     traits:['Counts the roofs between here and anywhere','Ties knots in whatever is in his hands','Says his own name three times when nervous','Has never once looked down'],
@@ -1959,7 +1959,7 @@ const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.so
 const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
 const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
 /* v13.5: the level-12 talent (014 PICKS.t2). The role is read from the kit: sergeant, healer, heavy, sapper, bow, caster. */
-function t2Role(k){ const ab = (TPL[k] && TPL[k].ab) || []; if (k === 'sgt') return 'oldhand'; if (ab.includes('mend')) return 'fieldsurgeon'; if (ab.includes('bash')) return 'anvil';
+function t2Role(k){ const ab = (TPL[k] && TPL[k].ab) || []; if (k === 'sgt') return 'oldhand'; if (ab.includes('mend')) return 'fieldsurgeon'; if (ab.includes('bash') || (typeof KIT_ANVIL !== 'undefined' && KIT_ANVIL.includes(k))) return 'anvil';
   if (ab.includes('sharper')) return 'stakeline'; if (ab.includes('mark')) return 'calledshot'; if (ab.some(a => AB[a] && AB[a].strain && !['mend','wash','stanch'].includes(a))) return 'deepwarren'; return null; }
 const T2IDS = () => Object.keys(PICKS.t2);
 function t2Opts(s, k){ const t3 = PICKS[3][k]; if (!t3) return []; const mine = ((s.picks || {})[k]) || [], took = t3.find(o => mine.includes(o[0]));
@@ -2420,6 +2420,99 @@ function drawHound(ctx, o = {}){
   const ea = o.eyeA ?? 1; ctx.fillStyle = rgba(o.eye || '#ffb040', .95*ea); ctx.fillRect(21.6, -12.4, 2, 1.3); glow(ctx, 22.6, -11.8, 5, o.eye || '#ffb040', .45*ea);
 }
 
+
+/* v13.51.0: the animals drawn as animals (David, Nov 18, 2026: "improve the artwork of the jheck wolves, horses and other animals").
+   Two shared drawers, so every wolf, dog, horse and ox in the game has the same bones under it:
+   drawWolf: a wolf or a dog side on, shaded, for the walking and fighting figures (the Hound of Shadow keeps its own, 017).
+   beastHorse / beastOx: one-colour silhouettes for the scene art, where a horse is a few pixels of dusk. */
+
+/* a wolf, side on, facing +x, feet on y = 0, about 57 units nose to tail and 17 at the shoulder (the Hound's frame, 017).
+   o: {fur, dark, pale (hex): the coat, its saddle and far legs, its belly and muzzle; g: stride -1..1; eye (hex); snarl: teeth showing;
+       lean: 0..1, ribs and a tucked belly (a camp dog); tail: 'low' (a wolf's) | 'high' (a dog's, curled over); ear: 'down' drops the far ear; grey: 0..1, an old muzzle} */
+function drawWolf(ctx, o = {}){
+  const fur = o.fur || '#7c7870', dark = o.dark || shade(fur, -.42), pale = o.pale || shade(fur, .34), g = o.g || 0, lean = o.lean || 0;
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const leg = (pts, w, c, paw) => { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+    const [fx, fy] = pts[pts.length - 1]; ctx.strokeStyle = paw; ctx.lineWidth = w*.72; ctx.beginPath(); ctx.moveTo(fx - .3, fy + .1); ctx.lineTo(fx + 1.5, fy + .1); ctx.stroke(); };
+  /* the far legs: a foreleg straight under the shoulder, a hind leg with the hock set back */
+  leg([[10.4, -9], [11.4 - g*1.6, -4.8], [11.8 + g*3.2, -.7]], 2.5, dark, shade(dark, -.2));
+  leg([[-14.6, -10], [-18.6 + g*1.6, -5.2], [-15.6 - g*3.2, -.7]], 2.8, dark, shade(dark, -.2));
+  /* the tail */
+  ctx.fillStyle = fur; ctx.beginPath();
+  if (o.tail === 'high') { ctx.moveTo(-20.6, -13.4); ctx.quadraticCurveTo(-27.6, -17.4 - g*.6, -25.6, -22.6); ctx.quadraticCurveTo(-22.6, -24.6, -21.2, -21.6); ctx.quadraticCurveTo(-23.8, -21.8, -23.6, -18.6); ctx.quadraticCurveTo(-22.6, -14.4, -19.4, -11.6); }
+  else { ctx.moveTo(-20.4, -13.6); ctx.quadraticCurveTo(-29.4, -13.6, -31.6, -5.2 + g*.8); ctx.quadraticCurveTo(-31.4, -2.6, -29.2, -2.8 + g*.8); ctx.quadraticCurveTo(-25.6, -7.2, -19.6, -8.8); }
+  ctx.closePath(); ctx.fill();
+  if (o.tail !== 'high') { ctx.fillStyle = rgba(dark, .55); ctx.beginPath(); ctx.moveTo(-28.6, -8.6); ctx.quadraticCurveTo(-31.4, -5.6, -31.4, -4 + g*.8); ctx.quadraticCurveTo(-30.6, -2.6, -29.2, -2.8 + g*.8); ctx.quadraticCurveTo(-28.4, -5.4, -28.6, -8.6); ctx.fill(); } // the dark tip
+  /* the body: a deep chest, a tucked waist, the head carried level and forward */
+  const by = -7.4 - lean*1.3; // the belly line rises on a lean one
+  const body = () => { ctx.beginPath(); ctx.moveTo(-21.6, -8.6); ctx.quadraticCurveTo(-22.6, -12.6, -19.6, -14.2); ctx.quadraticCurveTo(-13, -15.9, -6, -15.2); ctx.quadraticCurveTo(0, -15.2, 4.6, -17.2); // the croup, the back, up to the withers
+    ctx.quadraticCurveTo(8.4, -18.2, 12.4, -17.2); ctx.lineTo(16.6, -17.4); ctx.quadraticCurveTo(19.2, -17, 20.6, -15.2); // the neck's ruff, the skull
+    ctx.lineTo(25.6, -13.4); ctx.quadraticCurveTo(27.4, -13, 27.2, -11.8); ctx.lineTo(25.8, -10.6); ctx.lineTo(20.6, -10); // the stop, the muzzle, the nose, the lip
+    ctx.quadraticCurveTo(18, -9, 16.4, -8.6); ctx.quadraticCurveTo(14.6, -5.2, 10.6, -4.6); ctx.quadraticCurveTo(7.6, -4.6, 5.6, -6); // the jaw, the throat's ruff, the brisket
+    ctx.quadraticCurveTo(-2, by + .4, -10, by - 1.6); ctx.quadraticCurveTo(-14.6, by - 1.2, -17.6, -6.6); ctx.quadraticCurveTo(-20.6, -6.4, -21.6, -8.6); ctx.closePath(); }; // the belly, the tuck, the haunch
+  const gr = ctx.createLinearGradient(0, -18, 0, -5); gr.addColorStop(0, dark); gr.addColorStop(.3, fur); gr.addColorStop(.72, fur); gr.addColorStop(1, pale); body(); ctx.fillStyle = gr; ctx.fill();
+  ctx.save(); body(); ctx.clip();
+    ctx.fillStyle = rgba(pale, .8); ctx.beginPath(); ctx.moveTo(27.4, -12); ctx.lineTo(20.6, -12.2); ctx.quadraticCurveTo(15.6, -11.6, 14.4, -8); ctx.quadraticCurveTo(12.6, -6.6, 5.6, -7.2); ctx.lineTo(5.6, -3); ctx.lineTo(27.4, -3); ctx.closePath(); ctx.fill(); // pale under the jaw, the throat and the chest
+    ctx.fillStyle = rgba(dark, .5); ctx.beginPath(); ctx.moveTo(-20, -15); ctx.quadraticCurveTo(-8, -17, 4.6, -18.4); ctx.lineTo(13, -18.2); ctx.lineTo(12, -15.6); ctx.quadraticCurveTo(2, -13.2, -8, -13.4); ctx.quadraticCurveTo(-15, -13, -20, -12); ctx.closePath(); ctx.fill(); // the saddle
+    ctx.strokeStyle = rgba(dark, .5); ctx.lineWidth = .7; ctx.beginPath(); for (let i = 0; i < 7; i++){ const x = 3.4 + i*1.5; ctx.moveTo(x, -16.6 + i*.5); ctx.lineTo(x - 1.5, -12.4 + i*.7); } ctx.stroke(); // the ruff, in hanks down the neck
+    ctx.strokeStyle = rgba(pale, .3); ctx.lineWidth = .6; ctx.beginPath(); for (let i = 0; i < 6; i++){ const x = -19 + i*1.5; ctx.moveTo(x, -12.4 + i*.2); ctx.lineTo(x - 1.2, -8.6 + i*.1); } ctx.stroke(); // the haunch's long fur
+    if (lean > 0) { ctx.strokeStyle = rgba(dark, .5*lean); ctx.lineWidth = .7; ctx.beginPath(); for (let i = 0; i < 5; i++){ const x = -6.4 + i*2.3; ctx.moveTo(x, -13.4); ctx.quadraticCurveTo(x - 1.4, -10.6, x - .4, by - .4); } ctx.stroke();
+      ctx.strokeStyle = rgba(pale, .28*lean); ctx.beginPath(); for (let i = 0; i < 5; i++){ const x = -5.6 + i*2.3; ctx.moveTo(x, -13.2); ctx.quadraticCurveTo(x - 1.4, -10.6, x - .4, by - .4); } ctx.stroke(); } // every rib
+    if (o.grey) { ctx.fillStyle = rgba('#d8d4cc', .7*o.grey); ctx.beginPath(); ctx.moveTo(19.6, -16.4); ctx.lineTo(28, -14); ctx.lineTo(28, -9); ctx.lineTo(18.6, -9); ctx.closePath(); ctx.fill(); } // grey to the muzzle
+  ctx.restore();
+  /* the ears: the far one behind and darker, the near one pricked */
+  if (o.ear === 'down') poly(ctx, [[14.6, -17.2], [12.2, -16.4], [13.6, -13.8]], dark); else poly(ctx, [[13.2, -17.2], [13.6, -21.4], [15.8, -17.2]], dark);
+  poly(ctx, [[15.2, -17.2], [16.6, -22.2], [18.9, -16.8]], fur); poly(ctx, [[16, -17.6], [16.7, -20.6], [17.9, -17.4]], rgba('#2a1c18', .55));
+  /* the near legs: thicker, the coat's own colour, pale at the paw */
+  leg([[8.2, -9.6], [8.6 + g*1.6, -4.9], [8.8 - g*3.2, -.7]], 3, fur, pale);
+  ctx.fillStyle = fur; ctx.beginPath(); ctx.ellipse(-15, -10.2, 4.4, 3.6, -.5, 0, Math.PI*2); ctx.fill(); // the thigh, over the leg's top
+  leg([[-13.6, -9.6], [-18 - g*1.6, -5.2], [-14.6 + g*3.2, -.7]], 3.2, fur, pale);
+  /* the face */
+  ctx.fillStyle = '#0c0a09'; ctx.beginPath(); ctx.ellipse(26.7, -12.5, 1.15, .95, 0, 0, Math.PI*2); ctx.fill(); // the nose
+  ctx.strokeStyle = 'rgba(12,8,6,.85)'; ctx.lineWidth = .7; ctx.beginPath(); ctx.moveTo(26.2, -11.1); ctx.lineTo(21, -10.5 - (o.snarl ? .5 : 0)); ctx.stroke(); // the mouth
+  if (o.snarl) { ctx.fillStyle = '#16100e'; ctx.beginPath(); ctx.moveTo(21, -11.4); ctx.lineTo(26.4, -11.4); ctx.lineTo(25.8, -9.6); ctx.lineTo(21.4, -9.2); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#ece4d0'; for (let i = 0; i < 4; i++) ctx.fillRect(21.8 + i*1.15, -11.3, .55, 1 + (i === 3 ? .7 : 0)); }
+  ctx.fillStyle = 'rgba(14,10,8,.7)'; ctx.beginPath(); ctx.moveTo(18.6, -15.3); ctx.lineTo(21.4, -14.6); ctx.lineTo(18.8, -14.3); ctx.closePath(); ctx.fill(); // the eye's dark rim
+  ctx.fillStyle = o.eye || '#e8c860'; ctx.beginPath(); ctx.ellipse(19.9, -14.75, .85, .6, .2, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = '#0a0806'; ctx.fillRect(19.7, -15.05, .5, .6);
+  ctx.strokeStyle = rgba(pale, .35); ctx.lineWidth = .6; ctx.beginPath(); ctx.moveTo(-19, -14.4); ctx.quadraticCurveTo(-8, -16.2, 4.6, -17.6); ctx.quadraticCurveTo(8.4, -18.4, 12.4, -17.5); ctx.stroke(); // light along the back
+  ctx.restore();
+}
+
+/* a horse as one flat shape, side on, facing +x, feet on y = 0, the barrel about 11 long and the withers 8.6 up: the measure the scene art's
+   old ovals-on-sticks used, so it drops into their places. The caller scales and flips it.
+   o: {g: stride -1..1; run: 1 stretched at the gallop, 2 gathered under; down: head to the ground; up: head thrown high; tail: false for a docked one;
+       bare: true leaves the neck and head off (a rider's own code draws them)} */
+function beastHorse(x, col, o = {}){
+  const g = o.g || 0; x.save(); x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'round'; x.lineJoin = 'round';
+  const leg = (a, b, c, w) => { x.lineWidth = w; x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0], b[1]); x.stroke(); x.lineWidth = w*.5; x.beginPath(); x.moveTo(b[0], b[1]); x.lineTo(c[0], c[1] - .3); x.stroke();
+    x.lineWidth = w*.62; x.beginPath(); x.moveTo(c[0], c[1] - .24); x.lineTo(c[0] + .36, c[1] - .24); x.stroke(); };
+  if (o.run === 1) { leg([3.9, -5.2], [6.2, -3.8], [8.6, -2.4], 1.15); leg([3.3, -5.2], [5.2, -3], [7.2, -1], 1.15); leg([-4, -5.6], [-6.4, -3.6], [-8.8, -2], 1.3); leg([-3.4, -5.4], [-5.4, -2.8], [-7.4, -.6], 1.3); }
+  else if (o.run === 2) { leg([3.9, -5.2], [4.8, -2.8], [2.8, -1.4], 1.15); leg([3.3, -5.2], [5.2, -3.2], [3.8, -.7], 1.15); leg([-4, -5.6], [-2.2, -3.2], [-.8, -1], 1.3); leg([-3.4, -5.4], [-3.2, -2.8], [-1.8, -.3], 1.3); }
+  else { leg([3, -5.2], [2.8 + g*.7, -2.7], [2.7 + g*1.7, 0], .95); leg([4.3, -5.2], [4.4 - g*.7, -2.7], [4.4 - g*1.7, 0], 1);
+    leg([-3.2, -5.6], [-3.9 - g*.5, -2.9], [-3.1 - g*1.6, 0], 1.1); leg([-4.6, -5.6], [-5.6 + g*.5, -2.9], [-4.9 + g*1.6, 0], 1.15); }
+  x.beginPath(); x.moveTo(-5.8, -6.8); x.quadraticCurveTo(-5.6, -8.9, -3.6, -8.9); x.quadraticCurveTo(-.4, -7.9, 2.7, -8.7); // the rump, the croup, the back, the withers
+  if (o.bare) { x.lineTo(5.2, -8); }
+  else if (o.down) { x.quadraticCurveTo(5.8, -8.6, 7.3, -4.9); x.lineTo(7.9, -5.5); x.lineTo(7.9, -4.3); x.lineTo(8.7, -1.5); x.quadraticCurveTo(8.6, -.7, 7.8, -.9); x.lineTo(6.7, -3.6); x.quadraticCurveTo(5.9, -5.4, 5.5, -6.2); } // the neck let down, the head at the ground
+  else if (o.up) { x.quadraticCurveTo(4, -11.6, 5.3, -13.5); x.lineTo(5.3, -14.6); x.lineTo(6, -13.7); x.lineTo(8.6, -12.9); x.quadraticCurveTo(9.2, -12.3, 8.6, -11.8); x.lineTo(6.6, -11.5); x.quadraticCurveTo(5.9, -9.8, 5.7, -8.2); x.quadraticCurveTo(5.6, -7, 5.5, -6.2); } // thrown high
+  else { x.quadraticCurveTo(4.6, -11.2, 6.4, -12.3); x.lineTo(6.5, -13.4); x.lineTo(7.1, -12.4); x.lineTo(9.3, -10.1); x.quadraticCurveTo(9.8, -9.3, 9.1, -8.9); x.lineTo(7.3, -9.8); x.quadraticCurveTo(6.3, -9.4, 5.9, -8.2); x.quadraticCurveTo(5.6, -7, 5.5, -6.2); } // the crest, the ear, the long face, the jaw, the throat
+  x.quadraticCurveTo(5.4, -4.5, 4.1, -4.4); x.quadraticCurveTo(0, -3.5, -3.2, -4.6); x.quadraticCurveTo(-4.8, -4.4, -5.7, -5.4); x.closePath(); x.fill(); // the chest, the belly, the flank
+  if (o.tail !== false) { x.beginPath(); x.moveTo(-5.2, -8.5); x.quadraticCurveTo(-8.2, -8.3 - g*.3, -8 - g*.3, -3.2); x.lineTo(-7.4 - g*.3, -2.2); x.quadraticCurveTo(-7.1, -6.4, -5.6, -7.6); x.closePath(); x.fill(); } // the tail
+  if (o.mane) { x.fillStyle = o.mane; x.beginPath(); x.moveTo(2.9, -8.7); x.quadraticCurveTo(4.5, -11.4, 6.3, -12.4); x.lineTo(5.6, -10.6); x.quadraticCurveTo(4.6, -9.6, 4.2, -7.8); x.closePath(); x.fill(); }
+  x.restore();
+}
+
+/* an ox as one flat shape, side on, facing +x, feet on y = 0, the barrel about 16 long and the hump 10 up (b92aOx's measure): the heavy shoulder,
+   the head carried low, the dewlap, the horn. o: {horn: colour of the horn (drawn over), g: stride} */
+function beastOx(x, col, o = {}){
+  const g = o.g || 0; x.save(); x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'round'; x.lineJoin = 'round';
+  const leg = (hx, k, w) => { x.lineWidth = w; x.beginPath(); x.moveTo(hx, -4.6); x.lineTo(hx + k*.5, -2.2); x.stroke(); x.lineWidth = w*.68; x.beginPath(); x.moveTo(hx + k*.5, -2.2); x.lineTo(hx + k*1.3, -.3); x.stroke(); };
+  leg(5.6, g, 1.9); leg(6.9, -g, 2); leg(-5.4, -g, 2); leg(-6.8, g, 2.1);
+  x.beginPath(); x.moveTo(-8.6, -6.4); x.quadraticCurveTo(-8.6, -9.6, -6, -9.6); x.quadraticCurveTo(-1, -8.8, 2.6, -9.6); x.quadraticCurveTo(4.6, -11, 6.6, -10.2); // the rump, the back, the hump over the shoulder
+  x.quadraticCurveTo(8.6, -9.4, 9.8, -8.2); x.lineTo(10.4, -9); x.lineTo(10.8, -7.8); x.quadraticCurveTo(13, -6.8, 13.4, -4.4); x.quadraticCurveTo(13.4, -3.2, 12.2, -3.2); x.lineTo(10.4, -4.6); // the neck, an ear, the long head held low, the muzzle
+  x.quadraticCurveTo(9.4, -2.6, 8.2, -3.4); x.quadraticCurveTo(7.6, -2.6, 6.6, -3.2); x.quadraticCurveTo(0, -2.2, -5.6, -3.4); x.quadraticCurveTo(-7.8, -3.6, -8.6, -6.4); x.closePath(); x.fill(); // the dewlap, the brisket, the belly
+  x.lineWidth = .7; x.beginPath(); x.moveTo(-8.4, -8.6); x.quadraticCurveTo(-10, -7 , -9.6 - g*.4, -3); x.stroke(); x.beginPath(); x.ellipse(-9.6 - g*.4, -2.4, .6, 1, 0, 0, 7); x.fill(); // the tail and its tuft
+  if (o.horn) { x.strokeStyle = o.horn; x.lineWidth = .7; x.beginPath(); x.moveTo(10, -8.6); x.quadraticCurveTo(11.6, -11.2, 13.2, -10.2); x.stroke(); }
+  x.restore();
+}
 
 /* ============ figure sprites ============ */
 /* draws a ~32px-tall figure centred at (cx, baseline cy). s = scale, dir = facing */
@@ -7000,10 +7093,8 @@ function tkHorses(ctx, x, y, T, P, N){ const px = x*T, py = y*T, h = hash(x, y);
   for (let i = 0; i < 5; i++) ell(ctx, px + T*(.1 + hash(x, y, i + 70)*.8), py + T*(.6 + hash(y, x, i + 71)*.35), T*.04, T*.03, `rgba(${P.mud},.45)`);
   ctx.strokeStyle = P.woodL; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py + T*.3); ctx.lineTo(px + T, py + T*.3); ctx.stroke(); if (tkAt(x - 1, y) !== '@') { ctx.fillStyle = P.wood; ctx.fillRect(px + T*.04, py + T*.16, T*.06, T*.3); }
   const hx = px + T*.5, hy = py + T*.72, d = hash(x, y, 10) > .5 ? 1 : -1, hc = ['#5a3a22', '#8a6a44', '#3a2a1e', '#a89070'][Math.floor(h*4)], c = N ? shade(hc, -.6) : hc;
-  ell(ctx, hx, hy + T*.2, T*.3, T*.06, `rgba(${P.foot},.35)`); ctx.fillStyle = c; for (let i = 0; i < 4; i++) ctx.fillRect(hx + T*(-.2 + (i%2)*.06 + (i > 1 ? .28 : 0))*d - T*.02, hy, T*.04, T*.2);
-  ell(ctx, hx, hy - T*.02, T*.26, T*.1, c); ctx.strokeStyle = c; ctx.lineWidth = Math.max(2, T*.08); ctx.beginPath(); ctx.moveTo(hx + T*.18*d, hy - T*.04); ctx.lineTo(hx + T*.3*d, hy - T*.24); ctx.stroke(); ell(ctx, hx + T*.35*d, hy - T*.24, T*.08, T*.045, c, .5*d);
-  ctx.strokeStyle = '#140c08'; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.moveTo(hx - T*.26*d, hy - T*.04); ctx.lineTo(hx - T*.32*d, hy + T*.1); ctx.stroke();
-  ctx.fillStyle = `rgba(${P.lit},.18)`; ctx.fillRect(hx - T*.2, hy - T*.11, T*.3, 1); ctx.strokeStyle = P.woodL; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(hx + T*.38*d, hy - T*.22); ctx.lineTo(hx + T*.3*d, py + T*.3); ctx.stroke(); }
+  ell(ctx, hx, hy + T*.2, T*.3, T*.06, `rgba(${P.foot},.35)`); { const k = T*.047; ctx.save(); ctx.translate(hx, hy + T*.2); ctx.scale(d*k, k); beastHorse(ctx, c, {mane:'#140c08', down:hash(x, y, 12) > .6}); ctx.restore(); } // v13.51.0: the shared horse (017b), some with their heads down
+  ctx.fillStyle = `rgba(${P.lit},.18)`; ctx.fillRect(hx - T*.17, hy - T*.2, T*.28, 1); if (!(hash(x, y, 12) > .6)) { ctx.strokeStyle = P.woodL; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(hx + T*.4*d, hy - T*.26); ctx.lineTo(hx + T*.3*d, py + T*.3); ctx.stroke(); } }
 function tkWeapons(ctx, x, y, T, P){ const px = x*T, py = y*T, cx = px + T*.42, ty = py + T*.12, by = py + T*.86; ell(ctx, cx + T*.1, by, T*.36, T*.08, `rgba(${P.foot},.4)`);
   [[-.22, 0], [.2, .02], [0, .06]].forEach(([dx, dz]) => { B2F.line(ctx, P.wood, Math.max(1, T*.035), [[cx + dx*T, by - dz*T], [cx, ty + T*.08]]); }); // spears stood together, heads up
   for (let i = 0; i < 3; i++) poly(ctx, [[cx - T*.03 + i*T*.03 - T*.02, ty + T*.06], [cx - T*.02 + i*T*.03, ty - T*.06], [cx + i*T*.03 - T*.0, ty + T*.06]], P.bone);
@@ -7828,7 +7919,8 @@ function mkParty(id, x, y){
   ['quorl','shadowstep','shadowlash','argument','quickshot','ropeswing','anvil','stakeline'].forEach(k => { if (has(id,k)) u.ab.splice(u.ab.length - 1, 0, k); }); // before Salve
   trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
-  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld]; // levels 3/5/7 hit harder, 4/8 stand harder (15)
+  u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld];
+  if (t.attacks > 1 && !(B && B.def.nomagic && u.magic)) { u.attacks = t.attacks; const d2 = t.dmg2 || t.dmg; u.dmg2 = [d2[0], d2[1], (d2[2] || 0) + ld]; u.verb2 = t.verb2; } // v13.51: a blade in each hand. The off hand keeps its own dice whatever the main hand is given to carry // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.soak = squadSoak(id); // v10.2 (31c)
   u.hp = u.maxhp; const w = DIFF().carry ? woundOf(id) : null; if (w != null) u.hp = clamp(w, 1, u.maxhp); // Bridgeburner: the wounds the squad carried in
   return u;
@@ -8212,7 +8304,9 @@ function battleTap(x, y){
     if (a.tiles(u).some(q => q === t || (q.x === x && q.y === y))) return useAb(B.mode, x, y);
     B.mode = 'act'; return updBattleUI();
   }
-  if (t && t.side === 'e' && !B.acted && cheb(u,t) <= u.rng && canShoot(u,t)) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; B.busy = true; attack(u, t); later(() => { B.busy = false; afterAct(); }, pace(380)); updBattleUI(); return; }
+  if (t && t.side === 'e' && !B.acted && cheb(u,t) <= u.rng && canShoot(u,t)) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; B.busy = true; attack(u, t); const nb = u.attacks || 1;
+    for (let i = 1; i < nb; i++) later(() => { if (!B || B.over || u.hp <= 0 || B.cur !== u) return; const nx = t.hp > 0 && cheb(u,t) <= u.rng ? t : foes().filter(f => f.hp > 0 && cheb(u,f) <= u.rng && canShoot(u,f)).sort((p, q) => p.hp - q.hp)[0]; if (nx) { attack(u, nx, {dmg:u.dmg2, verb:u.verb2 || 'cuts again at'}); updBattleUI(); } }, pace(380) * i); // v13.51: the off hand
+    later(() => { B.busy = false; afterAct(); }, pace(380) * nb); updBattleUI(); return; }
   if (t) { B.ping = {u:t, t:performance.now()}; blog(`${t.name}: ${t.hp}/${t.maxhp} health, armour ${t.ac}${t.soak ? `, soak ${t.soak}` : ''}${t.ward ? `, ward ${t.ward}` : ''}${t.rng > 1 ? `, range ${t.rng}` : ''}${t.side === 'e' && !B.acted ? (cheb(u,t) > u.rng ? ' · out of range' : !canShoot(u,t) ? ' · ' + noShotWhy(u,t) : '') : ''}.`); return; }
   if (!B.moved && B.reach && B.reach.has(K(x,y)) && !(x === u.x && y === u.y)) moveCur(x, y);
 }
@@ -8390,7 +8484,7 @@ async function aiTurn(u, turnId){
   const tg = inRange().sort((a,b) => (flanked(u,b) - flanked(u,a)) || (a.hp - b.hp))[0];
   if (tg) { attack(u, tg); await wait(650); if (gone()) return;
     for (let i = 1; i < (u.attacks || 1); i++) { if (gone() || B.over || u.hp <= 0) break; // more than one blow a turn
-      const nx = tg.hp > 0 && cheb(u, tg) <= u.rng && canShoot(u, tg) ? tg : inRange().sort((a,b) => a.hp - b.hp)[0]; if (!nx) break; attack(u, nx, {verb:u.verb2 || 'cuts again at'}); await wait(650); } }
+      const nx = tg.hp > 0 && cheb(u, tg) <= u.rng && canShoot(u, tg) ? tg : inRange().sort((a,b) => a.hp - b.hp)[0]; if (!nx) break; attack(u, nx, {verb:u.verb2 || 'cuts again at', dmg:u.dmg2}); await wait(650); } }
   if (gone()) return;
   if (u.side === 'e') { await foeAfter(u, gone); if (gone()) return; }
   done();
@@ -9810,6 +9904,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.51.0', ['New kits for the later books\' recruits, so no squad walks with two of the same shield. Brisk, Haddat, Thegg and Dannet keep the shield bash; nobody else does.', 'Brannoc is a Falari boarding marine: an axe in each hand and two blows a turn, a Boarding line that hauls an enemy to him, a Boarding leap, and no shield. Brask fights with sword and mace, two blows a turn. Vell has a knife in each hand.', 'Darrut drives an enemy back (Gate drive). Ottar howls, and enemies near him hit worse. Doss sweeps the flail through two enemies. Edrem\'s mace breaks a guard: armour 2 worse against everyone. Brennet swaps places with an enemy. Pruss\'s maul drives one back two tiles. Tirren\'s hoof-knife leaves it bleeding.', 'An enemy driven, hauled or turned out of a squadmate\'s reach gives that squadmate a free swing, as the sergeant\'s Shield Drive always has.', 'Tirren\'s talent The Twitch now does what it says. It never triggered before.', 'Brannoc has a new portrait and figure.', 'The animals are redrawn. The Jheck wolves and the great wolf of Book Five are wolves now, with three coats in a pack; the camp dogs of Book Nine are drawn on the same bones. Every horse in the scene art, from the Chain of Dogs to the Bonehunters\' road, is a horse and not an oval on sticks, and the oxen have their shoulders.']],
   ['13.50.3', ['Shadow Lash now leaps from each enemy it strikes to the next, and each link of the chain hangs in the air until it is done. Before, a bolt also flew from Tuft to every target. The numbers are unchanged.']],
   ['13.50.2', ['The Khundryl Burned Tears are drawn as the books describe them: pale skin, black tears inked from the eyes, and on Orvas a black moustache, a knotted chin beard and braids.']],
   ['13.50.1', ['Portraits of the later books\' recruits: Ilsa\'s and Wenna\'s hair knots are behind their heads (they had been drawn over an eye), collars sit close to the neck in the garment\'s own colour, and the fourteen fill the frame like the rest.', 'The mill-woman, the company clerk and the Malazan clerk have necks: their heads no longer float above their bodies.']],
@@ -29992,14 +30087,9 @@ TILEX.ridge = (ctx, ch, x, y, T, dark) => b2Clip(ctx, x, y, T, () => b2Ridge(ctx
 
 /* ---------------- backdrops: inside the tunnel, Gelor from below, the charge ---------------- */
 /* a horse and rider at the gallop, side on, facing d (1 right, -1 left); legs in one of two strides */
-function b2Rider(x, cx, cy, s, col, d, k, lance){ x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'round';
-  x.beginPath(); x.ellipse(cx, cy - 6*s, 5.4*s, 2.4*s, 0, 0, 7); x.fill(); // the barrel
-  x.lineWidth = 1.6*s; x.beginPath(); x.moveTo(cx + 4*d*s, cy - 7*s); x.lineTo(cx + 7*d*s, cy - 10.4*s); x.stroke(); x.beginPath(); x.ellipse(cx + 8*d*s, cy - 10.2*s, 2*s, 1*s, .5*d, 0, 7); x.fill(); // neck stretched, head
-  x.lineWidth = .9*s; const L = k ? [[3.6, 6, -3, 8.4, -1.6], [4.4, 5.6, -2.4, 7, -.3], [-3.6, -6, -3.2, -8.6, -1.4], [-4.4, -5.4, -2.4, -7, -.2]] : [[3.6, 3.4, -2.6, 1.4, 0], [4.4, 5, -2.4, 3.2, -.2], [-3.6, -1.6, -2.8, .6, 0], [-4.4, -3, -2.4, -1.4, -.2]]; // stretched out, or gathered under
-  L.forEach(([hx, kx, ky, fx, fy]) => { x.beginPath(); x.moveTo(cx + hx*d*s, cy - 5*s); x.lineTo(cx + kx*d*s, cy + ky*s); x.lineTo(cx + fx*d*s, cy + fy*s); x.stroke(); });
-  x.lineWidth = 1*s; x.beginPath(); x.moveTo(cx - 5*d*s, cy - 7*s); x.quadraticCurveTo(cx - 8*d*s, cy - 7*s, cx - 9*d*s, cy - 4*s); x.stroke(); // tail out behind
-  x.beginPath(); x.ellipse(cx, cy - 11*s, 1.4*s, 3*s, -.25*d, 0, 7); x.fill(); x.beginPath(); x.arc(cx + .6*d*s, cy - 14.6*s, 1.1*s, 0, 7); x.fill(); // the rider, leaning in
-  if (lance) { x.lineWidth = .6*s; x.beginPath(); x.moveTo(cx - 6*d*s, cy - 13*s); x.lineTo(cx + 16*d*s, cy - 9*s); x.stroke(); }
+function b2Rider(x, cx, cy, s, col, d, k, lance){ x.save(); x.translate(cx, cy); x.scale(d*s*1.06, s*1.06); beastHorse(x, col, {run:k ? 1 : 2}); x.restore(); x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'round'; // v13.51.0: the shared horse (017b), stretched out or gathered under
+  x.beginPath(); x.ellipse(cx + .4*d*s, cy - 11.8*s, 1.4*s, 3*s, -.25*d, 0, 7); x.fill(); x.beginPath(); x.arc(cx + 1*d*s, cy - 15.4*s, 1.1*s, 0, 7); x.fill(); // the rider, leaning in
+  if (lance) { x.lineWidth = .6*s; x.beginPath(); x.moveTo(cx - 6*d*s, cy - 13.8*s); x.lineTo(cx + 16*d*s, cy - 9.8*s); x.stroke(); }
   x.lineCap = 'butt'; }
 
 SCENEX.b2_tunnel = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, vx = W*.56, vy = H*.44, p = (Math.sin(t/900) + 1)/2;
@@ -31539,12 +31629,7 @@ SCENEX.b2_after = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ?
    the bank, lamps in their windows. 'dawn': first light, and the ford full of people from bank to bank, and nothing yet coming down the river.
    'cross': the afternoon after the bridges, the Seventh wading over last between the drifting wreckage, the column sitting down in heaps on
    the far bank at the edge of the wood, and on this side what the slaughter left: carts on their sides, arrows in the mud, crows. */
-function b2Horse(x, cx, cy, s, col, d, down){ x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'round';
-  x.beginPath(); x.ellipse(cx, cy - 6*s, 5*s, 2.3*s, 0, 0, 7); x.fill(); // the barrel
-  x.lineWidth = 1*s; [[3.4, 3.8], [2.2, 2.4], [-3.2, -3.4], [-4.2, -4.6]].forEach(([a, b]) => { x.beginPath(); x.moveTo(cx + a*d*s, cy - 5*s); x.lineTo(cx + b*d*s, cy); x.stroke(); });
-  x.lineWidth = 2*s; x.beginPath(); x.moveTo(cx + 3.6*d*s, cy - 7*s); if (down) x.quadraticCurveTo(cx + 7*d*s, cy - 7.4*s, cx + 7.6*d*s, cy - 1.8*s); else x.lineTo(cx + 6.6*d*s, cy - 11*s); x.stroke(); // the neck, down to the water or up
-  x.beginPath(); if (down) x.ellipse(cx + 7.8*d*s, cy - 1.2*s, 1*s, 1.9*s, .3*d, 0, 7); else x.ellipse(cx + 7.6*d*s, cy - 11*s, 1.9*s, 1*s, .5*d, 0, 7); x.fill();
-  x.lineWidth = .9*s; x.beginPath(); x.moveTo(cx - 4.8*d*s, cy - 6.6*s); x.quadraticCurveTo(cx - 6.6*d*s, cy - 5*s, cx - 6.4*d*s, cy - 2.4*s); x.stroke(); x.lineCap = 'butt'; } // the tail
+function b2Horse(x, cx, cy, s, col, d, down){ x.save(); x.translate(cx, cy); x.scale(d*s, s); beastHorse(x, col, {down}); x.restore(); x.fillStyle = col; x.strokeStyle = col; x.lineCap = 'butt'; } // v13.51.0: the shared horse (017b), head up or down to the water
 /* a carriage of the Nobles' Council, side on: a high box with a curved roof, two big wheels, a shaft with nothing in it yet */
 function b2Carriage(x, cx, cy, s, col, d){ x.fillStyle = col; x.strokeStyle = col; x.beginPath(); x.moveTo(cx - 9*s, cy - 6*s); x.lineTo(cx - 9*s, cy - 17*s); x.quadraticCurveTo(cx, cy - 21*s, cx + 9*s, cy - 17*s); x.lineTo(cx + 9*s, cy - 6*s); x.closePath(); x.fill();
   x.fillRect(cx - 11*s, cy - 7*s, 22*s, 1.6*s); x.fillRect(cx + (d > 0 ? 9 : -13)*s, cy - 12*s, 4*s, 1.4*s); // the bed, the driver's box
@@ -33048,9 +33133,8 @@ SCENEX.b2_trygalle = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
       x.strokeStyle = '#1a1612'; x.lineWidth = 1.4*s; x.beginPath(); if (kind === 'x') { x.moveTo(gx - 2*s, gy - hh*.7); x.lineTo(gx - 12*s, gy - hh*.9); x.moveTo(gx - 10*s, gy - hh*1.25); x.lineTo(gx - 10*s, gy - hh*.55); } else if (kind === 'a' || kind === 's') { x.moveTo(gx - 3*s, gy - hh*.3); x.lineTo(gx - 7*s, gy - hh - 8*s); } else { x.moveTo(gx + 3*s, gy - hh*.5); x.lineTo(gx + 9*s, gy - hh*.9); } x.stroke(); if (kind === 'a') { x.fillStyle = '#2a2622'; x.beginPath(); x.moveTo(gx - 7*s, gy - hh - 8*s); x.lineTo(gx - 12*s, gy - hh - 6*s); x.lineTo(gx - 8*s, gy - hh - 3*s); x.fill(); } if (i === 2) { x.fillStyle = 'rgba(220,210,190,.8)'; x.fillRect(gx - 3*s, gy - hh*.55, 6*s, 1.6*s); x.fillRect(gx - 2*s, gy - hh - 4.4*s, 4.4*s, 1.2*s); } }); // the big one bandaged, arm and head
     // the back of it still somewhere else: the coach going dark and violet where it is still inside the rent
     if (open) { x.save(); x.beginPath(); x.ellipse(rx, ry, RW, RH, 0, 0, 7); x.clip(); const fg = x.createLinearGradient(rx - RW*.6, 0, rx + RW*.3, 0); fg.addColorStop(0, 'rgba(30,16,52,0)'); fg.addColorStop(1, 'rgba(30,16,52,1)'); x.fillStyle = fg; x.fillRect(rx - RW, ry - RH, RW*2, RH*2); x.restore(); }
-    const horse = (hx, hy, s, col) => { x.fillStyle = col; x.beginPath(); x.ellipse(hx, hy - 17*s, 12*s, 6*s, 0, 0, 7); x.fill(); [[-8, .1], [-5, -.1], [6, .15], [9, -.05]].forEach(([dx, a]) => { x.save(); x.translate(hx + dx*s, hy - 13*s); x.rotate(a); x.fillRect(-1.1*s, 0, 2.2*s, 13*s); x.restore(); }); // body, legs
-      x.beginPath(); x.moveTo(hx - 8*s, hy - 21*s); x.lineTo(hx - 15*s, hy - 22*s); x.lineTo(hx - 22*s, hy - 12*s); x.lineTo(hx - 19*s, hy - 9.6*s); x.lineTo(hx - 13*s, hy - 15*s); x.lineTo(hx - 7*s, hy - 13*s); x.fill(); poly(x, [[hx - 15*s, hy - 22*s],[hx - 14*s, hy - 26*s],[hx - 12.6*s, hy - 21.6*s]], col); // the neck down, the head hung; an ear
-      x.strokeStyle = col; x.lineWidth = 1.6*s; x.beginPath(); x.moveTo(hx + 11*s, hy - 19*s); x.quadraticCurveTo(hx + 16*s, hy - 14*s, hx + 14*s, hy - 6*s); x.stroke(); x.fillStyle = 'rgba(255,214,160,.2)'; x.beginPath(); x.ellipse(hx - 2*s, hy - 21.6*s, 8*s, 1.4*s, 0, 0, 7); x.fill(); x.fillStyle = 'rgba(240,236,226,.75)'; for (let k=0;k<7;k++) x.fillRect(hx - (8 + hash(k, Math.round(hx))*8)*s, hy - (12 + hash(Math.round(hx), k)*9)*s, 1.2*s, 1*s); }; // a tail; the light along its back; lather on neck and chest
+    const horse = (hx, hy, s, col) => { x.save(); x.translate(hx, hy); x.scale(-s*2.3, s*2.3); beastHorse(x, col, {down:true}); x.restore(); // v13.51.0: the shared horse (017b), facing left, the head hung
+      x.fillStyle = 'rgba(255,214,160,.2)'; x.beginPath(); x.ellipse(hx - 2*s, hy - 21.6*s, 8*s, 1.4*s, 0, 0, 7); x.fill(); x.fillStyle = 'rgba(240,236,226,.75)'; for (let k=0;k<7;k++) x.fillRect(hx - (8 + hash(k, Math.round(hx))*8)*s, hy - (12 + hash(Math.round(hx), k)*9)*s, 1.2*s, 1*s); }; // a tail; the light along its back; lather on neck and chest
     for (let k=2;k>=0;k--){ const hx = c0 - (30 + k*40)*H/480; horse(hx - 12*H/480, by - 3, 1.7*H/480, '#1e140e'); horse(hx, by + 4, 1.85*H/480, '#120c08'); } // the team: nine of them in threes, the far ones lost behind the near
     x.strokeStyle = '#1a1410'; x.lineWidth = 1.4; x.beginPath(); x.moveTo(c0, by - 14); x.lineTo(c0 - 130*H/480, by - 30*H/480); x.stroke();
   }), 0, 0, W, H);
@@ -52187,8 +52271,7 @@ const B3VB = {
   fire(ctx, x, y, T, k = 1){ const f = REDUCE() ? 1 : .86 + Math.sin(T/120)*.07 + Math.sin(T/47)*.05; glow(ctx, x, y - 4*k, 46*k, '#e07a30', .3*f); poly(ctx, [[x - 5*k, y],[x - 2*k, y - 10*k*f],[x, y - 4*k],[x + 2*k, y - 13*k*f],[x + 5*k, y]], '#d8642a'); poly(ctx, [[x - 2.4*k, y],[x, y - 7*k*f],[x + 2.4*k, y]], '#ffc060'); },
   /* a rider seen from the side, small: a horse at a walk and a man on it with a lance; dir 1 faces right */
   rider(ctx, x, y, s, col, T, ph = 0, dir = 1, lance = true){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s, s); const g = REDUCE() ? 0 : Math.sin(T/180 + ph);
-    ctx.fillStyle = col; ell(ctx, 0, -7, 6, 2.6, col); ctx.fillRect(4, -11, 2.2, 4.6); ell(ctx, 6.4, -11, 2.4, 1.3, col); // body, neck, head
-    ctx.strokeStyle = col; ctx.lineWidth = 1.1; ctx.beginPath(); [[-4, g], [-2.6, -g], [3, -g], [4.4, g]].forEach(([lx, k]) => { ctx.moveTo(lx, -5.6); ctx.lineTo(lx + k*1.4, 0); }); ctx.moveTo(-6, -7.4); ctx.lineTo(-8, -3.6); ctx.stroke(); // legs, tail
+    ctx.save(); ctx.scale(1.06, 1.06); beastHorse(ctx, col, {g}); ctx.restore(); ctx.fillStyle = col; ctx.strokeStyle = col; // v13.51.0: the shared horse (017b)
     ctx.fillRect(-1.4, -14.6, 2.8, 6); ell(ctx, 0, -16, 1.5, 1.5, col); // the rider
     if (lance) { ctx.lineWidth = .7; ctx.beginPath(); ctx.moveTo(-1, -9); ctx.lineTo(2.4, -24); ctx.stroke(); }
     ctx.restore(); },
@@ -52794,7 +52877,7 @@ Object.assign(TPL, {
     get quest(){ return `He dreamt of sand before he saw any. Lately he dreams of a sea where the sand is, and does not know what that means, and has decided not to mention it to Marrow in case she does.`; },
     banter:[`"From back here, Sergeant, everything looks like a target. It's restful."`, `"The Queen sends dreams. I send arrows. We have an understanding."`, `"Two hundred paces, the sergeant says. In this dust, call it a hundred and pray."`],
     rel:{haddat:'She asks what he sees from the back. She believes him, which surprised him.', sathi:'They shoot for dried meat every evening. They are even. Neither will say so.', tangle:'Two men who prefer to do it from a distance. They get on.', marrow:'She stitched his bow hand. He thanked her in Dal Honese, at length.', tallow:'He is teaching the boy the bow. The boy is not good at it. Tebbet is patient.', hessa:'He shoots past her shoulder in drill and she never flinches. He would like to know how.', darrut:'Darrut calls him "the Dal Honese" in the third person. Tebbet calls him "the wall" back.', orvas:'Horse archers make him nervous. Orvas has noticed, and rides closer.', redblade:'Two straight backs at drill.', warlock:'Makes the sign against the evil eye when the old voice speaks.'}},
-  darrut:{name:'Darrut', role:'Shield · late of the Aren Guard', sig:'D', col:'#9a8c70', hp:23, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['bash','salve'],
+  darrut:{name:'Darrut', role:'Shield · late of the Aren Guard', sig:'D', col:'#9a8c70', hp:23, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['gatedrive','salve'],
     epithet:'"I was on the wall. That is all I will say about the wall."', origin:'Aren, the Old Quarter', age:34, service:'Twelve years in the Aren Guard, and a few months in the 9th', height:'Broad, thick in the neck, and moves slower than he can.',
     weapon:'A Malazan short sword, and the Guard\'s big round shield with its badge scraped off', armour:'Aren Guard mail, patched, and a helm with the Guard\'s plume cut off',
     bio:`Twelve years in the Aren Guard, which in Aren means drills, gates and the odd riot. When Blistig was promoted out of the Guard to command the 9th, some of his men asked to go with him, because they had stood with him once when it mattered. Darrut was one of them. He says it was the 9th or the harbour, and he gets seasick.`,
@@ -55315,11 +55398,9 @@ SCENEX.b4_c1_market = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE
 
 /* the quay: three ships warped in against the stone, horses coming down the gangplanks with their eyes covered, dogs, riders in black;
    along the quay a boy standing straight by a grey mare with some forty youths behind him, and the riders walking past */
-function b41Horse(x, cx, cy, s, col, blind, step){ const lg = step || 0; x.fillStyle = col; x.beginPath(); x.ellipse(cx, cy, 7*s, 3.4*s, 0, 0, 7); x.fill(); // the barrel
-  x.fillRect(cx - 6*s, cy, 1.4*s, 6*s + lg); x.fillRect(cx - 3.6*s, cy, 1.4*s, 6*s - lg); x.fillRect(cx + 3*s, cy, 1.4*s, 6*s - lg); x.fillRect(cx + 5.2*s, cy, 1.4*s, 6*s + lg); // legs
-  x.beginPath(); x.moveTo(cx + 5*s, cy - 2*s); x.lineTo(cx + 9*s, cy - 8*s); x.lineTo(cx + 11.6*s, cy - 7*s); x.lineTo(cx + 8*s, cy); x.closePath(); x.fill(); x.beginPath(); x.ellipse(cx + 11*s, cy - 7.4*s, 2.6*s, 1.4*s, .4, 0, 7); x.fill(); // the neck and head
-  if (blind) { x.fillStyle = '#d8ccb0'; x.fillRect(cx + 9.6*s, cy - 9*s, 2.6*s, 1.6*s); } // the eye-cloth
-  x.fillStyle = col; x.beginPath(); x.moveTo(cx - 7*s, cy - 1*s); x.quadraticCurveTo(cx - 10*s, cy + 1*s, cx - 9*s, cy + 5*s); x.lineTo(cx - 8*s, cy + 1*s); x.fill(); } // the tail
+function b41Horse(x, cx, cy, s, col, blind, step){ const k = s*1.2; x.save(); x.translate(cx, cy + 6*s); x.scale(k, k); beastHorse(x, col, {g:Math.max(-1, Math.min(1, (step || 0)/(k*1.6)))}); // v13.51.0: the shared horse (017b)
+  if (blind) { x.fillStyle = '#d8ccb0'; x.beginPath(); x.moveTo(6.6, -12.5); x.lineTo(8.3, -11.4); x.lineTo(7.7, -10.5); x.lineTo(6.2, -11.5); x.closePath(); x.fill(); } // the eye-cloth
+  x.restore(); x.fillStyle = col; }
 SCENEX.b4_c1_quay = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.34, wl = H*.6, qy = wl + H*.06;
   ctx.drawImage(sceneLayer('b41:quay', W, H, (x, W, H) => {
     x.fillStyle = vgrad(x, 0, hz, [[0,'#5a7896'],[.6,'#b8bcb8'],[1,'#e4d6b8']]); x.fillRect(0, 0, W, wl); glow(x, W*.85, hz*.4, W*.4, '#ffe4b8', .4); for (let i = 0; i < 3; i++) cloud(x, W*(.2 + hash(i, 841)*.6), hz*(.25 + i*.15), W*.22, 2, '#ffffff', .12);
@@ -63580,10 +63661,8 @@ const B4VB = {
   /* flat ash, with drifts */
   ash(ctx, W, H, y, c, T){ ctx.fillStyle = c; ctx.fillRect(0, y, W, H - y); for (let i=0;i<40;i++) ell(ctx, hash(i, 31)*W, y + hash(i, 32)*(H - y), 8 + hash(i, 33)*30, 1.2, 'rgba(30,28,26,.16)'); },
   /* a horse running far off, a silhouette (dir 1 faces right) */
-  horse(ctx, x, y, s, col, T, ph = 0, dir = 1, mane = null){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s, s); const g = REDUCE() ? 0 : Math.sin(T/110 + ph);
-    ell(ctx, 0, -6, 6.4, 2.6, col); poly(ctx, [[4,-7],[6.6,-11.6],[9,-12],[9.6,-10.6],[6.6,-6]], col);
-    ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.beginPath(); [[-4.4, g], [-3, -g], [3, -g], [4.4, g]].forEach(([lx, k]) => { ctx.moveTo(lx, -4.6); ctx.lineTo(lx + k*2.2, 0); }); ctx.moveTo(-6.2, -6.6); ctx.lineTo(-9, -4 - g); ctx.stroke();
-    if (mane) poly(ctx, [[4,-7.6],[6.4,-12],[7.6,-12.4],[6,-8]], mane); ctx.restore(); },
+  horse(ctx, x, y, s, col, T, ph = 0, dir = 1, mane = null){ ctx.save(); ctx.translate(x, y); ctx.scale(dir*s*1.1, s*1.1); const g = REDUCE() ? 0 : Math.sin(T/110 + ph);
+    beastHorse(ctx, col, {g, mane}); ctx.restore(); }, // v13.51.0: the shared horse (017b)
   /* a fire glow on the ground */
   fire(ctx, x, y, T, k = 1, col = '#ff8a30'){ const f = REDUCE() ? 1 : .86 + Math.sin(T/120 + x)*.07 + Math.sin(T/47)*.05; glow(ctx, x, y - 4*k, 40*k, col, .3*f); poly(ctx, [[x - 4*k, y],[x - 1.6*k, y - 9*k*f],[x, y - 3.6*k],[x + 1.8*k, y - 11*k*f],[x + 4*k, y]], '#e0642a'); poly(ctx, [[x - 2*k, y],[x, y - 6*k*f],[x + 2*k, y]], '#ffc060'); },
   /* a lamp with a halo */
@@ -65253,12 +65332,9 @@ Object.assign(FIGX, {
   b5_wraith(ctx, h, t, o){ const fl = o.still ? 0 : Math.sin(t/240 + (o.phase || 0));
     ctx.globalAlpha *= .8; poly(ctx, [[-6,-14],[6,-14],[7.4,4 + fl],[4,10],[1,6 + fl],[-2,11],[-5,6],[-7.4,4 - fl]], 'rgba(16,14,22,.92)'); ell(ctx, 0, -14, 4.4, 4.6, 'rgba(16,14,22,.95)');
     ctx.fillStyle = 'rgba(210,220,255,.75)'; ctx.fillRect(-2, -14.6, 1.2, 1); ctx.fillRect(1, -14.6, 1.2, 1); ctx.globalAlpha = 1; },
-  /* a Jheck wolf: big, grey, low, head forward */
-  b5_jheck(ctx, h, t, o){ const g = o.still ? 0 : Math.sin(t/160 + (o.phase || 0));
-    ell(ctx, 0, 2, 9, 4.6, '#6a6660'); ell(ctx, -1, 1, 8, 3.6, '#8a847c'); // the body
-    poly(ctx, [[7,-1],[13,-3],[14.4,0],[12,2],[8,3]], '#6a6660'); poly(ctx, [[9,-3],[10,-6],[11,-3]], '#5a5650'); ell(ctx, 12.6, -1.2, .6, .5, '#e8d080'); // the head, ears, an eye
-    poly(ctx, [[-8.6,0],[-13,-3 + g],[-12,1]], '#6a6660'); // the tail
-    ctx.fillStyle = '#5a5650'; [-6, -3, 3, 6].forEach((x, i) => ctx.fillRect(x + (i % 2 ? g : -g)*.6, 4, 1.6, 8)); },
+  /* a Jheck wolf: big, grey, low, head forward (v13.51.0: on the shared wolf, 017b; three coats so a pack is not one wolf five times) */
+  b5_jheck(ctx, h, t, o){ const g = o.still ? 0 : Math.sin(t/160 + (o.phase || 0)), c = b2Pick(o, [['#77736c', '#3a3733', '#b8b2a6'], ['#6a6862', '#2e2c2a', '#a8a49c'], ['#857c6e', '#40382e', '#c4b8a4']]);
+    ctx.save(); ctx.translate(-1, 12.4); ctx.scale(.56, .66); drawWolf(ctx, {fur:c[0], dark:c[1], pale:c[2], g, snarl:!o.still, eye:'#e8c850'}); ctx.restore(); },
   /* a bound demon (Kenryll'ah): huge, armoured in plates, a crested head, no face anyone wants to look at */
   b5_demon(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.7, 1.6);
     h.legs('#2a2220'); poly(ctx, [[-8,-7],[8,-7],[9,8],[-9,8]], h.armor('#6a4a3a', '#1a100c')); ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = .6; ctx.beginPath(); for (let i = 0; i < 5; i++) { ctx.moveTo(-8.4, -5 + i*2.6); ctx.lineTo(8.4, -5 + i*2.6); } ctx.stroke(); // the plates
@@ -73144,11 +73220,9 @@ Object.assign(FIGX, {
     if (k === 1) { ctx.fillStyle = '#3a2a1a'; ctx.fillRect(-3.4, -8.6, 6.8, 1.6); }
     B2F.line(ctx, '#6a4a2a', 1.6, [[6, 4], [10.4, -6.6]]); ctx.fillStyle = '#5a3a20'; ctx.fillRect(8.4, -9.6, 5.2, 3.6); ctx.fillStyle = 'rgba(255,240,200,.18)'; ctx.fillRect(8.4, -9.6, 5.2, .8); // the mallet
     ctx.restore(); },
-  /* the pack's biggest: a Jheck wolf, too big, grey to the muzzle */
-  b5_c7_greatwolf(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.5, 1.42); FIGX.b5_jheck(ctx, h, t, o);
-    poly(ctx, [[10.4, -1.6], [14.4, -.4], [13, 1.6], [10.6, 1.4]], '#a8a49c'); ell(ctx, 12.6, -1.2, .7, .6, '#f0d878'); // the grey muzzle, the eye
-    ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i = 0; i < 4; i++) { ctx.moveTo(-5 + i*2.6, -2.6); ctx.lineTo(-4.4 + i*2.6, 0); } ctx.stroke(); // the ruff
-    ctx.restore(); },
+  /* the pack's biggest: a Jheck wolf, too big, grey to the muzzle (v13.51.0: on the shared wolf, 017b) */
+  b5_c7_greatwolf(ctx, h, t, o){ const g = o.still ? 0 : Math.sin(t/190 + (o.phase || 0));
+    ctx.save(); ctx.translate(-1.5, 12.4); ctx.scale(.84, .96); drawWolf(ctx, {fur:'#6c6962', dark:'#2a2826', pale:'#b4aea2', g, snarl:true, eye:'#f0d468', grey:1}); ctx.restore(); },
   /* the Drownings court's man: thin, a long dark coat, the court's brass tag, a folded list */
   b5_c7_courtman(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, .9, 1.08);
     poly(ctx, [[-5.4, -6], [5.4, -6], [6.6, 11], [-6.6, 11]], h.armor('#2e3038', '#101116')); h.legs('#1a1a1e');
@@ -76632,16 +76706,16 @@ Object.assign(TPL, {
     bio:'A potter\'s son who stayed when the Falah\'d sent the city out. He knows the old wells, the drains and which walls are newer than they look. He does not say why he stayed, and the squad stops asking.',
     traits:['Knows the city under the city', 'Counts the Malazans the way they count him', 'Never stands with his back to a wall'], gear:['A sling', 'A ring of keys to doors that are no longer there'],
     get quest(){ return 'Out of the city before it burns, if the squad will have him.'; }},
-  ottar:{name:'Ottar', role:'Grey Helm of the Perish', sig:'O', col:'#8f9aa6', hp:24, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
+  ottar:{name:'Ottar', role:'Grey Helm of the Perish', sig:'O', col:'#8f9aa6', hp:24, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:3, wits:1, guile:0}, ab:['wolfhowl', 'salve'],
     epithet:'"Our Destriant speaks to your Adjunct. I speak to you. That is how it is done."', origin:'Perish, across the sea', age:38, service:'Nineteen years, a Grey Helm',
     weapon:'A long single-edged sword and a tall shield with the wolf on it', armour:'Grey plate over mail, and a helm with a wolf\'s brow',
     bio:'A Grey Helm sent across to the Malazan ships when the Perish fleet came alongside. He says little about his god and less about why the Perish came. He fights as if he has done it for a long time, which he has.',
     traits:['Prays before eating, briefly', 'Keeps his shield-rim sharp', 'Learns Malazan words one a day'], gear:['A wolf\'s tooth on a thong', 'A whetstone'],
     get quest(){ return 'Wherever his Destriant sends him. This season, with you.'; }},
-  brannoc:{name:'Brannoc', role:'Falari soldier', sig:'B', col:'#c26a3a', hp:22, ac:14, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['bash', 'salve'],
+  brannoc:{name:'Brannoc', role:'Falari marine · boarding axes', sig:'B', col:'#c26a3a', hp:22, ac:13, atk:4, dmg:[1,6,0], rng:1, mv:5, init:2, st:{might:2, wits:1, guile:1}, attacks:2, dmg2:[1,6,0], verb2:'brings the other axe round into', ab:['boardline', 'boardleap'],
     epithet:'"Captain Sweetcreek says I talk too much. Captain Sweetcreek says that to everyone."', origin:'Falar, the islands', age:27, service:'Seven years with the Host, under Captain Sweetcreek',
-    weapon:'A Falari axe, broad in the blade', armour:'Mail, and a red Falari beard he is proud of',
-    bio:'One of the Falari in Sweetcreek\'s command, loaned to the Seventh Company to make up its numbers on the north coast. Red-haired, loud, and better in a fight than anyone expects from someone who sings that badly.',
+    weapon:'A pair of Falari boarding axes, spike-backed, and a grapnel on thirty feet of tarred line', armour:'A marine\'s short mail, cut to swim in, and a red Falari beard he is proud of',
+    bio:'One of the Falari in Sweetcreek\'s command, loaned to the Seventh Company to make up its numbers on the north coast. A ship\'s marine before he was a soldier on land: he was taught to fight across a rail, with an axe in each hand and a line to bring the other deck closer, and nobody has taught him anything since. Red-haired, loud, and better in a fight than anyone expects from someone who sings that badly.',
     traits:['Sings on the march', 'Trusts sailors, not maps', 'Thinks the plague is a Seven Cities thing and will not touch Falari'], gear:['A tin whistle', 'His mother\'s copper ring'],
     get quest(){ return 'Back to Sweetcreek\'s line when the Seventh has its numbers. Or not.'; }},
   ressa:{name:'Ressa', role:'Survivor of G\'danisban', sig:'R', col:'#9a8aa8', hp:15, ac:12, atk:4, dmg:[1,6,1], rng:1, mv:5, init:2, st:{might:0, wits:2, guile:3}, ab:['mark', 'salve'],
@@ -76651,9 +76725,9 @@ Object.assign(TPL, {
     traits:['Does not catch the fever', 'Knows the city\'s streets and its temples', 'Sleeps sitting up'], gear:['Two knives', 'A dyer\'s blue on her fingers that will not wash out'],
     get quest(){ return 'Away from the city. The Host is going away from the city.'; }},
 });
-Object.assign(VERB, {mehet:'slings a shot at', ottar:'brings the long sword down on', brannoc:'swings the Falari axe at', ressa:'cuts at'});
+Object.assign(VERB, {mehet:'slings a shot at', ottar:'brings the long sword down on', brannoc:'swings a boarding axe at', ressa:'cuts at'});
 Object.assign(STATUP, {mehet:['guile', 'wits'], ottar:['might', 'wits'], brannoc:['might', 'guile'], ressa:['guile', 'wits']});
-Object.assign(TPL_ROLES, {mehet:['light', 'ranged', 'blade'], ottar:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], brannoc:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], ressa:['light', 'blade']});
+Object.assign(TPL_ROLES, {mehet:['light', 'ranged', 'blade'], ottar:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], brannoc:['heavy', 'mail', 'blade', 'heavyweapon'], ressa:['light', 'blade']});
 /* Ressa has had the fever, and does not catch it again (her bio; bh-canon §8) */
 { const _c = b6Catch; b6Catch = function(id, why){ return id === 'ressa' ? false : _c(id, why); }; }
 
@@ -77995,12 +78069,7 @@ POR.mehet = function(ctx){ const F = {cy:-76, w:11.8, h:20, jaw:.78, chin:4.6, s
 function b61Bush(x, bx, by, s, col){ x.fillStyle = col; for (let i = 0; i < 4; i++) { x.beginPath(); x.ellipse(bx + (i - 1.5)*3*s, by - 1.6*s - (i % 2)*1.2*s, 3.4*s, 2.2*s, 0, 0, 7); x.fill(); }
   x.strokeStyle = col; x.lineWidth = Math.max(.4, .4*s); x.beginPath(); for (let i = 0; i < 5; i++) { const a = -2.4 + i*.4; x.moveTo(bx, by - 2*s); x.lineTo(bx + Math.cos(a)*7*s, by - 2*s + Math.sin(a)*6*s); } x.stroke(); }
 /* a picket horse in silhouette, head down or up */
-function b61Horse(ctx, hx, hy, s, col, up){ ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(hx, hy - 10*s, 8.4*s, 3.8*s, 0, 0, 7); ctx.fill();
-  [[-6.4, 0], [-4.6, .4], [4.6, 0], [6.4, .4]].forEach(([dx, k]) => ctx.fillRect(hx + dx*s - .7*s, hy - 8*s, 1.4*s, 8*s + k*s));
-  poly(ctx, up ? [[hx + 5*s, hy - 12.4*s], [hx + 8.6*s, hy - 19*s], [hx + 9.6*s, hy - 21*s], [hx + 13.6*s, hy - 18.6*s], [hx + 13*s, hy - 17*s], [hx + 10.4*s, hy - 17.4*s], [hx + 8.6*s, hy - 9*s]]
-    : [[hx + 5*s, hy - 12.6*s], [hx + 9.4*s, hy - 11*s], [hx + 12.4*s, hy - 4.6*s], [hx + 13.4*s, hy - 2*s], [hx + 11*s, hy - 1.4*s], [hx + 9.6*s, hy - 4.6*s], [hx + 7*s, hy - 8*s]], col); // neck and head
-  if (up) poly(ctx, [[hx + 9.6*s, hy - 21*s], [hx + 9.8*s, hy - 23*s], [hx + 10.8*s, hy - 21*s]], col); // an ear
-  ctx.beginPath(); ctx.moveTo(hx - 8*s, hy - 11*s); ctx.quadraticCurveTo(hx - 11*s, hy - 8*s, hx - 10*s, hy - 3*s); ctx.lineWidth = 1.4*s; ctx.strokeStyle = col; ctx.stroke(); } // the tail
+function b61Horse(ctx, hx, hy, s, col, up){ const k = s*1.55; ctx.save(); ctx.translate(hx, hy); ctx.scale(k, k); beastHorse(ctx, col, up ? {up:true} : {down:true}); ctx.restore(); ctx.fillStyle = col; ctx.strokeStyle = col; } // v13.51.0: the shared horse (017b): head thrown up, or down to the ground
 
 /* the Fourteenth's first night camp on the Lato Odhan (100's caption; the Deck's table, B6DECK[1]): stars over flat scrub, a far low line
    of hills, and on the horizon ahead a dark long shape with three faint lights in it, the old city waiting; cook-fires in a long line
@@ -78450,7 +78519,7 @@ const B6CH2 = {
     if (f.b6_c2_villageDone) x.push('In a village where the dead were left, the squad drove off the people robbing them, street and yard.');
     if (f.b6_c2_roadDone) x.push('Bandits on the plague road came up out of the ditch for the squad\'s boots, and did not get them.');
     if (f.b6_c2_shrineDone) x.push('On the headland, the squad drove looters off a shrine of D\'rek whose priests were already dead.');
-    if (f.b6_brannocDone === 1 && b6In('brannoc')) x.push('Brannoc of Sweetcreek\'s Falari walks with the Fourth, loaned to make up the Seventh\'s numbers, with his axe and his tin whistle.');
+    if (f.b6_brannocDone === 1 && b6In('brannoc')) x.push('Brannoc of Sweetcreek\'s Falari walks with the Fourth, loaned to make up the Seventh\'s numbers, with his axes and his tin whistle.');
     else if (f.b6_brannocDone === 2) x.push('Brannoc of Sweetcreek\'s Falari waits with his own lines for now. The roster can bring him in.');
     if (f.b6_c2_weatherOk) x.push('An old Falari sail-mender on the shore taught the squad to feel the break in a squall before it comes.');
     if (f.b6_c2_onearm) x.push(f.b6_c2_key === 'pass' ? 'High Fist Dujek walked down the column on foot, and asked the Fourth which end of the village died first. He wrote the village down as burned.' : 'High Fist Dujek walked down the column on foot, and asked the Fourth which end of the village died first. South, it told him.');
@@ -78522,7 +78591,7 @@ ${b62Say({brisk:`Brisk looks at the half-built palisade, and at the slope, and a
 
     /* ---- Brannoc, by the horse lines: the recruit ---- */
     b6_c2_brannoc:()=>({sp:'A Falari soldier', scene:'b6_coast', txt:
-`By the horse lines a big red-haired soldier in mail is sitting on an upturned bucket in the rain, playing a tin whistle, badly. He has a Falari axe across his knees and a red beard braided in two, and he stops when he sees the Fourth's shields and stands up, which takes a while.
+`By the horse lines a big red-haired soldier in mail is sitting on an upturned bucket in the rain, playing a tin whistle, badly. He has a pair of Falari boarding axes across his knees and a coil of tarred line at his feet and a red beard braided in two, and he stops when he sees the Fourth's shields and stands up, which takes a while.
 
 "Brannoc," he says. "Sweetcreek's. Loaned to the Seventh, the captain says, to make up the numbers. Which squad's short?" He looks the Fourth over. "Ah. All of them. Well."
 
@@ -78540,7 +78609,7 @@ ${b62Say({brisk:`Brisk looks him up and down, from the beard to the boots. "Shie
 `"Six of you already," Brannoc says, looking along the line. "Well. I'll be with the Falari, then. Send for me." He picks up the whistle again.`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
     b6_c2_brannoc_wait:()=>({sp:'Brannoc', scene:'b6_coast', txt:
-`"Fair," Brannoc says. "Sweetcreek's lines are down by the boats. I'll be there, being loaned to nobody." He tucks the axe under his arm. "Send a runner. Or whistle. I'll hear it."`,
+`"Fair," Brannoc says. "Sweetcreek's lines are down by the boats. I'll be there, being loaned to nobody." He tucks the axes under his arm. "Send a runner. Or whistle. I'll hear it."`,
       ch:[{t:'Back to the lines.', go:()=>startExplore()}]}),
     b6_c2_brannoc_away:()=>({sp:'Brannoc', scene:'b6_coast', txt:
 `Brannoc shrugs, a large shrug. "Somebody else's by morning, the captain said. He'll be pleased he was right." He goes off down the slope toward the Falari lines, whistling, badly.`,
@@ -78873,7 +78942,7 @@ The Fourth makes a small fire by the broken wall of the empty hamlet, to dry its
 
 ${b62Say({ellis:'Ellis stops, and puts a hand up. "Ditch," she says. "Both sides. Breathing."', kettle:'Kettle stops. "Ditch," she says, very low. "Left side. I can smell their fire, they put it out too late."', _:'Something moves in the ditch on the left, and something answers it in the ditch on the right.'})}
 
-They have been waiting for whoever runs from the villages. Tonight it is the Fourth, a mile behind the Host, with packs and boots and full water-skins.${b62If('brannoc', `\n\nBrannoc puts his helm on and takes the axe off his shoulder. "Oh good," he says.`)}`,
+They have been waiting for whoever runs from the villages. Tonight it is the Fourth, a mile behind the Host, with packs and boots and full water-skins.${b62If('brannoc', `\n\nBrannoc puts his helm on and takes an axe in each hand. "Oh good," he says.`)}`,
       ch:[{t:'"Shields." Walk on, and let them come.', go:()=>startBattle('b6_c2_road', {})},
           {t:'Get off the road and into the ditch first, before they are ready.', check:['might', 16],
             edges:id=>[id === 'brisk' && ['she is through a ditch before most people are into it', 2], id === 'brannoc' && ['he is very large and quite fast', 1], id === 'sgt' && ['you have done this on a road before', 1], id === 'tuft' && ['she is small and the ditch is deep', -2], id === 'ohl' && ['he is fifty-eight', -2]],
@@ -78944,7 +79013,7 @@ Nobody says anything.
 
 /* ============ Book Six, Chapter 2 art: The North Coast — the Host's camp above the sea in the rain, the empty villages inland ============ */
 /* Figures (FIGX) in the ~32px frame of 18/47b/80d, lit from the left: Brannoc, Falari, loaned to the Seventh (red hair, a red beard he is
-   proud of, mail under the Host's blue-grey, the broad Falari axe, a tin whistle at his throat); and the followers of the Chosen (b6_cultist):
+   proud of, mail under the Host's blue-grey, two Falari boarding axes and a coil of tarred line (v13.51), a tin whistle at his throat); and the followers of the Chosen (b6_cultist):
    ragged ash-grey robes, faces wrapped to the eyes, a cord of prayer-knots, a hooked knife; never sick in close-up, nothing shown under the
    wrappings. Brannoc's portrait (POR) in the bust style of 019. Two backdrops replacing the borrowed placeholders (SCENEX, sceneLayer for the
    still parts, REDUCE() holding the rest still): b6_coast (the Host's tents in rows above a grey beach at night, rain on the sea, transports
@@ -78956,15 +79025,17 @@ Nobody says anything.
 /* ---------------- figures ---------------- */
 Object.assign(FIGX, {
   /* Brannoc: a big Falari, red hair tied back and a red beard to the collarbone; mail under a blue-grey surcoat (the Host's colour, Sweetcreek's
-     red edging at the hem); the broad-bladed Falari axe held up on the shoulder; a tin whistle on a cord at his throat */
+     red edging at the hem); a Falari boarding axe on the shoulder and its twin in the left fist, the tarred line coiled at the belt (v13.51); a tin whistle on a cord at his throat */
   brannoc(ctx, h, t, o){ ctx.save(); B2F.grow(ctx, 1.08, 1.04);
-    B2F.line(ctx, '#6a4a2c', 1.6, [[5.4, 6], [9.6, -15]]); ctx.fillStyle = '#7a3a22'; ctx.fillRect(5.6, 2.6, 1.8, 2.4); // the haft, wrapped red at the grip
-    poly(ctx, [[8.4,-13],[14.6,-17.6],[15.4,-11.6],[13.4,-8.4],[10.4,-9.4]], '#9a9890'); poly(ctx, [[14.6,-17.6],[15.4,-11.6],[14.4,-10.4],[13.8,-15.8]], '#d8d4c8'); ctx.fillStyle = '#b8642a'; ctx.fillRect(8.6, -13.4, 2, 1.2); // the broad blade, its lit edge; a copper band
+    B2F.line(ctx, '#6a4a2c', 1.5, [[5.4, 6], [9.4, -14.4]]); ctx.fillStyle = '#7a3a22'; ctx.fillRect(5.6, 2.6, 1.8, 2.4); // the haft, wrapped red at the grip
+    poly(ctx, [[8.4,-13],[12.8,-16.2],[13.6,-11.4],[12,-9],[10,-9.8]], '#9a9890'); poly(ctx, [[12.8,-16.2],[13.6,-11.4],[12.8,-10.4],[12.2,-14.8]], '#d8d4c8'); poly(ctx, [[8.4,-13.6],[5.2,-14.8],[8,-11.4]], '#8a8880'); ctx.fillStyle = '#b8642a'; ctx.fillRect(8.4, -13.2, 1.8, 1.1); // a boarding axe: the short bit, its lit edge, the spike behind; a copper band (v13.51)
     h.legs('#2e2c2a'); ctx.fillStyle = '#1a1614'; ctx.fillRect(-4.6, 10.6, 3.6, 2.4); ctx.fillRect(1, 10.6, 3.6, 2.4); // boots
     h.torso('#9a968c', '#34322e', 7.2); ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = .5; ctx.beginPath(); for (let i = 0; i < 4; i++){ ctx.moveTo(-7, -4 + i*2.4); ctx.lineTo(7, -4 + i*2.4); } ctx.stroke(); // mail
     poly(ctx, [[-4.6,-5.6],[4.6,-5.6],[5.4,7.6],[-5.4,7.6]], h.armor('#6e7e8c', '#26303a')); ctx.fillStyle = '#8a3a24'; ctx.fillRect(-5.4, 6.4, 10.8, 1.2); ctx.fillStyle = 'rgba(220,230,240,.12)'; ctx.fillRect(-4.4, -5, 1.2, 11); // the blue-grey surcoat, red at the hem
     ctx.fillStyle = '#4a3420'; ctx.fillRect(-5.6, 2, 11.2, 1.3); ctx.fillStyle = '#b8a070'; ctx.fillRect(-.8, 1.9, 1.6, 1.5); // the belt
     ctx.fillStyle = '#c49c80'; ctx.fillRect(-9, -4.6, 2.2, 5.6); ell(ctx, 6.6, 3.4, 1.7, 1.5, '#c49c80'); // a bare forearm, the fist on the haft
+    B2F.line(ctx, '#6a4a2c', 1.4, [[-7.6, 3.6], [-10, -9.4]]); poly(ctx, [[-10.2,-9.6],[-13.8,-11.2],[-14.2,-6.8],[-11.2,-5.6]], '#9a9890'); poly(ctx, [[-13.8,-11.2],[-14.2,-6.8],[-13.4,-6.6],[-13,-10.6]], '#d8d4c8'); poly(ctx, [[-9.6,-9.4],[-6.8,-10.6],[-9.2,-7.4]], '#8a8880'); ell(ctx, -7.9, 1.2, 1.5, 1.4, '#c49c80'); // the second axe, head up in the left fist
+    ctx.strokeStyle = '#1e1810'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(3.4, 5.2, 1.9, 2.6, 0, 0, Math.PI*2); ctx.stroke(); ctx.strokeStyle = '#4a3a26'; ctx.lineWidth = .5; ctx.beginPath(); ctx.ellipse(3.4, 5.2, 1.2, 1.9, 0, 0, Math.PI*2); ctx.stroke(); // the boarding line, coiled at the belt
     h.head('#c89e80', 4.6, -11.2); h.look('rgba(24,14,10,.85)', -11.6); ctx.fillStyle = 'rgba(160,80,50,.35)'; ctx.fillRect(-2.4, -10.4, 1, .6); ctx.fillRect(2.6, -10.2, 1, .6); // freckles under the eyes
     poly(ctx, [[-4.4,-9.4],[4.6,-9.4],[4.4,-6.4],[2.6,-3.4],[0,-2.6],[-2.6,-3.4],[-4.2,-6.4]], '#b4482a'); ctx.fillStyle = 'rgba(240,150,90,.35)'; ctx.fillRect(-3.6, -8.6, 1.2, 4); ctx.fillStyle = '#6a2414'; ctx.fillRect(-1.6, -8, 3.4, .7); // the red beard, the mouth in it
     B2F.cap(ctx, '#c0502e', 4.8, -12.2, 1.02, 1.98); ctx.fillStyle = '#c0502e'; ctx.fillRect(-5.6, -12.4, 1.8, 4.8); ell(ctx, -6.4, -7, 1.3, 1.6, '#a8402a'); ctx.fillStyle = 'rgba(255,190,130,.35)'; ctx.fillRect(-3.6, -16.2, 3.4, .7); // red hair, tied back
@@ -78990,17 +79061,20 @@ if (FOES.b6_cultist) FOES.b6_cultist.kind = 'b6_cultist'; // the engine borrowed
 
 /* ---------------- Brannoc's portrait (019's bust units: about 120 tall, shoulders at y = 0, the lantern on the left) ---------------- */
 POR.brannoc = function(ctx){ const F = {cy:-75, w:14.8, h:20.8, jaw:.94, chin:6.4, skin:'#caa082', iris:'#5a7a8a', lip:'#a0604c', browCol:'#a0442a', browW:1.7, arch:.9, browL:.6, browR:.3, rim:'#e0a060', rimA:.22, nose:1.2, look:.2, open:1, smileL:.55, smileR:.75, mouthW:4.2, teeth:1, flush:'#d07a60', age:.2};
-  /* the Falari axe over his right shoulder: an ash haft wrapped with red leather, and a broad bearded blade up beside his head */
-  ctx.save(); ctx.translate(30, 6); ctx.rotate(.24); ctx.lineCap = 'butt';
-    ctx.strokeStyle = PR.lin(ctx, -2, 0, 2, 0, [[0, '#b8925e'], [.5, '#6a4c2c'], [1, '#1e140a']]); ctx.lineWidth = 4.2; ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(0, -108); ctx.stroke();
-    ctx.fillStyle = PR.lin(ctx, -2.4, 0, 2.4, 0, [[0, '#c86a3a'], [.5, '#7a321a'], [1, '#2a0e06']]); ctx.fillRect(-2.4, -34, 4.8, 22); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { for (let i = 0; i < 9; i++){ ctx.moveTo(-2.4, -33 + i*2.5); ctx.lineTo(2.4, -31.6 + i*2.5); } }); // the red grip-wrap
-    ctx.fillStyle = PR.lin(ctx, -3, 0, 3, 0, [[0, '#f0b070'], [.5, '#b8642a'], [1, '#4a2008']]); ctx.fillRect(-2.8, -98, 5.6, 3.4); ctx.fillRect(-2.8, -84, 5.6, 2.4); // copper bands at the eye
-    const blade = () => { ctx.beginPath(); ctx.moveTo(1.6, -100); ctx.bezierCurveTo(10, -102, 18, -110, 22, -120); ctx.quadraticCurveTo(28, -100, 25, -76); ctx.bezierCurveTo(19, -80, 12, -84, 6, -82); ctx.lineTo(1.6, -84); ctx.closePath(); };
-    blade(); ctx.fillStyle = PR.lin(ctx, 2, -110, 26, -80, [[0, '#d8d6d0'], [.4, '#8e8c86'], [1, '#26241f']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .6; blade(); ctx.stroke();
-    PR.stroke(ctx, 'rgba(255,255,250,.7)', .8, () => { ctx.moveTo(22.4, -118); ctx.quadraticCurveTo(27.4, -100, 24.6, -78); }); // the edge, honed bright
-    ctx.save(); blade(); ctx.clip(); const r = PR.rng(211); for (let i = 0; i < 10; i++) PR.soft(ctx, 6 + r()*16, -110 + r()*30, 1 + r()*2, .6 + r(), '#3a2414', .35, r()*3); ctx.restore(); // the rust of a wet coast, scrubbed at
-    PR.stroke(ctx, 'rgba(60,40,30,.6)', .5, () => { ctx.moveTo(6, -96); ctx.bezierCurveTo(10, -96, 14, -100, 16, -104); ctx.moveTo(7, -91); ctx.bezierCurveTo(11, -91, 15, -94, 17, -98); }); // a wave cut in the steel, Falari work
-  ctx.restore();
+  /* a Falari boarding axe slung behind each shoulder, the hafts leaning in (v13.51): ash hafts wrapped with red leather, a short bearded bit and a spike behind it for the other ship's planking */
+  const axe = sx => { ctx.save(); ctx.translate(41*sx, 6); ctx.scale(sx, 1); ctx.rotate(-.2); ctx.lineCap = 'butt';
+    ctx.strokeStyle = PR.lin(ctx, -2, 0, 2, 0, [[0, '#b8925e'], [.5, '#6a4c2c'], [1, '#1e140a']]); ctx.lineWidth = 3.8; ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(0, -106); ctx.stroke();
+    ctx.fillStyle = PR.lin(ctx, -2.2, 0, 2.2, 0, [[0, '#c86a3a'], [.5, '#7a321a'], [1, '#2a0e06']]); ctx.fillRect(-2.2, -34, 4.4, 22); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { for (let i = 0; i < 9; i++){ ctx.moveTo(-2.2, -33 + i*2.5); ctx.lineTo(2.2, -31.6 + i*2.5); } }); // the red grip-wrap
+    ctx.fillStyle = PR.lin(ctx, -3, 0, 3, 0, [[0, '#f0b070'], [.5, '#b8642a'], [1, '#4a2008']]); ctx.fillRect(-2.6, -99, 5.2, 3); ctx.fillRect(-2.6, -86, 5.2, 2.2); // copper bands at the eye
+    const blade = () => { ctx.beginPath(); ctx.moveTo(1.6, -99); ctx.bezierCurveTo(8, -100, 13, -106, 16, -113); ctx.quadraticCurveTo(20.6, -98, 18, -80); ctx.bezierCurveTo(14, -84, 10, -87, 6, -86); ctx.lineTo(1.6, -86); ctx.closePath(); };
+    const spike = () => { ctx.beginPath(); ctx.moveTo(-1.6, -98); ctx.lineTo(-14, -93.6); ctx.lineTo(-1.6, -88.4); ctx.closePath(); };
+    spike(); ctx.fillStyle = PR.lin(ctx, -14, -98, -2, -88, [[0, '#c8c6c0'], [1, '#3a3832']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .6; spike(); ctx.stroke();
+    blade(); ctx.fillStyle = PR.lin(ctx, 2, -108, 20, -82, [[0, '#d8d6d0'], [.4, '#8e8c86'], [1, '#26241f']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .6; blade(); ctx.stroke();
+    PR.stroke(ctx, 'rgba(255,255,250,.7)', .8, () => { ctx.moveTo(16.4, -111); ctx.quadraticCurveTo(20, -98, 17.6, -82); }); // the edge, honed bright
+    ctx.save(); blade(); ctx.clip(); const r = PR.rng(211 + (sx < 0 ? 7 : 0)); for (let i = 0; i < 8; i++) PR.soft(ctx, 5 + r()*12, -106 + r()*22, 1 + r()*2, .6 + r(), '#3a2414', .35, r()*3); ctx.restore(); // the rust of a wet coast, scrubbed at
+    PR.stroke(ctx, 'rgba(60,40,30,.6)', .5, () => { ctx.moveTo(5, -96); ctx.bezierCurveTo(8, -96, 11, -99, 12.6, -102); ctx.moveTo(6, -91.6); ctx.bezierCurveTo(9, -91.6, 12, -94, 13.6, -97); }); // a wave cut in the steel, Falari work
+  ctx.restore(); };
+  axe(-1); axe(1);
   BP.back(ctx, F, '#b4482a', '#3a1206', 20, 2); PR.neck(ctx, F, 11.2);
   /* mail to the throat under a blue-grey surcoat, a padded collar, a leather baldric */
   const B = BP.body(ctx, F, {wide:58, drop:1, trap:7, ny:F.cy + 15.8, cb:F.cy + 21, c1:'#94908a', c2:'#2a2826'}); ctx.save(); B.path(); ctx.clip();
@@ -79009,6 +79083,7 @@ POR.brannoc = function(ctx){ const F = {cy:-75, w:14.8, h:20.8, jaw:.94, chin:6.
     PR.stroke(ctx, 'rgba(220,232,240,.3)', .6, () => { ctx.moveTo(-29, -28); ctx.lineTo(-32, 2); }); PR.soft(ctx, -20, -18, 8, 14, '#dfe8f0', .1); const r2 = PR.rng(223); for (let i = 0; i < 18; i++) PR.soft(ctx, -30 + r2()*60, -32 + r2()*32, .6 + r2()*1.4, .6 + r2()*1.4, '#c8dce8', .25); // rain on it
     ctx.fillStyle = PR.lit(ctx, '#9a3a22', '#3a1006', -34, 30); PR.path(ctx, [[-34, -4], [34, -4], [34, 4], [-34, 4]]); ctx.fill(); // Sweetcreek's red at the hem
     ctx.fillStyle = PR.lit(ctx, '#6a4a2e', '#22160a', -30, 30); PR.path(ctx, [[-34, -38], [-28, -42], [38, 2], [30, 2]]); ctx.fill(); PR.stitch(ctx, 'rgba(220,180,120,.4)', .35, () => { ctx.moveTo(-31, -38.6); ctx.lineTo(33.6, 1.4); }); // the baldric
+    { const rr = PR.rng(241); for (let k = 0; k < 4; k++){ const o = 5.4 + k*3.1; PR.stroke(ctx, '#17120c', 2.7, () => { ctx.moveTo(-36, -37 + o); ctx.lineTo(36, 3 + o); }); PR.stroke(ctx, 'rgba(150,120,84,.5)', .5, () => { for (let q = 0; q < 20; q++){ const x = -34 + q*3.5 + rr(); ctx.moveTo(x, -36.6 + o + (x + 36)*.555); ctx.lineTo(x + 1.5, -37.4 + o + (x + 37.5)*.555); } }); } } // the boarding line, tarred, coiled bandolier-wise under the baldric (v13.51)
     ctx.fillStyle = '#b8642a'; ctx.fillRect(2, -19, 5, 5); ctx.fillStyle = '#3a1a08'; ctx.fillRect(3.2, -17.8, 2.6, 2.6); // a copper buckle
   ctx.restore(); BP.light(ctx, F, B);
   BP.spaulder(ctx, {wide:58, drop:1, rise:3, n:3, c:['#a88458', '#6a4a2c', '#2a1a0c'], style:'leather', rivet:'#e0b880'}); // boiled-leather shoulders, riveted with copper
@@ -86160,7 +86235,7 @@ Object.entries(B5_ABX).forEach(([k, x]) => { const a = AB[k]; if (!a) return;
 
 /* ---- the recruits (plan question 7; names checked, rg-canon §11). Base numbers; the roster brings them to the squad's level. ---- */
 Object.assign(TPL, {
-  doss:{name:'Doss', role:'Indebted farmhand', sig:'D', col:'#a89a6a', hp:20, ac:12, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['bash', 'salve'],
+  doss:{name:'Doss', role:'Indebted farmhand', sig:'D', col:'#a89a6a', hp:20, ac:12, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['sweep', 'salve'],
     epithet:'"You burned the book. I watched you do it. I have been waiting my whole life for somebody to do that."', origin:'A factor\'s holding on the Lether coast', age:26, service:'None. A threshing flail, and twenty-six years of the factor\'s fields',
     weapon:'A threshing flail with an iron-bound swingle, and a sickle in his belt', armour:'A leather jerkin the squad found him, and a quilted cap',
     bio:'Born Indebted on a factor\'s holding a day inland from the coast, to parents who were Indebted before him. He walked into the column\'s camp the night the squad burned the factor\'s ledger, and asked what the Malazans pay. They told him. He said it was more than nothing, which was what he had.',
@@ -95554,7 +95629,7 @@ Object.assign(TPL, {
     bio:'A Gadrobi tanner\'s son who went up onto the roofs at fourteen because the roofs paid. The Guild took him in, taught him the lines and the knots and which tiles hold, and then, this winter, handed him a paper with five old soldiers on it. He read it twice. He came to the Fourth\'s door instead.',
     traits:['Never stands where a window can see him', 'Knows which roofs hold and which only look as if they do', 'Counts the bells at night, out of habit, and can tell you which is which'], gear:['Two Guild knives', 'A knotted cord that is a map, if you know the knots'],
     get quest(){ return 'Out of the Guild alive, which nobody does. He has decided to be the first. He does not expect it to go well.'; }},
-  edrem:{name:'Edrem', role:'Pilgrim guard · Pannion veteran', sig:'E', col:'#8e9496', hp:24, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
+  edrem:{name:'Edrem', role:'Pilgrim guard · Pannion veteran', sig:'E', col:'#8e9496', hp:24, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['breaker', 'salve'],
     epithet:'"I wore the grey once. I keep the pilgrims\' road now. Nobody pays me. That is the point of it."', origin:'The old Domin, a town on the coast road that burned', age:41, service:'Nine years under the Seer, which he does not talk about, and years at the barrow since, which he does',
     weapon:'A long iron-shod mace, and a short blade for close work', armour:'Old grey scale with the Seer\'s marks filed off, and a pilgrim\'s cloak over it',
     bio:'He fought for the Domin, and lost, and did not die, which he considers the worst of the three. When the barrow outside Black Coral began to draw pilgrims he went and stood on the road to it, and has stood there since, keeping the worst of the road off the people walking it. He does not pray. He stands where the praying people can see him.',
@@ -104677,9 +104752,9 @@ Object.entries(B5_ABX).forEach(([k, x]) => { const a = AB[k]; if (!a) return;
 
 /* ---- the recruits (canon sheet §6: names checked). Base numbers; the roster brings them to the squad's level. ---- */
 Object.assign(TPL, {
-  brask:{name:'Brask', role:'Heavy of the 9th', sig:'B', col:'#8a8270', hp:26, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
+  brask:{name:'Brask', role:'Heavy of the 9th', sig:'B', col:'#8a8270', hp:26, ac:14, atk:4, dmg:[1,8,1], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, attacks:2, dmg2:[1,6,1], verb2:'brings the mace round into', ab:['salve'],
     epithet:'"My squad got broken up in Letheras and dealt out like cards. I was the card nobody wanted. You lot will do."', origin:'Gris, Quon Tali', age:35, service:'Twelve years, the last six in the heavies, all of it on foot',
-    weapon:'A heavy infantry sword and a mace on a thong, for when the sword is stuck in something', armour:'A heavy\'s scale, double at the shoulders, and a helm with the cheek-guards bent back',
+    weapon:'A heavy infantry sword in one hand and a mace in the other. He stopped carrying a shield in Letheras, and says the mace argues better', armour:'A heavy\'s scale, double at the shoulders, and a helm with the cheek-guards bent back',
     bio:'A heavy of the 9th whose squad came apart in Letheras: two dead on the river, one in the Letherii healers\' house, and a sergeant who took the new emperor\'s coin and a post at a gate. Brask was what was left. The Adjunct\'s clerks folded him into the Third on a list, and he walked over with his kit on his back and asked which end of the line was his.',
     traits:['Eats standing up', 'Sharpens the sword at every halt, whether it needs it or not', 'Has opinions about marines, and keeps most of them'], gear:['A heavy\'s sword', 'His old squad\'s tally-stick, with four notches filed flat'],
     get quest(){ return 'East, as far as the Adjunct goes. He has stopped asking where. He would like the squad he is in now to still be a squad when they get there.'; }},
@@ -104689,7 +104764,7 @@ Object.assign(TPL, {
     bio:'A Barghast woman of a small clan that walked away from the great host on the plains when the host went to war. Her clan went west. She did not. She came to the Malazan column with water-lore to sell and a reason she does not give, and the sergeants decided that a guide who knows where the dry washes hold water is worth a reason left unsaid.',
     traits:['Never says her clan\'s name', 'Reads the ground before she reads a face', 'Laughs at the heavies\' marching songs, and then sings them'], gear:['Two throwing-axes', 'A gourd that has never once been empty when it mattered'],
     get quest(){ return 'East, for now, because east is away from the host. After that she has not said. She says the Wastes have not finished saying things either.'; }},
-  brennet:{name:'Brennet', role:'Supply carter', sig:'N', col:'#9a7a5a', hp:20, ac:12, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:2, guile:0}, ab:['bash', 'salve'],
+  brennet:{name:'Brennet', role:'Supply carter', sig:'N', col:'#9a7a5a', hp:20, ac:12, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:2, guile:0}, ab:['turnload', 'salve'],
     epithet:'"I was Indebted to the wagon. Then the emperor tore the books up. Now the wagon and I are just friends."', origin:'A carter\'s yard outside the Letheras landward gate', age:31, service:'Nine years on the supply roads, the last month of it free',
     weapon:'A wagon-pin as long as his arm, and a carter\'s knife', armour:'A leather carter\'s apron with iron studs sewn on, and a padded cap',
     bio:'Born Indebted to a carting house and set to the reins at twelve. The new emperor\'s law freed him on a Tuesday. On the Wednesday the escort\'s quartermasters came round the yards asking for carters who could keep a wagon moving in country with no roads, and Brennet found that free meant he could say yes, so he did.',
@@ -104704,7 +104779,7 @@ Object.assign(TPL, {
 });
 Object.assign(VERB, {brask:'brings the heavy sword down on', tegra:'throws an axe at', brennet:'swings the wagon-pin at', kaedra:'looses an arrow at'});
 Object.assign(STATUP, {brask:['might', 'wits'], tegra:['might', 'wits'], brennet:['might', 'wits'], kaedra:['guile', 'wits']});
-Object.assign(TPL_ROLES, {brask:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], tegra:['light', 'blade', 'reach', 'ranged'], brennet:['heavy', 'blade', 'heavyweapon'], kaedra:['light', 'blade', 'ranged']});
+Object.assign(TPL_ROLES, {brask:['heavy', 'mail', 'blade', 'heavyweapon'], tegra:['light', 'blade', 'reach', 'ranged'], brennet:['heavy', 'blade', 'heavyweapon'], kaedra:['light', 'blade', 'ranged']});
 Object.assign(PICKS[3], {
   brask:[['holdline', 'The Heavies\' Wall', 'Brask\'s free swings are unlimited and hit +2. The heavies do not give ground. That is the whole of the job.'], ['shieldwall', 'Shoulder to Shoulder', 'Squadmates standing next to Brask get +2 armour. Six years in the heavies\' line, and he still closes up without being told.']],
   tegra:[['snare', 'The Plains Cord', 'Whatever Tegra catches is tangled: −2 to hit and −2 armour through its next turn. Her clan hunts with cord before it hunts with iron.'], ['ghost', 'Out of the Grass', 'Enemies take −2 to hit Tegra. On the plains, standing still is a way of hiding.']],
@@ -107114,11 +107189,7 @@ function b92aBarrels(x, cx, cy, s, when){ const N = when === 'night', st = N ? '
   [[-12, 0], [0, 0], [12, 0], [-6, 1], [6, 1], [0, 2]].forEach(([dx, r]) => { const bx = cx + dx*s, by = cy - 3*s - r*8*s - 4*s; ell(x, bx, by, 5*s, 4*s, st); x.fillStyle = hoop; x.fillRect(bx - 5*s, by - 1.4*s, 10*s, .8*s); x.fillRect(bx - 5*s, by + .8*s, 10*s, .8*s); });
   x.strokeStyle = N ? 'rgba(120,110,90,.3)' : 'rgba(180,160,120,.5)'; x.lineWidth = Math.max(1, s*.6); x.beginPath(); x.moveTo(cx - 17*s, cy - 3*s); x.lineTo(cx, cy - 26*s); x.lineTo(cx + 17*s, cy - 3*s); x.stroke(); } // the rope over
 /* an ox, side on, small: a heavy body, a hump, short horns, head low */
-function b92aOx(x, cx, cy, s, col, dir){ x.save(); x.translate(cx, cy); x.scale(dir || 1, 1); x.fillStyle = col;
-  x.beginPath(); x.ellipse(0, -6*s, 8*s, 4*s, 0, 0, 7); x.fill(); x.beginPath(); x.ellipse(-4*s, -9*s, 3*s, 2*s, 0, 0, 7); x.fill(); // the body, the hump
-  x.fillRect(-7*s, -4*s, 1.8*s, 4*s); x.fillRect(-3*s, -4*s, 1.8*s, 4*s); x.fillRect(3*s, -4*s, 1.8*s, 4*s); x.fillRect(6*s, -4*s, 1.8*s, 4*s); // legs
-  x.beginPath(); x.ellipse(-10*s, -5.4*s, 2.6*s, 2*s, .3, 0, 7); x.fill(); // the head, low
-  x.strokeStyle = 'rgba(220,210,180,.6)'; x.lineWidth = Math.max(1, s*.6); x.beginPath(); x.moveTo(-10*s, -7*s); x.quadraticCurveTo(-12*s, -9.6*s, -13.4*s, -8.4*s); x.stroke(); x.restore(); }
+function b92aOx(x, cx, cy, s, col, dir){ x.save(); x.translate(cx, cy); x.scale(-(dir || 1)*s, s); beastOx(x, col, {horn:'rgba(220,210,180,.7)'}); x.restore(); x.fillStyle = col; } // v13.51.0: the shared ox (017b). The old one faced -x at dir 1, so this one is flipped to match
 /* a tent of the escort, from the side: new canvas, the old battalion mark painted out */
 function b92aTent(x, cx, by, s, when){ const c = {eve:['#7a6e60', '#3e362e'], day:['#b8ac94', '#7a7060'], night:['#2a2a2e', '#14141a'], dawn:['#8a7e6c', '#4a4238']}[when];
   x.fillStyle = c[0]; x.beginPath(); x.moveTo(cx - 12*s, by); x.lineTo(cx - 2*s, by - 11*s); x.lineTo(cx + 2*s, by - 11*s); x.lineTo(cx + 12*s, by); x.closePath(); x.fill();
@@ -108193,20 +108264,9 @@ Object.assign(FIGX, {
      who wore Book Five's great wolf, a Jheck half again a wolf's size. Looks only: the foes keep their kinds; their fig names this. Lean and
      dun with a darker saddle, the ribs showing, one ear up and one down, a ragged tail held high and curled, smaller than any wolf
      (Claude's call: the game's own animal) */
-  b9_dog(ctx, h, t, o){ ctx.save(); const g = o.still ? 0 : Math.sin(t/150 + (o.phase || 0)), c = b2Pick(o, [['#9a7a52', '#4e3c28'], ['#8a6e4a', '#3e3020'], ['#a48c66', '#5a4830']]);
-    B2F.grow(ctx, 1.08, 1.06);
-    ctx.fillStyle = c[1]; [[-6, 1], [3.8, -1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7, 3.4, 1.7, 9)); // the far legs
-    B2F.line(ctx, c[0], 1.5, [[-6.8, -1.2], [-9.6, -4.4 + g*.5], [-8.8, -7.4 + g*.4], [-7.2, -6.6]]); poly(ctx, [[-8.8,-7.6],[-10,-8.6],[-8.6,-6.6]], c[0]); // the tail, high and curled, ragged at the end
-    poly(ctx, [[-7.6,-1.6],[-4,-2.8],[2.4,-2.8],[6.4,-2],[7.2,2.4],[4.6,5.4],[1.6,4.6],[-1.6,3.2],[-4.6,4.4],[-7.8,3]], c[0]); // the body: a deep chest, the belly tucked up
-    poly(ctx, [[-7,-1.8],[-3.8,-3],[2.4,-3],[5.6,-2.2],[3,-.8],[-4,-.6]], c[1]); // the saddle, darker
-    [[-1.6, -.4, 2.8], [.2, -.6, 3.2], [2, -.6, 3.4]].forEach(([x, y0, y1]) => B2F.line(ctx, 'rgba(0,0,0,.28)', .45, [[x, y0], [x + .4, y1]])); // the ribs
-    ctx.fillStyle = 'rgba(255,240,210,.14)'; ctx.fillRect(-7, -1.4, 6, .7); // the light along the back
-    poly(ctx, [[5,-2.6],[7.6,-6.2],[10.8,-6.6],[14.4,-4.8],[14.8,-3],[11,-1.8],[7.6,1.8]], c[0]); // the neck and head
-    poly(ctx, [[8.2,-5.8],[8.8,-9.4],[10.4,-6.2]], c[1]); poly(ctx, [[10.2,-6.2],[12.6,-7],[11.6,-5.2]], c[1]); // one ear up, one down
-    ell(ctx, 14.6, -4, .9, .8, '#1a120c'); ell(ctx, 10.4, -4.8, .6, .55, '#1e140a'); ctx.fillStyle = 'rgba(255,220,160,.6)'; ctx.fillRect(10.3, -5.1, .3, .3); // the nose, the eye
-    ctx.fillStyle = 'rgba(240,232,214,.8)'; ctx.fillRect(12.4, -2.6, 1.6, .5); // the teeth
-    ctx.fillStyle = c[0]; [[-4.6, -1], [5.2, 1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7, 3, 1.8, 9.4)); ctx.fillStyle = c[1]; [[-4.6, -1], [5.2, 1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7 - .2, 11.6, 2.2, 1)); // the near legs, the paws
-    ctx.restore(); },
+  b9_dog(ctx, h, t, o){ const g = o.still ? 0 : Math.sin(t/150 + (o.phase || 0)), c = b2Pick(o, [['#9a7a52', '#4e3c28', '#c8ac84'], ['#8a6e4a', '#3e3020', '#b89c74'], ['#a48c66', '#5a4830', '#d2bc98']]);
+    /* v13.51.0: on the shared wolf (017b), lean, one ear down, the tail curled high */
+    ctx.save(); ctx.translate(-.6, 12.4); ctx.scale(.4, .5); drawWolf(ctx, {fur:c[0], dark:c[1], pale:c[2], g, lean:1, tail:'high', ear:'down', snarl:!o.still, eye:'#d8b060'}); ctx.restore(); },
 });
 
 /* ---------------- shared pieces ---------------- */
@@ -108252,12 +108312,7 @@ function b93aPot(x, cx, cy, s, t, mo, N){ B2F.line(x, '#2a1e12', s, [[cx - 5*s, 
   ell(x, cx, cy, 3*s, 1.2*s, N ? 'rgba(255,140,60,.9)' : 'rgba(255,170,90,.7)'); if (N) glow(x, cx, cy - 2*s, 14*s, '#ff8a3a', .22);
   for (let i = 0; i < 3; i++) { const k = ((t/2600*mo + i/3) % 1); x.fillStyle = `rgba(230,230,230,${(.22*(1 - k)).toFixed(3)})`; x.beginPath(); x.ellipse(cx + Math.sin(k*6 + i)*2*s, cy - 7*s - k*14*s, (1.6 + k*3)*s, (1.2 + k*2)*s, 0, 0, 7); x.fill(); } } // steam
 /* a horse, side on, small: for the trader's string */
-function b93aHorse(x, cx, cy, s, col, dir){ x.save(); x.translate(cx, cy); x.scale(dir || 1, 1); x.fillStyle = col;
-  x.beginPath(); x.ellipse(0, -8*s, 7*s, 3.4*s, 0, 0, 7); x.fill(); // the body
-  [-5, -3, 3, 5].forEach(d => x.fillRect(d*s - .6*s, -6*s, 1.2*s, 6*s)); // legs
-  x.beginPath(); x.moveTo(5*s, -10*s); x.lineTo(9*s, -15*s); x.lineTo(11*s, -14*s); x.lineTo(7.6*s, -8*s); x.fill(); // the neck
-  x.beginPath(); x.ellipse(10.6*s, -14*s, 2.6*s, 1.4*s, .5, 0, 7); x.fill(); // the head
-  x.fillRect(-7.6*s, -9*s, 1*s, 5*s); x.restore(); } // the tail
+function b93aHorse(x, cx, cy, s, col, dir){ const k = s*1.3; x.save(); x.translate(cx, cy); x.scale((dir || 1)*k, k); beastHorse(x, col, {}); x.restore(); x.fillStyle = col; } // v13.51.0: the shared horse (017b)
 
 /* ---------------- the backdrops ---------------- */
 /* the road among the last farms by day: farms set back behind field walls with gaps in them, fields gone to dust, the column halted along
@@ -113906,13 +113961,13 @@ Object.entries(B5_ABX).forEach(([k, x]) => { const a = AB[k]; if (!a) return;
 
 /* ---- the recruits (canon sheet §6: names checked). Base numbers; the roster brings them to the squad's level. ---- */
 Object.assign(TPL, {
-  pruss:{name:'Pruss', role:'Heavy, a carter\'s son', sig:'P', col:'#8a7a62', hp:27, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
+  pruss:{name:'Pruss', role:'Heavy, a carter\'s son', sig:'P', col:'#8a7a62', hp:27, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['maul', 'salve'],
     epithet:'"My da hauled for the army at Unta. Said the beasts always die first. I thought he meant oxen."', origin:'A carter\'s yard outside Unta, Quon Tali', age:24, service:'Four years in the heavies, the last of it carrying more than his share',
     weapon:'A heavy infantry sword, notched, and a carter\'s maul on a thong', armour:'A heavy\'s scale, patched with somebody else\'s, and a helm he wears on the march only when told',
     bio:'A carter\'s son from outside Unta who joined the heavies because they eat first. His squad held a stretch of the rearguard on the day the short-tails came, and he was the one sent back for water when it broke, and so he is the one left. The clerks put him on the Third\'s list at the burial lines. He came over with his kit and his old sergeant\'s helm, and asked where they wanted the weight carried.',
     traits:['Knows how much a wagon weighs by the sound of its axle', 'Says his old squad\'s names under his breath at every halt', 'Laughs late, and then too long'], gear:['A heavy\'s sword', 'His old sergeant\'s helm, tied to his pack'],
     get quest(){ return 'East, in whatever traces the column gives him. He would like to be the one sent back for water, just once more, and come back with it.'; }},
-  tirren:{name:'Tirren', role:'Farrier of the train', sig:'T', col:'#9a7a5e', hp:20, ac:13, atk:4, dmg:[1,8,2], rng:1, mv:5, init:2, st:{might:2, wits:2, guile:1}, ab:['bash', 'salve'],
+  tirren:{name:'Tirren', role:'Farrier of the train', sig:'T', col:'#9a7a5e', hp:20, ac:13, atk:4, dmg:[1,8,2], rng:1, mv:5, init:2, st:{might:2, wits:2, guile:1}, ab:['hoofknife', 'salve'],
     epithet:'"The horses don\'t lie about how far they can go. The officers do. I listen to the horses."', origin:'A smithy in a Letherii river town', age:21, service:'Two years shoeing for the brigades\' train, and one long road',
     weapon:'A farrier\'s hammer, and a hoof-knife she will not lend', armour:'A leather farrier\'s apron over a quilted shirt, and a scarf over her hair against the dust',
     bio:'Her father shod for the river garrisons and taught her before he taught her brothers, because she listened. She came out with the brigades\' supply train to keep its horses on their feet, and has watched the long road south kill them one by one anyway. She asked the Sixth\'s sergeant for a place in the squad because a squad can at least decide when it stops, and a horse cannot.',
@@ -122921,6 +122976,97 @@ const TFIGHT = { // per-fight pass, Nov 13, 2026 (Whisper bot, 20 runs a step; t
     u.atk = (u.atk || 0) + atk;
     if (u.dmg && dmg) u.dmg = [u.dmg[0], u.dmg[1], Math.max(0, (u.dmg[2] || 0) + dmg)];
     return u; }; }
+
+/* v13.51.0: the later books' recruits stop being a second shield beside the squad's own (David, Nov 18, 2026).
+   Every thread already walks with one shield-and-bash heavy (Brisk, Haddat, Thegg). The recruits who doubled it get kits of their own:
+   pulls, drives, a swap, a sweep, a broken guard, a bleeding cut, a howl, and two soldiers and a rope boy who strike twice.
+   Forced movement uses the same rules as the sergeant's Shield Drive and Vell's hook (forcedMove, 031): every squadmate the enemy is
+   moved out of reach of gets a free swing, the very heavy do not move, a leader braces about half the time. */
+const kitCd = () => 2 - lvAt(6);
+const kitHe = u => (u && u.id === 'tirren') ? 'she' : 'he', kitHis = u => (u && u.id === 'tirren') ? 'her' : 'his', kitHim = u => (u && u.id === 'tirren') ? 'her' : 'him';
+/* drive t straight back from u, up to dist tiles: the Shield Drive's own road (a pit takes it, a wall or a body is +1d6) */
+async function kitDrive(u, t, dist, from){
+  const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} takes it and doesn't give a step.` : `${t.name} braces behind the blow and holds.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; }
+  const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y); let to = {x:t.x, y:t.y}, slam = false;
+  for (let i = 0; i < dist; i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, t)) { slam = true; break; } to = n; }
+  if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
+  blog(`${u.name} drives ${t.name} back${slam ? ' into what is behind it' : ''}.`); float(t, 'driven back', '#e8c073'); AUDIO.play('sword');
+  if (await forcedMove(t, to, 'driven')) return;
+  if (slam && t.hp > 0) { const d = roll(1,6,0); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); }
+}
+Object.assign(AB, {
+  /* Brannoc, Falari marine: the boarding line is Vell's hook thrown from a ship's rail, and the leap is how a marine crosses to the other deck */
+  boardline:{name:'Boarding line', desc:()=>`Throw the grapnel at an enemy 2 to ${grapR()} tiles off: 1d6+${1 + lvDmg()} on a hit, and it is hauled to the open tile beside Brannoc nearest it. Every squadmate it is hauled out of reach of gets a free swing. Hauled across a pit or a drop, it saves to catch the lip and go down prone, or goes in. The very heavy take the grapnel but don't come; a leader braces against it about half the time. Recharges after 3 rounds. Grows with level.`,
+    ok:u=>!(u.cdHook >= B.round), tiles:u=>foes().filter(f => cheb(u,f) >= 2 && cheb(u,f) <= grapR() && canShoot(u,f)),
+    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdHook = B.round + 3; AUDIO.play('bow');
+      const r = attack(u, t, {dmg:[1,6,1 + lvDmg()], verb:'throws the grapnel at'}); if (!r.hit) return;
+      await wait(pace(300)); if (!B || t.hp <= 0) return;
+      { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `The grapnel bites into ${t.name}. ${t.name} doesn't come. ${u.name} pays out the line before it takes him over the side instead.` : `The grapnel bites into ${t.name}, who sets both feet and leans back against it. ${u.name} lets the line run.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
+      const at = DIRS.map(([dx, dy]) => ({x:u.x + dx, y:u.y + dy})).filter(p => free(p.x, p.y, t)).sort((a, b) => cheb(a, t) - cheb(b, t))[0];
+      if (!at) { blog(`There's nowhere beside ${u.name} to haul ${t.name} to. The grapnel comes back with a piece of it.`); return; }
+      blog(`${u.name} takes a turn of the line round his forearm and heaves, the way you bring another ship's rail to yours, and ${t.name} comes across the ground to him.`);
+      sparks(t.x, t.y, 8, '#c26a3a', .4); AUDIO.play('step'); float(t, 'hauled in', '#c26a3a');
+      if (await forcedMove(t, at, 'dragged')) return;
+      t.facing = u.x >= t.x ? 1 : -1; }},
+  boardleap:{name:'Boarding leap', free:true, desc:()=>`Once a turn, and it does not use his action: cross to any open tile within ${3 + lvT()} in sight. No free swings against him. Grows with level.`, ok:u=>u.swungTurn !== B.turn,
+    tiles:u=>AB.ropeswing.tiles(u),
+    run(u,x,y){ u.swungTurn = B.turn; AUDIO.play('step'); sparks(u.x, u.y, 8, '#c26a3a', .4); u.x = x; u.y = y; sparks(x, y, 8, '#c26a3a', .4); blog(`${u.name} goes across the gap the way he would go across to another deck: all at once, and already swinging.`); enterFire(u); updBattleUI(); }},
+  /* Darrut, late of the Aren Guard: the sergeant's Shield Drive, learned on a gate */
+  gatedrive:{name:'Gate drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}. Grows with level.`,
+    ok:u=>AB.shove.ok(u), tiles:u=>AB.shove.tiles(u), run(u,x,y){ return AB.shove.run(u,x,y); }},
+  /* Ottar, Grey Helm of the Perish: the Wolves' howl, as the Grey Swords' acolyte has it (060) */
+  wolfhowl:{name:'The Wolves\' Howl', self:true, desc:()=>`Enemies within 2 take −2 to hit until Ottar's next turn. Recharges after 3 rounds.`,
+    ok:u=>!(u.cdHowl >= B.round),
+    run(u){ u.cdHowl = B.round + 3; AUDIO.play('shadow'); const near = foes().filter(f => cheb(u, f) <= 2);
+      near.forEach(f => { f.kitHowlUntil = B.round + 1; float(f, 'cowed', '#c8d4e0'); });
+      blog(near.length ? `${u.name} puts his head back inside the wolf-browed helm and howls. The Perish do it in the line, a thousand at a time. One is enough: ${near.length > 1 ? 'the enemy near him flinch' : `${near[0].name} flinches`} from it.` : `${u.name} howls at nothing. Somewhere, a long way off, something howls back.`); }},
+  /* Doss, farmhand: a threshing flail does not know how to hit one thing */
+  sweep:{name:'Threshing sweep', desc:()=>`The flail goes round: 1d10+${3 + lvDmg()} at an adjacent enemy, and the same again at one other enemy beside Doss. No push. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
+    ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
+    run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const d = [1,10,3 + lvDmg()];
+      const o = foes().filter(f => f !== t && f.hp > 0 && cheb(u,f) === 1).sort((a, b) => a.hp - b.hp)[0];
+      attack(u, t, {dmg:d, verb:'brings the flail round into'});
+      if (o) later(() => { if (B && !B.over && u.hp > 0 && o.hp > 0) { attack(u, o, {dmg:d, verb:'lets the flail carry on into'}); updBattleUI(); } }, pace(300)); }},
+  /* Edrem, pilgrim guard: a long mace opens armour for everybody after him */
+  breaker:{name:'Breaker', desc:()=>`The mace in both hands at an adjacent enemy: 1d10+${2 + lvDmg()} on a hit, and its armour is 2 worse against every blow through the next round. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
+    ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
+    run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const r = attack(u, t, {dmg:[1,10,2 + lvDmg()], verb:'brings the mace down two-handed on'});
+      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.kitBrokenUntil = B.round + 1; later(() => { if (B && t.hp > 0) float(t, 'guard broken', '#e8c073'); }, pace(260)); blog(`Something in ${t.name}'s guard gives. It will not sit right again this side of the fight.`); } }},
+  /* Brennet, carter: you do not stop a load, you turn it */
+  turnload:{name:'Turn the load', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and Brennet swaps places with it. Every other squadmate it is turned out of reach of gets a free swing. The very heavy don't turn; a leader braces and holds about half the time. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
+    ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
+    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); u.aooTurn = B.turn; // his own swing is spent on the turn
+      const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'gets the wagon-pin behind'}); if (!r.hit) return;
+      await wait(pace(250)); if (!B || t.hp <= 0 || u.hp <= 0) return;
+      { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} is not a thing that turns.` : `${t.name} sets its feet and will not be turned.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
+      const mine = {x:u.x, y:u.y}, theirs = {x:t.x, y:t.y};
+      blog(`${u.name} levers ${t.name} round the way he would turn a wagon in a narrow yard, and is standing where it stood.`); float(t, 'turned', '#e8c073'); AUDIO.play('step');
+      if (await opportunity(t, mine, 'turned')) return; if (!B || t.hp <= 0) return;
+      u.x = theirs.x; u.y = theirs.y; t.x = mine.x; t.y = mine.y; t.facing = u.x >= t.x ? 1 : -1; u.facing = t.x >= u.x ? 1 : -1; enterFire(t); if (B && u.hp > 0) enterFire(u); updBattleUI(); }},
+  /* Pruss, heavy: the carter's maul, for when the weight has to go somewhere else */
+  maul:{name:'The maul', desc:()=>`The carter's maul in both hands at an adjacent enemy: 1d10+${3 + lvDmg()} on a hit, and it is driven straight back up to 2 tiles. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6. Toward a pit or a drop: it saves to catch the lip, or goes over. The very heavy don't move; a leader braces and holds about half the time. Recharges after 3 rounds.`,
+    ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
+    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + 3; u.aooTurn = B.turn;
+      const r = attack(u, t, {dmg:[1,10,3 + lvDmg()], verb:'swings the maul into'}); if (!r.hit) return;
+      await wait(pace(250)); if (!B || t.hp <= 0) return;
+      await kitDrive(u, t, 2); }},
+  /* Tirren, farrier: the hammer to make it lift the foot, the hoof-knife for what the foot was covering */
+  hoofknife:{name:'Hoof-knife', desc:()=>`The hammer, then the knife into what it opened: 1d6+${2 + lvDmg()} at an adjacent enemy on a hit, and it bleeds for three rounds (1d4 a round). Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
+    ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
+    run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'puts the hammer and then the hoof-knife into'});
+      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.bleed = 3; later(() => { if (B && t.hp > 0) float(t, 'bleeding', '#e0574a'); }, pace(260));
+        if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; later(() => { if (B && t.hp > 0) float(t, 'held', '#b0a0c8'); }, pace(520)); } } }}
+});
+/* the howl's fear and the mace's broken guard, in the to-hit sum */
+{ const _atkCalc = atkCalc;
+  atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o); if (!B || !a || !t) return c;
+    if (a.side !== 'p' && a.kitHowlUntil >= B.round) c.bonus -= 2;
+    if (t.side !== 'p' && t.kitBrokenUntil >= B.round) c.ac -= 2;
+    return c; }; }
+{ const _squadTurnStart = squadTurnStart;
+  squadTurnStart = function(u){ const r = _squadTurnStart(u); if (B && u && u.id === 'ottar') B.units.forEach(e => { if (e.kitHowlUntil != null) e.kitHowlUntil = -1; }); return r; }; }
+/* the level-12 talent reads its role from the kit (015 t2Role). The reworked heavies keep the Anvil they were offered when they carried the bash, so no save loses a pick. */
+const KIT_ANVIL = ['brannoc', 'darrut', 'ottar', 'doss', 'edrem', 'brask', 'brennet', 'pruss', 'tirren'];
 
 /* ============ the finale's stingers (series polish §4, the sound pass) ============ */
 /* Every book from Six on wraps showFinale in its own file; this wraps them all (it loads after Book Ten), so it sees every page that

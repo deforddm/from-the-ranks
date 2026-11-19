@@ -72,20 +72,9 @@ Object.assign(FIGX, {
      who wore Book Five's great wolf, a Jheck half again a wolf's size. Looks only: the foes keep their kinds; their fig names this. Lean and
      dun with a darker saddle, the ribs showing, one ear up and one down, a ragged tail held high and curled, smaller than any wolf
      (Claude's call: the game's own animal) */
-  b9_dog(ctx, h, t, o){ ctx.save(); const g = o.still ? 0 : Math.sin(t/150 + (o.phase || 0)), c = b2Pick(o, [['#9a7a52', '#4e3c28'], ['#8a6e4a', '#3e3020'], ['#a48c66', '#5a4830']]);
-    B2F.grow(ctx, 1.08, 1.06);
-    ctx.fillStyle = c[1]; [[-6, 1], [3.8, -1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7, 3.4, 1.7, 9)); // the far legs
-    B2F.line(ctx, c[0], 1.5, [[-6.8, -1.2], [-9.6, -4.4 + g*.5], [-8.8, -7.4 + g*.4], [-7.2, -6.6]]); poly(ctx, [[-8.8,-7.6],[-10,-8.6],[-8.6,-6.6]], c[0]); // the tail, high and curled, ragged at the end
-    poly(ctx, [[-7.6,-1.6],[-4,-2.8],[2.4,-2.8],[6.4,-2],[7.2,2.4],[4.6,5.4],[1.6,4.6],[-1.6,3.2],[-4.6,4.4],[-7.8,3]], c[0]); // the body: a deep chest, the belly tucked up
-    poly(ctx, [[-7,-1.8],[-3.8,-3],[2.4,-3],[5.6,-2.2],[3,-.8],[-4,-.6]], c[1]); // the saddle, darker
-    [[-1.6, -.4, 2.8], [.2, -.6, 3.2], [2, -.6, 3.4]].forEach(([x, y0, y1]) => B2F.line(ctx, 'rgba(0,0,0,.28)', .45, [[x, y0], [x + .4, y1]])); // the ribs
-    ctx.fillStyle = 'rgba(255,240,210,.14)'; ctx.fillRect(-7, -1.4, 6, .7); // the light along the back
-    poly(ctx, [[5,-2.6],[7.6,-6.2],[10.8,-6.6],[14.4,-4.8],[14.8,-3],[11,-1.8],[7.6,1.8]], c[0]); // the neck and head
-    poly(ctx, [[8.2,-5.8],[8.8,-9.4],[10.4,-6.2]], c[1]); poly(ctx, [[10.2,-6.2],[12.6,-7],[11.6,-5.2]], c[1]); // one ear up, one down
-    ell(ctx, 14.6, -4, .9, .8, '#1a120c'); ell(ctx, 10.4, -4.8, .6, .55, '#1e140a'); ctx.fillStyle = 'rgba(255,220,160,.6)'; ctx.fillRect(10.3, -5.1, .3, .3); // the nose, the eye
-    ctx.fillStyle = 'rgba(240,232,214,.8)'; ctx.fillRect(12.4, -2.6, 1.6, .5); // the teeth
-    ctx.fillStyle = c[0]; [[-4.6, -1], [5.2, 1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7, 3, 1.8, 9.4)); ctx.fillStyle = c[1]; [[-4.6, -1], [5.2, 1]].forEach(([x, d]) => ctx.fillRect(x + g*d*.7 - .2, 11.6, 2.2, 1)); // the near legs, the paws
-    ctx.restore(); },
+  b9_dog(ctx, h, t, o){ const g = o.still ? 0 : Math.sin(t/150 + (o.phase || 0)), c = b2Pick(o, [['#9a7a52', '#4e3c28', '#c8ac84'], ['#8a6e4a', '#3e3020', '#b89c74'], ['#a48c66', '#5a4830', '#d2bc98']]);
+    /* v13.51.0: on the shared wolf (017b), lean, one ear down, the tail curled high */
+    ctx.save(); ctx.translate(-.6, 12.4); ctx.scale(.4, .5); drawWolf(ctx, {fur:c[0], dark:c[1], pale:c[2], g, lean:1, tail:'high', ear:'down', snarl:!o.still, eye:'#d8b060'}); ctx.restore(); },
 });
 
 /* ---------------- shared pieces ---------------- */
@@ -131,12 +120,7 @@ function b93aPot(x, cx, cy, s, t, mo, N){ B2F.line(x, '#2a1e12', s, [[cx - 5*s, 
   ell(x, cx, cy, 3*s, 1.2*s, N ? 'rgba(255,140,60,.9)' : 'rgba(255,170,90,.7)'); if (N) glow(x, cx, cy - 2*s, 14*s, '#ff8a3a', .22);
   for (let i = 0; i < 3; i++) { const k = ((t/2600*mo + i/3) % 1); x.fillStyle = `rgba(230,230,230,${(.22*(1 - k)).toFixed(3)})`; x.beginPath(); x.ellipse(cx + Math.sin(k*6 + i)*2*s, cy - 7*s - k*14*s, (1.6 + k*3)*s, (1.2 + k*2)*s, 0, 0, 7); x.fill(); } } // steam
 /* a horse, side on, small: for the trader's string */
-function b93aHorse(x, cx, cy, s, col, dir){ x.save(); x.translate(cx, cy); x.scale(dir || 1, 1); x.fillStyle = col;
-  x.beginPath(); x.ellipse(0, -8*s, 7*s, 3.4*s, 0, 0, 7); x.fill(); // the body
-  [-5, -3, 3, 5].forEach(d => x.fillRect(d*s - .6*s, -6*s, 1.2*s, 6*s)); // legs
-  x.beginPath(); x.moveTo(5*s, -10*s); x.lineTo(9*s, -15*s); x.lineTo(11*s, -14*s); x.lineTo(7.6*s, -8*s); x.fill(); // the neck
-  x.beginPath(); x.ellipse(10.6*s, -14*s, 2.6*s, 1.4*s, .5, 0, 7); x.fill(); // the head
-  x.fillRect(-7.6*s, -9*s, 1*s, 5*s); x.restore(); } // the tail
+function b93aHorse(x, cx, cy, s, col, dir){ const k = s*1.3; x.save(); x.translate(cx, cy); x.scale((dir || 1)*k, k); beastHorse(x, col, {}); x.restore(); x.fillStyle = col; } // v13.51.0: the shared horse (017b)
 
 /* ---------------- the backdrops ---------------- */
 /* the road among the last farms by day: farms set back behind field walls with gaps in them, fields gone to dust, the column halted along

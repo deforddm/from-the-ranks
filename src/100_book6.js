@@ -110,16 +110,16 @@ Object.assign(TPL, {
     bio:'A potter\'s son who stayed when the Falah\'d sent the city out. He knows the old wells, the drains and which walls are newer than they look. He does not say why he stayed, and the squad stops asking.',
     traits:['Knows the city under the city', 'Counts the Malazans the way they count him', 'Never stands with his back to a wall'], gear:['A sling', 'A ring of keys to doors that are no longer there'],
     get quest(){ return 'Out of the city before it burns, if the squad will have him.'; }},
-  ottar:{name:'Ottar', role:'Grey Helm of the Perish', sig:'O', col:'#8f9aa6', hp:24, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
+  ottar:{name:'Ottar', role:'Grey Helm of the Perish', sig:'O', col:'#8f9aa6', hp:24, ac:15, atk:4, dmg:[1,8,2], rng:1, mv:4, init:0, st:{might:3, wits:1, guile:0}, ab:['wolfhowl', 'salve'],
     epithet:'"Our Destriant speaks to your Adjunct. I speak to you. That is how it is done."', origin:'Perish, across the sea', age:38, service:'Nineteen years, a Grey Helm',
     weapon:'A long single-edged sword and a tall shield with the wolf on it', armour:'Grey plate over mail, and a helm with a wolf\'s brow',
     bio:'A Grey Helm sent across to the Malazan ships when the Perish fleet came alongside. He says little about his god and less about why the Perish came. He fights as if he has done it for a long time, which he has.',
     traits:['Prays before eating, briefly', 'Keeps his shield-rim sharp', 'Learns Malazan words one a day'], gear:['A wolf\'s tooth on a thong', 'A whetstone'],
     get quest(){ return 'Wherever his Destriant sends him. This season, with you.'; }},
-  brannoc:{name:'Brannoc', role:'Falari soldier', sig:'B', col:'#c26a3a', hp:22, ac:14, atk:4, dmg:[1,8,2], rng:1, mv:4, init:1, st:{might:2, wits:1, guile:1}, ab:['bash', 'salve'],
+  brannoc:{name:'Brannoc', role:'Falari marine · boarding axes', sig:'B', col:'#c26a3a', hp:22, ac:13, atk:4, dmg:[1,6,0], rng:1, mv:5, init:2, st:{might:2, wits:1, guile:1}, attacks:2, dmg2:[1,6,0], verb2:'brings the other axe round into', ab:['boardline', 'boardleap'],
     epithet:'"Captain Sweetcreek says I talk too much. Captain Sweetcreek says that to everyone."', origin:'Falar, the islands', age:27, service:'Seven years with the Host, under Captain Sweetcreek',
-    weapon:'A Falari axe, broad in the blade', armour:'Mail, and a red Falari beard he is proud of',
-    bio:'One of the Falari in Sweetcreek\'s command, loaned to the Seventh Company to make up its numbers on the north coast. Red-haired, loud, and better in a fight than anyone expects from someone who sings that badly.',
+    weapon:'A pair of Falari boarding axes, spike-backed, and a grapnel on thirty feet of tarred line', armour:'A marine\'s short mail, cut to swim in, and a red Falari beard he is proud of',
+    bio:'One of the Falari in Sweetcreek\'s command, loaned to the Seventh Company to make up its numbers on the north coast. A ship\'s marine before he was a soldier on land: he was taught to fight across a rail, with an axe in each hand and a line to bring the other deck closer, and nobody has taught him anything since. Red-haired, loud, and better in a fight than anyone expects from someone who sings that badly.',
     traits:['Sings on the march', 'Trusts sailors, not maps', 'Thinks the plague is a Seven Cities thing and will not touch Falari'], gear:['A tin whistle', 'His mother\'s copper ring'],
     get quest(){ return 'Back to Sweetcreek\'s line when the Seventh has its numbers. Or not.'; }},
   ressa:{name:'Ressa', role:'Survivor of G\'danisban', sig:'R', col:'#9a8aa8', hp:15, ac:12, atk:4, dmg:[1,6,1], rng:1, mv:5, init:2, st:{might:0, wits:2, guile:3}, ab:['mark', 'salve'],
@@ -129,9 +129,9 @@ Object.assign(TPL, {
     traits:['Does not catch the fever', 'Knows the city\'s streets and its temples', 'Sleeps sitting up'], gear:['Two knives', 'A dyer\'s blue on her fingers that will not wash out'],
     get quest(){ return 'Away from the city. The Host is going away from the city.'; }},
 });
-Object.assign(VERB, {mehet:'slings a shot at', ottar:'brings the long sword down on', brannoc:'swings the Falari axe at', ressa:'cuts at'});
+Object.assign(VERB, {mehet:'slings a shot at', ottar:'brings the long sword down on', brannoc:'swings a boarding axe at', ressa:'cuts at'});
 Object.assign(STATUP, {mehet:['guile', 'wits'], ottar:['might', 'wits'], brannoc:['might', 'guile'], ressa:['guile', 'wits']});
-Object.assign(TPL_ROLES, {mehet:['light', 'ranged', 'blade'], ottar:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], brannoc:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], ressa:['light', 'blade']});
+Object.assign(TPL_ROLES, {mehet:['light', 'ranged', 'blade'], ottar:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], brannoc:['heavy', 'mail', 'blade', 'heavyweapon'], ressa:['light', 'blade']});
 /* Ressa has had the fever, and does not catch it again (her bio; bh-canon §8) */
 { const _c = b6Catch; b6Catch = function(id, why){ return id === 'ressa' ? false : _c(id, why); }; }
 

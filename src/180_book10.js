@@ -253,13 +253,13 @@ Object.entries(B5_ABX).forEach(([k, x]) => { const a = AB[k]; if (!a) return;
 
 /* ---- the recruits (canon sheet §6: names checked). Base numbers; the roster brings them to the squad's level. ---- */
 Object.assign(TPL, {
-  pruss:{name:'Pruss', role:'Heavy, a carter\'s son', sig:'P', col:'#8a7a62', hp:27, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['bash', 'salve'],
+  pruss:{name:'Pruss', role:'Heavy, a carter\'s son', sig:'P', col:'#8a7a62', hp:27, ac:15, atk:4, dmg:[1,10,2], rng:1, mv:4, init:1, st:{might:3, wits:1, guile:0}, ab:['maul', 'salve'],
     epithet:'"My da hauled for the army at Unta. Said the beasts always die first. I thought he meant oxen."', origin:'A carter\'s yard outside Unta, Quon Tali', age:24, service:'Four years in the heavies, the last of it carrying more than his share',
     weapon:'A heavy infantry sword, notched, and a carter\'s maul on a thong', armour:'A heavy\'s scale, patched with somebody else\'s, and a helm he wears on the march only when told',
     bio:'A carter\'s son from outside Unta who joined the heavies because they eat first. His squad held a stretch of the rearguard on the day the short-tails came, and he was the one sent back for water when it broke, and so he is the one left. The clerks put him on the Third\'s list at the burial lines. He came over with his kit and his old sergeant\'s helm, and asked where they wanted the weight carried.',
     traits:['Knows how much a wagon weighs by the sound of its axle', 'Says his old squad\'s names under his breath at every halt', 'Laughs late, and then too long'], gear:['A heavy\'s sword', 'His old sergeant\'s helm, tied to his pack'],
     get quest(){ return 'East, in whatever traces the column gives him. He would like to be the one sent back for water, just once more, and come back with it.'; }},
-  tirren:{name:'Tirren', role:'Farrier of the train', sig:'T', col:'#9a7a5e', hp:20, ac:13, atk:4, dmg:[1,8,2], rng:1, mv:5, init:2, st:{might:2, wits:2, guile:1}, ab:['bash', 'salve'],
+  tirren:{name:'Tirren', role:'Farrier of the train', sig:'T', col:'#9a7a5e', hp:20, ac:13, atk:4, dmg:[1,8,2], rng:1, mv:5, init:2, st:{might:2, wits:2, guile:1}, ab:['hoofknife', 'salve'],
     epithet:'"The horses don\'t lie about how far they can go. The officers do. I listen to the horses."', origin:'A smithy in a Letherii river town', age:21, service:'Two years shoeing for the brigades\' train, and one long road',
     weapon:'A farrier\'s hammer, and a hoof-knife she will not lend', armour:'A leather farrier\'s apron over a quilted shirt, and a scarf over her hair against the dust',
     bio:'Her father shod for the river garrisons and taught her before he taught her brothers, because she listened. She came out with the brigades\' supply train to keep its horses on their feet, and has watched the long road south kill them one by one anyway. She asked the Sixth\'s sergeant for a place in the squad because a squad can at least decide when it stops, and a horse cannot.',
