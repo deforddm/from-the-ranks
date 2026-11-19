@@ -105,7 +105,7 @@ const ATL_ROUTES = {
     {x:780, y:462, t:'The Ration Book', q:1, a:'b', via:[[600,478]]}, {x:930, y:404, t:'Short Rations', a:'c'}, {x:1050, y:426, t:'Dust on the Horizon', q:1, a:'b'}, {x:1110, y:366, t:'The Rearguard'}]},
   tcg:{geo:'let', cam:[990, 150, 700, 560], title:'The Glass Desert', sub:'and Kolanse: the last road', comp:[.93, .86], cart:'bl', note:'tr', squads:['the Third', 'the Sixth'], stops:[
     {x:1130, y:374, t:'The Wastes', o:1}, {x:1130, y:374, t:'Missing Is Not Dead', a:'c'}, {x:1146, y:412, t:'The Parting', q:1, a:'l', dy:6}, {x:1270, y:360, t:'Night Marches', a:'b'},
-    {x:1330, y:600, t:'The Long Way Round', q:1, a:'c', via:[[1210,520]]}, {x:1400, y:352, t:'The Last Water', a:'c'}, {x:1592, y:452, t:'The Feint', q:1, a:'l', dy:8, via:[[1480,590]]}, {x:1520, y:350, t:'Over the Ridge', a:'b'}]}
+    {x:1330, y:600, t:'The Long Way Round', q:1, dy:-10, via:[[1210,520]]}, {x:1400, y:352, t:'The Last Water', a:'c'}, {x:1592, y:452, t:'The Feint', q:1, a:'l', dy:8, via:[[1480,590]]}, {x:1520, y:350, t:'Over the Ridge', a:'b'}]}
 };
 
 /* ---- drawing ---- */

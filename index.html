@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.54.0';
+const VERSION = '13.54.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9937,6 +9937,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.54.1', ['Book Ten\'s road map: the Long Way Round\'s name no longer sits under the title box.']],
   ['13.54.0', ['The maps are redrawn. Where the books meet (Journal and Deeds) is now a map in ink on parchment: Seven Cities, Genabackis and, oceans away, Lether and the east, with coasts, mountains, rivers and deserts, and each book\'s road carrying its number.', 'Every book has a road map of its own in the Journal and on the Deeds page, with a numbered stop for each chapter reached. Books Six to Ten had none before and showed Book One\'s. Where two squads take turns, each has its own colour.', 'Walk-around areas and battle boards have more depth: walls throw a shadow and catch the light, and the edges of the sheet fall off a little. Looks only: nothing about the ground, the fights or your saves has changed.']],
   ['13.53.0', ['Veteran picks carry on past level 15: a second rank of the six (Iron II, Keen II, Fleet II, Nerve II, Stout II, Edge II) at levels 17, 19, 21, 23, 25 and 27. A second rank opens once its first is held. A save already past 17 is asked for what it is owed.', 'Every recruit now walks in wearing their own armour as a piece of kit: +2 for a soldier in mail, +1 for the rest. It is theirs alone, and it never pushes off something better. The regulars, who have carried the books\' armour all along, are not given one.', 'A weapon with reach now says what it does (\"strikes 2 tiles away\"), and the first one you find explains it.', 'Where every open veteran pick is owed, the game takes them without asking: nothing to tap through.']],
   ['13.52.0', ['Every soldier now has a talent at level 3 and a choice of two at level 12. Book Six\'s four recruits (Mehet, Ottar, Brannoc, Ressa) had neither. The hook and lance soldiers, and Keth, Tallow and Hessa, were offered only one at 12.', 'New level-12 talents: Hand Over Hand (hooks), Set the Butt (lances), Twice Blessed (Keth, Tallow, Hessa), Flurry (Brannoc, Brask), Full Circle (Doss), Shatter (Edrem), Follow Through (Brennet, Pruss), Deep Cut (Tirren). All of them work by themselves: no new buttons. Anyone who already took Anvil keeps it.', 'A soldier who joins below level 15 now chooses their own veteran picks, all on one screen, where they used to be handed out in a fixed order. From level 15 a soldier has all six, so there is nothing to choose.', 'More horses redrawn: the Wickan riders on Book Two\'s title, the horse lines on the maps of Books Two and Three, the watchers on the skyline, the picketed horse at Pale, the far horsemen of Book Ten, and the giant\'s mount.']],
@@ -123368,7 +123369,7 @@ const ATL_ROUTES = {
     {x:780, y:462, t:'The Ration Book', q:1, a:'b', via:[[600,478]]}, {x:930, y:404, t:'Short Rations', a:'c'}, {x:1050, y:426, t:'Dust on the Horizon', q:1, a:'b'}, {x:1110, y:366, t:'The Rearguard'}]},
   tcg:{geo:'let', cam:[990, 150, 700, 560], title:'The Glass Desert', sub:'and Kolanse: the last road', comp:[.93, .86], cart:'bl', note:'tr', squads:['the Third', 'the Sixth'], stops:[
     {x:1130, y:374, t:'The Wastes', o:1}, {x:1130, y:374, t:'Missing Is Not Dead', a:'c'}, {x:1146, y:412, t:'The Parting', q:1, a:'l', dy:6}, {x:1270, y:360, t:'Night Marches', a:'b'},
-    {x:1330, y:600, t:'The Long Way Round', q:1, a:'c', via:[[1210,520]]}, {x:1400, y:352, t:'The Last Water', a:'c'}, {x:1592, y:452, t:'The Feint', q:1, a:'l', dy:8, via:[[1480,590]]}, {x:1520, y:350, t:'Over the Ridge', a:'b'}]}
+    {x:1330, y:600, t:'The Long Way Round', q:1, dy:-10, via:[[1210,520]]}, {x:1400, y:352, t:'The Last Water', a:'c'}, {x:1592, y:452, t:'The Feint', q:1, a:'l', dy:8, via:[[1480,590]]}, {x:1520, y:350, t:'Over the Ridge', a:'b'}]}
 };
 
 /* ---- drawing ---- */
