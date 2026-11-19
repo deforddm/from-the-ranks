@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.54.1';
+const VERSION = '13.54.2';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9937,6 +9937,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.54.2', ['The Seven Cities maps, checked against the Malazan Wiki: G\'danisban sits on Raraku\'s eastern edge with Ehrlitan due north of it, and Raraku lies a little further north and west.']],
   ['13.54.1', ['Book Ten\'s road map: the Long Way Round\'s name no longer sits under the title box.']],
   ['13.54.0', ['The maps are redrawn. Where the books meet (Journal and Deeds) is now a map in ink on parchment: Seven Cities, Genabackis and, oceans away, Lether and the east, with coasts, mountains, rivers and deserts, and each book\'s road carrying its number.', 'Every book has a road map of its own in the Journal and on the Deeds page, with a numbered stop for each chapter reached. Books Six to Ten had none before and showed Book One\'s. Where two squads take turns, each has its own colour.', 'Walk-around areas and battle boards have more depth: walls throw a shadow and catch the light, and the edges of the sheet fall off a little. Looks only: nothing about the ground, the fights or your saves has changed.']],
   ['13.53.0', ['Veteran picks carry on past level 15: a second rank of the six (Iron II, Keen II, Fleet II, Nerve II, Stout II, Edge II) at levels 17, 19, 21, 23, 25 and 27. A second rank opens once its first is held. A save already past 17 is asked for what it is owed.', 'Every recruit now walks in wearing their own armour as a piece of kit: +2 for a soldier in mail, +1 for the rest. It is theirs alone, and it never pushes off something better. The regulars, who have carried the books\' armour all along, are not given one.', 'A weapon with reach now says what it does (\"strikes 2 tiles away\"), and the first one you find explains it.', 'Where every open veteran pick is owed, the game takes them without asking: nothing to tap through.']],
@@ -123275,6 +123276,9 @@ function hourTint(ctx, w, hgt, a){ const hr = hourOf(a); if (!hr) return;
    Desert (W Kolanse, W Glass Desert). Everything else is placed as the shipped road maps of Books One to
    Five placed it, and the chapters' own names. The coastlines are a sketch from the novels' maps, not a
    tracing, and every plate says so. No canon place is named here that the game's text does not already name.
+   v13.54.2, from the pages themselves: G'danisban on Raraku's eastern border by the Pan'potsun Odhan, Ehrlitan a week's ride
+   north of it (W G'danisban); Raraku in the north-west, west of the Pan'potsun Odhan (W Raraku); the Kokakal Sea in the north
+   (W Kokakal Sea, W Seven Cities); Trate Lether's northernmost city, a port (W Trate); Kravos Hill west of Letheras (W Letheras).
    Rule 85 holds: a finale's world map stops at its own book (bookLive). Future stops are unnamed dots. */
 
 const ATL_INK = '#3a2a1a', ATL_PAPER = '#dcc9a0', ATL_LAND = '#e6d6ae', ATL_SEA = '#b3bfb4', ATL_RED = '#9a2c1a', ATL_BLUE = '#2c4a78', ATL_WATER = '#4f6f84';
@@ -123307,11 +123311,11 @@ const ATLAS = {
     rivers:[[[740,500],[655,558],[590,600],[540,660],[530,722]], [[768,348],[796,430],[782,505],[810,560]], [[640,640],[628,690],[610,722]]],
     ranges:[{p:[[330,205],[420,182],[505,172]], n:9, z:1}, {p:[[700,468],[740,486],[772,476]], n:6, z:.6, hill:1}, {p:[[520,520],[570,536],[610,520]], n:6, z:.6, hill:1}, {p:[[820,200],[850,250]], n:4, z:.8}],
     forests:[{x:625, y:548, rx:44, ry:22, n:14}],
-    deserts:[{x:430, y:400, rx:112, ry:78}, {x:340, y:350, rx:70, ry:40, thin:1}],
+    deserts:[{x:415, y:372, rx:112, ry:78}, {x:320, y:336, rx:66, ry:38, thin:1}],
     plains:[{x:790, y:380, rx:70, ry:60}, {x:640, y:420, rx:120, ry:60}, {x:560, y:300, rx:80, ry:40}],
     seas:[{t:'the Sahul Sea', x:968, y:520, rot:90, z:1}, {t:'Aren Bay', x:690, y:776, z:.9}],
-    labels:[{t:'Raraku', x:520, y:420, k:'region', only:['dg', 'world'], w:[430, 428]}, {t:'the Sialk Odhan', x:640, y:330, k:'region', only:['dg']}],
-    towns:{hissar:{x:893, y:345, t:'Hissar', k:'city', a:'l'}, aren:{x:585, y:728, t:'Aren', k:'city', a:'l'}, ehrlitan:{x:716, y:80, t:'Ehrlitan', k:'city'}, gdan:{x:540, y:250, t:"G'danisban", k:'city'}, yghatan:{x:300, y:332, t:"Y'Ghatan", k:'city', a:'l'}}},
+    labels:[{t:'Raraku', x:520, y:400, k:'region', only:['dg', 'world'], w:[415, 400]}, {t:'the Sialk Odhan', x:640, y:330, k:'region', only:['dg']}],
+    towns:{hissar:{x:893, y:345, t:'Hissar', k:'city', a:'l'}, aren:{x:585, y:728, t:'Aren', k:'city', a:'l'}, ehrlitan:{x:572, y:64, t:'Ehrlitan', k:'city'}, gdan:{x:542, y:366, t:"G'danisban", k:'city'}, yghatan:{x:272, y:316, t:"Y'Ghatan", k:'city', a:'l'}}},
   let: {seed:37, land:[[[60,300],[90,180],[150,128],[200,112],[330,70],[420,110],[520,60],[700,50],[900,70],[1100,60],[1300,90],[1480,70],[1600,130],[1650,250],[1622,380],[1660,480],[1600,600],[1450,680],[1250,700],[1000,720],[760,700],[560,720],[380,690],[230,640],[130,540],[80,420]]],
     lakes:[],
     rivers:[[[580,360],[470,410],[390,446],[330,472],[250,540],[196,618]], [[400,150],[380,240],[392,330],[390,446]]],
@@ -123351,13 +123355,13 @@ const ATL_ROUTES = {
     {x:832, y:656, t:'The Prisoners', a:'l', dy:6}, {x:800, y:716, t:'South of the Catlin', a:'l'}, {x:812, y:810, t:'The Night Lift', a:'l'}, {x:886, y:900, t:'Coral', a:'l', dy:8}]},
   hoc:{geo:'sev', cam:[330, 340, 420, 440], title:'Seven Cities', sub:"the Fourteenth's march", comp:[.9, .2], cart:'bl', stops:[
     {x:585, y:728, t:'Aren', a:'b'}, {x:600, y:712, t:'The Muster'}, {x:606, y:672, t:"Coltaine's Fall"}, {x:598, y:596, t:'The Vathar'},
-    {x:556, y:532, t:'The hills', a:'l'}, {x:500, y:466, t:'The Whirlwind Wall'}, {x:462, y:434, t:"Pan'arak", a:'l', dy:6}, {x:432, y:398, t:'Raraku', a:'c'}]},
+    {x:556, y:532, t:'The hills', a:'l'}, {x:496, y:452, t:'The Whirlwind Wall', a:'l'}, {x:456, y:412, t:"Pan'arak", a:'l', dy:6}, {x:420, y:372, t:'Raraku', a:'c'}]},
   mt:{geo:'let', cam:[70, 30, 470, 520], title:'Lether', sub:"the Sixth Company's war", comp:[.9, .8], cart:'bl', stops:[
     {x:330, y:472, t:'Letheras', a:'l'}, {x:352, y:456, t:'The Drownings'}, {x:192, y:124, t:'Trate', a:'l', via:[[250,330],[200,220]]}, {x:300, y:92, t:"Kraig's Landing", a:'c'},
     {x:400, y:150, t:'High Fort'}, {x:396, y:280, t:'The Retreat'}, {x:306, y:352, t:'Brans Keep', a:'l'}, {x:334, y:498, t:'The Seventh Closure', dy:6}]},
   bh:{geo:'sev', cam:[30, 30, 880, 480], title:'Seven Cities', sub:'two squads, one summer', comp:[.93, .8], cart:'bl', squads:['the Third', 'the Fourth'], stops:[
-    {x:432, y:404, t:'Raraku', a:'b'}, {x:372, y:366, t:'The Lato Odhan', dy:8}, {x:716, y:80, t:'The North Coast', q:1, a:'c'}, {x:300, y:332, t:"Y'Ghatan", a:'l', dy:8},
-    {x:540, y:250, t:"G'danisban", q:1, a:'b', via:[[640,150]]}, {x:205, y:258, t:'The Kokakal Shore', dy:10}, {x:600, y:200, t:'The Falling Sky', q:1}, {x:60, y:130, t:'to Malaz City', to:1, via:[[150,200]]}]},
+    {x:420, y:378, t:'Raraku', a:'b'}, {x:346, y:346, t:'The Lato Odhan', a:'b'}, {x:572, y:64, t:'The North Coast', q:1}, {x:272, y:316, t:"Y'Ghatan", a:'l', dy:8},
+    {x:542, y:366, t:"G'danisban", q:1, via:[[560,210]]}, {x:205, y:258, t:'The Kokakal Shore', dy:10}, {x:612, y:312, t:'The Falling Sky', q:1}, {x:60, y:130, t:'to Malaz City', to:1, via:[[150,200]]}]},
   rg:{geo:'let', cam:[30, 250, 420, 300], title:'Lether', sub:'one war, two sides', comp:[.08, .84], cart:'tr', squads:['the Third', 'the Sixth'], stops:[
     {x:92, y:330, t:'The coast', o:1}, {x:92, y:330, t:'The Burned Ships'}, {x:350, y:490, t:'The File', q:1, a:'b'}, {x:160, y:366, t:'Night Raids', a:'b'},
     {x:262, y:480, t:'The Muster', q:1, a:'l'}, {x:228, y:406, t:'The Village', a:'c'}, {x:292, y:436, t:'Before the Walls', q:1, a:'c'}, {x:330, y:472, t:'Letheras'}]},
@@ -123519,9 +123523,9 @@ function atlWorldCanvas(upTo){
   road('moi', vg, [[470,330],[560,440],[770,560],[858,632],[800,716],[812,810],[886,900]], ATL_BLUE, [650, 492]);
   road('tth', vg, [[478,586],[640,628],[810,740],[886,900]], ATL_RED, [690, 660]);
   road('dg', vs, [[893,345],[796,430],[736,482],[655,558],[628,626],[585,728]], ATL_RED, [770, 452]);
-  road('hoc', vs, [[585,728],[598,596],[556,532],[500,466],[432,404]], ATL_BLUE, [540, 510]);
-  road('bh', vs, [[432,404],[372,366],[300,332],[205,258]], ATL_RED, [366, 362]);
-  if (live('bh')) atlRoad(ctx, G(vs, [[716,80],[640,150],[540,250],[600,200]]), ATL_RED, .9);
+  road('hoc', vs, [[585,728],[598,596],[556,532],[496,452],[420,372]], ATL_BLUE, [540, 510]);
+  road('bh', vs, [[420,378],[346,346],[272,316],[205,258]], ATL_RED, [346, 346]);
+  if (live('bh')) atlRoad(ctx, G(vs, [[572,64],[560,210],[542,366],[612,312]]), ATL_RED, .9);
   let vl = null;
   if (far) { const cam = live('tcg') ? [30, 20, 1660, 720] : live('dod') ? [30, 20, 1400, 720] : [10, 20, 640, 720]; vl = atlView(cam, 8, IY, 384, IH);
     ctx.save(); ctx.beginPath(); ctx.rect(8, IY, 384, IH); ctx.clip(); ctx.fillStyle = ATL_SEA; ctx.fillRect(8, IY, 384, IH); ctx.restore();
@@ -123533,7 +123537,7 @@ function atlWorldCanvas(upTo){
     road('tcg', vl, [[1096,376],[1270,360],[1400,352],[1520,350]], ATL_RED, [1330, 356]);
     if (live('tcg')) { atlRoad(ctx, G(vl, [[1096,376],[1210,520],[1330,600],[1480,590],[1592,452]]), ATL_BLUE, .9); atlText(ctx, 'the long way round', vl.X(1330), vl.Y(668), {font:"italic 9.5px 'IM Fell English', Georgia, serif", fill:ATL_BLUE, align:'center', halo:'rgba(232,218,180,.8)', hw:2.5}); } }
   const town = (v, geo, id, t, a) => { const o = ATLAS[geo].towns[id], x = v.X(o.x), y = v.Y(o.y); atlTown(ctx, x, y, o.k, .85); atlTownLabel(ctx, t || o.t, x, y, a || o.a, 0, 10.5, 3.4); };
-  town(vs, 'sev', 'hissar'); town(vs, 'sev', 'aren'); if (live('bh')) { town(vs, 'sev', 'yghatan'); town(vs, 'sev', 'gdan'); town(vs, 'sev', 'ehrlitan', null, 'l'); }
+  town(vs, 'sev', 'hissar'); town(vs, 'sev', 'aren'); if (live('bh')) { town(vs, 'sev', 'yghatan'); town(vs, 'sev', 'gdan'); town(vs, 'sev', 'ehrlitan'); }
   town(vg, 'gen', 'genabaris'); town(vg, 'gen', 'pale'); town(vg, 'gen', 'daru', null, 'l'); if (live('moi')) { town(vg, 'gen', 'capustan', null, 'c'); town(vg, 'gen', 'coral', live('tth') ? 'Black Coral' : 'Coral'); }
   if (vl) { town(vl, 'let', 'letheras'); town(vl, 'let', 'trate'); }
   roads.forEach(f => f());
