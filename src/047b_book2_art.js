@@ -410,10 +410,8 @@ function b2Odhan(ctx, ch, x, y, T, N){
     for (let i=0;i<5;i++) ell(ctx, px + T*(.1 + hash(x,y,i+70)*.8), py + T*(.6 + hash(y,x,i+71)*.35), T*.04, T*.03, N ? 'rgba(0,0,0,.4)' : 'rgba(90,64,40,.45)');
     ctx.strokeStyle = N ? '#4a4038' : '#8a7454'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py + T*.3); ctx.lineTo(px + T, py + T*.3); ctx.stroke(); if (!b2At(x - 1, y, 'h')) { ctx.fillStyle = N ? '#2a2016' : '#5a4028'; ctx.fillRect(px + T*.04, py + T*.16, T*.06, T*.3); }
     if (hash(x,y,9) > .25) { const hx = px + T*.5, hy = py + T*.72, d = hash(x,y,10) > .5 ? 1 : -1, hc = N ? ['#1a1614','#2a2420','#141210'][Math.floor(h*3)] : ['#5a3a22','#8a6a44','#3a2a1e','#a89070'][Math.floor(h*4)];
-      ell(ctx, hx, hy + T*.2, T*.3, T*.06, N ? 'rgba(0,0,0,.4)' : 'rgba(70,46,26,.35)'); ctx.fillStyle = hc; for (let i=0;i<4;i++) ctx.fillRect(hx + T*(-.2 + (i%2)*.06 + (i > 1 ? .28 : 0))*d - T*.02, hy, T*.04, T*.2); // legs
-      ell(ctx, hx, hy - T*.02, T*.26, T*.1, hc); ctx.strokeStyle = hc; ctx.lineWidth = Math.max(2, T*.08); ctx.beginPath(); ctx.moveTo(hx + T*.18*d, hy - T*.04); ctx.lineTo(hx + T*.3*d, hy - T*.24); ctx.stroke(); ell(ctx, hx + T*.35*d, hy - T*.24, T*.08, T*.045, hc, .5*d); // body, neck, head
-      ctx.strokeStyle = N ? '#0a0808' : '#1e140c'; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.moveTo(hx - T*.26*d, hy - T*.04); ctx.lineTo(hx - T*.32*d, hy + T*.1); ctx.stroke(); // tail
-      ctx.fillStyle = N ? 'rgba(160,170,210,.12)' : 'rgba(255,240,210,.22)'; ctx.fillRect(hx - T*.2, hy - T*.11, T*.3, 1); ctx.strokeStyle = N ? '#3a3028' : '#6a5a40'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(hx + T*.38*d, hy - T*.22); ctx.lineTo(hx + T*.3*d, py + T*.3); ctx.stroke(); } }
+      ell(ctx, hx, hy + T*.2, T*.3, T*.06, N ? 'rgba(0,0,0,.4)' : 'rgba(70,46,26,.35)'); { const k = T*.047; ctx.save(); ctx.translate(hx, hy + T*.2); ctx.scale(d*k, k); beastHorse(ctx, hc, {mane:N ? '#0a0808' : '#1e140c'}); ctx.restore(); } // v13.52.0: the shared horse (017b)
+      ctx.fillStyle = N ? 'rgba(160,170,210,.12)' : 'rgba(255,240,210,.22)'; ctx.fillRect(hx - T*.17, hy - T*.2, T*.28, 1); ctx.strokeStyle = N ? '#3a3028' : '#6a5a40'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(hx + T*.4*d, hy - T*.26); ctx.lineTo(hx + T*.3*d, py + T*.3); ctx.stroke(); } }
   else exitArrow(ctx, ch, px, py, T);
   if (N) b2Firelit(ctx, x, y, T, .34, 3.2, '255,150,70');
 }

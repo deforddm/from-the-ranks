@@ -323,7 +323,7 @@ const SYNTH_TCG = (n) => {
 
 let bad = 0, skipped = 0;
 async function run(i) {
-  const { ctx, page, errors: errs } = await openGame(browser, srv.url, wide ? { fast: true, width: 1366, height: 768 } : { fast: true });
+  const { ctx, page, errors: errs } = await openGame(browser, srv.url, wide ? { fast: true, width: 1366, height: 768, handPicks: true } : { fast: true, handPicks: true }); // the play-through answers the real pick screen
   page.on('console', m => { if (m.type() === 'warning' && /finale|backdrop leave|unknown/i.test(m.text())) errs.push('warn: ' + m.text()); });
   await page.evaluate(BOT);
   if (cheat) await page.evaluate(() => { __bot.cheat = true; });

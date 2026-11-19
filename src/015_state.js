@@ -27,6 +27,9 @@ function migrate(s){
   // v13.4 (David, Nov 12): the Mockra Whisper is Tuft's from the start, so a Tuft who took it as her level-3 talent chooses again (Shadow Step or Shadow Lash)
   [s, ...Object.values(s.th || {})].forEach(t => { const p = t && t.picks && t.picks.tuft; if (!p || !p.includes('mockra')) return; t.picks.tuft = p.filter(k => k !== 'mockra');
     if ((t.lvl || s.lvl || 1) >= 3) { t.picksDue ??= []; if (!t.picksDue.includes(3)) t.picksDue.push(3); } });
+  // v13.52.0: a save made before every soldier had a level-3 talent and a level-12 choice of two is asked once for the ones it now owes (Book Six's four; the hooks, the lances, Keth, Tallow, Hessa)
+  if (!s.t52Asked && !(typeof window !== 'undefined' && window.FTR_AUTOPICK)) { s.t52Asked = 1; [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !Array.isArray(t.squad) || !t.picks) return; const o = t === s ? s : Object.assign({}, s, t);
+    t.picksDue ??= []; picksOwed(o).filter(l => l === 3 || l === 12).forEach(l => { if (!t.picksDue.includes(l)) t.picksDue.push(l); }); t.picksDue.sort((x, y) => x - y); }); }
   // v13.5: a save already at level 12 or past it is asked for the second talent (picksOwed checks who still owes it)
   [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !t.picks || (t.lvl || s.lvl || 1) < 12 || t.t2Asked) return; t.t2Asked = 1; t.picksDue ??= []; if (!t.picksDue.includes(12)) t.picksDue.push(12); });
   if (s.book !== 'gotm') return s; // the fixes below are for Book One saves only
@@ -64,7 +67,7 @@ const HEALER = () => S && S.squad ? ['ohl', 'marrow', 'mirrel', 'ammet'].find(id
 const kitAb = id => { const ab = [...TPL[id].ab]; if (id === 'kettle' && S && ((S.inv && S.inv.smoker > 0) || (S.f && S.f.gotSmokers))) ab.splice(ab.indexOf('cusser') + 1, 0, 'smoker'); return ab; };
 /* a new squadmate. If the squad has already earned its level-3 habits, the recruit picks hers before the next conversation. */
 function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push(id); S.loy[id] ??= 0; S.gear[id] ??= {}; S.picks[id] ??= [];
-  if (S.lvl >= 3 && PICKS[3][id] && !S.picks[id].some(k => PICKS[3][id].some(o => o[0] === k)) && !S.picksDue.includes(3)) S.picksDue.push(3);
+  if (talentOwed(S, id) && !S.picksDue.includes(3)) S.picksDue.push(3);
   vetCatchUp(id);
   note(`${NAME(id)} joins the Fourth.`, 'good'); AUDIO.play('up'); save(); }
 /* v7.2.2 (David, Oct 27: a recruit joins at the sergeant's level, with its rewards): the squad's level is shared; what each soldier
@@ -73,22 +76,26 @@ function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push
    book; before, only Books Three and Four did it, and only on a first join. picksOwed(s): the levels someone walking still owes (b3PicksDue). */
 const VET_LVLS = [5,7,9,11,13,15];
 const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
-const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
+const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(typeof window !== 'undefined' && window.FTR_AUTOPICK && ['mehet', 'ottar', 'brannoc', 'ressa'].includes(k)) && /* the test tools' seam: Book Six's four had no talent before v13.52.0, and the flow tests written then are not about picks */ !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
 const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
 /* v13.5: the level-12 talent (014 PICKS.t2). The role is read from the kit: sergeant, healer, heavy, sapper, bow, caster. */
-function t2Role(k){ const ab = (TPL[k] && TPL[k].ab) || []; if (k === 'sgt') return 'oldhand'; if (ab.includes('mend')) return 'fieldsurgeon'; if (ab.includes('bash') || (typeof KIT_ANVIL !== 'undefined' && KIT_ANVIL.includes(k))) return 'anvil';
+function t2Role(k){ const ab = (TPL[k] && TPL[k].ab) || []; if (k === 'sgt') return 'oldhand'; if (ab.includes('mend')) return 'fieldsurgeon'; if (typeof KIT_T2 !== 'undefined' && KIT_T2[k]) return KIT_T2[k]; if (ab.includes('bash') || (typeof KIT_ANVIL !== 'undefined' && KIT_ANVIL.includes(k))) return 'anvil'; if (ab.includes('grapple')) return 'handover'; if (ab.includes('b2_lance')) return 'setbutt';
   if (ab.includes('sharper')) return 'stakeline'; if (ab.includes('mark')) return 'calledshot'; if (ab.some(a => AB[a] && AB[a].strain && !['mend','wash','stanch'].includes(a))) return 'deepwarren'; return null; }
 const T2IDS = () => Object.keys(PICKS.t2);
 function t2Opts(s, k){ const t3 = PICKS[3][k]; if (!t3) return []; const mine = ((s.picks || {})[k]) || [], took = t3.find(o => mine.includes(o[0]));
   if (!took) return []; const out = t3.filter(o => o[0] !== took[0]); const r = t2Role(k); if (r) out.push(PICKS.t2[r]); return out; }
-const t2Owed = (s, k) => (s.lvl || 1) >= 12 && !!PICKS[3][k] && !talentOwed(s, k) && (() => { const o = t2Opts(s, k), mine = ((s.picks || {})[k]) || []; return o.length && !o.some(x => mine.includes(x[0])); })();
+const t2Owed = (s, k) => (s.lvl || 1) >= 12 && !!PICKS[3][k] && !talentOwed(s, k) && (() => { const o = t2Opts(s, k), mine = ((s.picks || {})[k]) || []; return o.length && !o.some(x => mine.includes(x[0])) && !mine.some(p => T2IDS().includes(p)); })();
 function picksOwed(s){ const sq = (s.squad || []).filter(k => TPL[k]), due = [];
   if (sq.some(k => talentOwed(s, k))) due.push(3);
   if (sq.some(k => t2Owed(s, k))) due.push(12);
   VET_LVLS.forEach(l => { if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
   return due; }
 function vetCatchUp(id){ if (!S || !TPL[id] || id === 'sgt') return; S.picks[id] ??= []; const want = VET_LVLS.filter(l => (S.lvl || 1) >= l).length, have = vetCount(S, id);
-  if (have < want) PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, want - have).forEach(k => S.picks[id].push(k)); }
+  if (have >= want) return; const left = PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k));
+  if (want - have >= left.length) { left.forEach(k => S.picks[id].push(k)); return; } // every pick there is: nothing to choose
+  if (typeof window !== 'undefined' && window.FTR_AUTOPICK) { left.slice(0, want - have).forEach(k => S.picks[id].push(k)); return; } // the test tools' seam (tools/page.mjs): flow tests that are not about picks take them in order, as the game did before v13.52.0
+  /* v13.52.0 (David, Nov 19, 2026: "having the upgrades chosen manually will help"): the levels passed are owed, and the pick screen asks for them all at once (037 openPicks) */
+  S.picksDue ??= []; VET_LVLS.filter(l => vetOwedAt(S, id, l) && !S.picksDue.includes(l)).forEach(l => S.picksDue.push(l)); S.picksDue.sort((a, b) => a - b); }
 /* a squadmate who leaves by choice, for somewhere of their own (Ellis, to find Toc): no 'gone' flag, a plain note */
 function letGo(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.gear[id] = {}; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); }
 function unrecruit(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.f[id + 'Gone'] = 1; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); }

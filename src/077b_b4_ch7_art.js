@@ -67,10 +67,7 @@ function b47Ghost(ctx, h, t, o){ ctx.save(); const ph = o.phase || 0, g = o.stil
 /* a giant on a horse, very far off: a silhouette, the horse bigger than any horse, the rider as tall again, something long across his back */
 function b47Giant(ctx, h, t, o){ ctx.save(); const s = o.still ? 0 : Math.sin(t/300 + (o.phase || 0)), col = '#1c1612', rim = 'rgba(232,206,160,.28)';
   ctx.translate(0, -4); ctx.scale(1.5, 1.5); ctx.translate(0, 4);
-  ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(0, 1.6, 11.6, 4.6, 0, 0, 7); ctx.fill(); // the horse's barrel, bigger than any horse
-  poly(ctx, [[-8, -.6], [-12.4, -7.6], [-15.6, -7.4], [-13.4, 1.4]], col); ctx.beginPath(); ctx.ellipse(-15.6, -7, 3.2, 1.7, -.4, 0, 7); ctx.fill(); poly(ctx, [[-13.6, -8.4], [-12.8, -10.4], [-12.4, -8.2]], col); // neck and head up, an ear (facing left)
-  ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.lineCap = 'round'; [[-7.4, 5, -8.2 + s, 13], [-5, 5, -4.2 - s, 13], [6, 5, 6.8 - s, 13], [8.4, 5, 7.8 + s, 13]].forEach(([a, b, c, d]) => { ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(c, d); ctx.stroke(); });
-  ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(11, 0); ctx.quadraticCurveTo(14.4, 3, 13.6, 8); ctx.stroke(); // the tail, hanging
+  ctx.save(); ctx.translate(0, 13); ctx.scale(-2.05, 2.05); beastHorse(ctx, col, {g:s*.5}); ctx.restore(); ctx.fillStyle = col; ctx.strokeStyle = col; // v13.52.0: the shared horse (017b), bigger than any horse, facing left
   poly(ctx, [[-3.4, -1], [3.6, -1], [4.4, -10], [2, -16], [-2.4, -16], [-4.2, -10]], col); ell(ctx, -.2, -18.6, 2.6, 2.8, col); poly(ctx, [[-2.8, -1], [-4.4, 4], [-2.4, 4.4], [-1.2, -1]], col); // the rider, upright, huge, a leg down the horse's side
   ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(-6.4, -7); ctx.lineTo(6.4, -20); ctx.stroke(); ctx.lineCap = 'butt'; // something long across his back
   ctx.strokeStyle = rim; ctx.lineWidth = .7; ctx.beginPath(); ctx.moveTo(-3, -16); ctx.lineTo(-4.2, -10); ctx.lineTo(-3.4, -1); ctx.moveTo(-11, .6); ctx.quadraticCurveTo(-4, -3, 8, -2.4); ctx.stroke(); // the low sun on its edge

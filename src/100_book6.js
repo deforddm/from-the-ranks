@@ -130,6 +130,12 @@ Object.assign(TPL, {
     get quest(){ return 'Away from the city. The Host is going away from the city.'; }},
 });
 Object.assign(VERB, {mehet:'slings a shot at', ottar:'brings the long sword down on', brannoc:'swings a boarding axe at', ressa:'cuts at'});
+/* v13.52.0 (David, Nov 19, 2026): Book Six's four had no level-3 talent, so no level-12 pick either */
+Object.assign(PICKS[3], {
+  mehet:[['quickshot', 'Potter\'s Aim', 'Once a fight: two sling-shots at one target within range (three from level 6). He threw clay at a mark for thirty years before he threw it at people.'], ['ghost', 'Nobody\'s Townsman', 'Enemies take −2 to hit Mehet. A man who has walked out of one burning city knows where not to stand in the next.']],
+  ottar:[['shieldwall', 'Shield of the Wolves', 'Squadmates standing next to Ottar get +2 armour. The Perish fight in a line, and the line is the point.'], ['holdline', 'The Wolf Holds', 'Ottar\'s free swings are unlimited and hit +2. What comes past a Grey Helm comes past bleeding.']],
+  brannoc:[['holdline', 'Repel Boarders', 'Brannoc\'s free swings are unlimited and hit +2. Anything that crosses his rail is cut on the way.'], ['snare', 'Fouled Line', 'Whatever the Boarding line hauls in is tangled in it: −2 to hit and −2 armour through its next turn.']],
+  ressa:[['twoblades', 'Both Knives', 'Ressa strikes twice a turn, the second with the off hand (1d4). She carries two for a reason.'], ['ghost', 'Already Buried Once', 'Enemies take −2 to hit Ressa. The fever looked straight at her and went past.']]});
 Object.assign(STATUP, {mehet:['guile', 'wits'], ottar:['might', 'wits'], brannoc:['might', 'guile'], ressa:['guile', 'wits']});
 Object.assign(TPL_ROLES, {mehet:['light', 'ranged', 'blade'], ottar:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], brannoc:['heavy', 'mail', 'blade', 'heavyweapon'], ressa:['light', 'blade']});
 /* Ressa has had the fever, and does not catch it again (her bio; bh-canon §8) */

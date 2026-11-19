@@ -76,14 +76,14 @@ const r = await page.evaluate(() => { const out = {};
   click('[data-rout="tallow"]'); click('[data-rin="tebbet"]'); click('#rDo'); out.four.spare = S.squad.join(','); closeRoster();
   out.four.offers = b4Offers().join(','); b4SwapIn('redblade'); out.four.sendFor = {sq:S.squad.join(','), gear:JSON.stringify(S.gear.redblade)};
   /* ---- v7.2.2: a late joiner owes the squad's level rewards, and only they choose; the level bar fits ---- */
-  setBook('gotm'); S = newState('Late'); S.chapter = 4; S.lvl = 6; S.xp = LEVELS[5]; S.picksDue = []; ['sgt', 'brisk', 'kettle', 'tuft', 'ohl'].forEach(k => S.picks[k] = [PICKS[3][k][0][0], 'iron']);
+  window.FTR_AUTOPICK = 0; setBook('gotm'); S = newState('Late'); S.chapter = 4; S.lvl = 6; S.xp = LEVELS[5]; S.picksDue = []; ['sgt', 'brisk', 'kettle', 'tuft', 'ohl'].forEach(k => S.picks[k] = [PICKS[3][k][0][0], 'iron']);
   recruit('ellis'); out.late = {due:S.picksDue.join(','), vet:S.picks.ellis.join(',')}; openPicks(() => {}); out.late.who = [...document.querySelectorAll('#modal .pk h4')].map(h => h.textContent.split(' ')[0]).join(',');
-  click('[data-id="ellis"][data-k="ghost"]'); click('#bPick');
+  click('[data-id="ellis"][data-k="ghost"]'); click('#bPick'); out.late.who2 = [...document.querySelectorAll('#modal .pk h4')].map(h => h.textContent.split(' ')[0]).join(','); click('[data-id="ellis"][data-k="iron"]'); click('#bPick'); // v13.52.0: she chooses her own veteran pick
   out.late.after = {picks:S.picks.ellis.join(','), due:S.picksDue.join(','), sgt:S.picks.sgt.join(',')}; $('#modal').hidden = true;
   const st = {}; ['sgt', 'ellis'].forEach(k => { const u = mkParty(k, 0, 0); st[k] = {hp:u.maxhp - TPL[k].hp}; }); out.late.st = st;
   rosterOut('ellis'); S.lvl = 7; S.picksDue = [7]; ['sgt', 'brisk', 'kettle', 'tuft', 'ohl'].forEach(k => S.picks[k].push('keen')); openPicks(() => {});
-  out.late.benched = S.picksDue.join(','); rosterIn('ellis'); out.late.back = S.picks.ellis.join(',');
-  setBook('dg'); S = newStateDG('LateTwo'); S.chapter = 4; S.lvl = 7; S.picksDue = []; b2SwapIn('redblade'); out.late.ramin = (S.picks.redblade || []).join(',');
+  out.late.benched = S.picksDue.join(','); rosterIn('ellis'); out.late.back = S.picks.ellis.join(',') + ' due ' + S.picksDue.join(',');
+  setBook('dg'); S = newStateDG('LateTwo'); S.chapter = 4; S.lvl = 7; S.picksDue = []; b2SwapIn('redblade'); out.late.ramin = (S.picks.redblade || []).join(',') + ' due ' + S.picksDue.join(',');
   setBook('hoc'); S = newStateHOC('Bar'); S.lvl = 13; openChars(0); const lb = [...document.querySelectorAll('#chars .stbar')].find(e => /Level/.test(e.textContent));
   out.bar = lb ? {i:lb.querySelector('.bar i').getBoundingClientRect().right, bar:lb.querySelector('.bar').getBoundingClientRect().right} : null; $('#chars').hidden = true;
   return out; });
@@ -112,9 +112,9 @@ ok(r.four.imp && /arensword/.test(r.four.parked), 'Book Four: Ramin\'s Book Two 
 ok(/redblade/.test(r.four.ramin.sq) && /arensword/.test(r.four.ramin.gear) && /arenmail/.test(r.four.ramin.gear) && r.four.ramin.loy === 3 && /iron/.test(r.four.ramin.picks), `Ramin joins in his Book Two gear, loyalty and picks (${JSON.stringify(r.four.ramin)})`);
 ok(!r.four.spareAlone && r.four.spareSwap && !r.four.spareForRecruit && !r.four.coreOut && r.four.recruitForRecruit, 'Book Four: a spare goes only for a spare (the five stay filled); recruit for recruit; never the core');
 ok(r.four.recruitForSpare, 'Book Four: a recruit can go to camp for a spare, so six still walk (David, Oct 27)');
-ok(r.late.due === '3' && r.late.vet === 'iron' && r.late.who === 'Ellis', `a late joiner gets the level-5 veteran pick at once, and chooses only her talent (${r.late.due}; ${r.late.vet}; ${r.late.who})`);
-ok(r.late.after.picks === 'iron,ghost' && r.late.after.due === '' && r.late.after.sgt === 'discipline,iron' && r.late.st.ellis.hp === r.late.st.sgt.hp, `chosen, and nobody else got a pick; her health grows like the sergeant's (${JSON.stringify(r.late.after)} ${JSON.stringify(r.late.st)})`);
-ok(r.late.benched === '' && r.late.back === 'iron,ghost,keen' && r.late.ramin === 'iron,keen', `benched through a level-up, she catches up when she's back; Ramin joining Book Two at 7 has two (${r.late.back}; ${r.late.ramin})`);
+ok(r.late.due === '3,5' && r.late.vet === '' && r.late.who === 'Ellis' && r.late.who2 === 'Ellis', `a late joiner is given nothing silently: she chooses her talent and then her level-5 veteran pick (v13.52.0) (${r.late.due}; ${r.late.vet}; ${r.late.who})`);
+ok(r.late.after.picks === 'ghost,iron' && r.late.after.due === '' && r.late.after.sgt === 'discipline,iron' && r.late.st.ellis.hp === r.late.st.sgt.hp, `chosen, and nobody else got a pick; her health grows like the sergeant's (${JSON.stringify(r.late.after)} ${JSON.stringify(r.late.st)})`);
+ok(r.late.benched === '' && r.late.back === 'ghost,iron due 7' && /^ due (3,)?5,7$/.test(r.late.ramin), `benched through a level-up, she owes the level's pick when she's back; Ramin joining Book Two at 7 owes two (${r.late.back}; ${r.late.ramin})`);
 ok(r.bar && r.bar.i <= r.bar.bar + 0.5, `the level bar stays inside its box at level 13 (${JSON.stringify(r.bar)})`);
 ok(r.four.outs === 'redblade' && r.four.after.sq.includes('orvas') && !r.four.after.sq.includes('redblade') && r.four.after.camp.includes('redblade') && r.four.after.flag === 2, `Book Four: the sergeant chooses which recruit goes (${r.four.outs}; ${JSON.stringify(r.four.after)})`);
 ok(r.four.spare.includes('tebbet') && !r.four.spare.includes('tallow'), `a spare swapped for a spare (${r.four.spare})`);

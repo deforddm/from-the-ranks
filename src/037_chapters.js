@@ -223,13 +223,17 @@ function openPicks(done){
   while (S.picksDue.length && !SQUAD().some(id => owesAt(id, S.picksDue[0]))) S.picksDue.shift(); // nobody walking owes it (they went to camp)
   const lvl = S.picksDue[0]; if (!lvl) { save(); return done && done(); }
   const m = $('#modal'); m.hidden = false; m.scrollTop = 0;
+  const vet = VET_LVLS.includes(lvl), vls = vet ? S.picksDue.filter(l => VET_LVLS.includes(l)) : [lvl]; // v13.52.0: every veteran level owed is asked on one screen, so a soldier who joins late chooses all of theirs at once
   const chosen = {};
-  const optsFor = id => !owesAt(id, lvl) ? [] : lvl === 3 ? PICKS[3][id] || [] : lvl === 12 ? t2Opts(S, id) : PICKS.vet.filter(v => !has(id, v[0]));
-  m.innerHTML = `<div class="mbox"><h2 class="m">Level ${lvl}</h2><p class="fine">${lvl === 3 ? 'The squad has been through enough to have habits. Pick one per soldier.' : lvl === 12 ? 'Long service. A second habit each: the one passed over at the start, or the trade\'s own.' : 'Veterans. One pick each; the rest stays as it was.'}</p>
-    <div class="picks">${SQUAD().filter(id => optsFor(id).length).map(id => `<div class="pk"><h4>${esc(NAME(id))} <span class="stat">${TPL[id].role}</span></h4><div class="opt2">${optsFor(id).map(o => `<button class="btn" data-id="${id}" data-k="${o[0]}"><b>${o[1]}</b>${o[2]}</button>`).join('')}</div></div>`).join('')}</div>
+  const optsFor = id => !vls.some(l => owesAt(id, l)) ? [] : lvl === 3 ? PICKS[3][id] || [] : lvl === 12 ? t2Opts(S, id) : PICKS.vet.filter(v => !has(id, v[0]));
+  const needOf = id => vet ? Math.min(optsFor(id).length, vls.filter(l => owesAt(id, l)).length) : 1;
+  const who = SQUAD().filter(id => optsFor(id).length), many = who.some(id => needOf(id) > 1);
+  m.innerHTML = `<div class="mbox"><h2 class="m">${vet && vls.length > 1 ? 'Veteran picks' : `Level ${lvl}`}</h2><p class="fine">${lvl === 3 ? 'The squad has been through enough to have habits. Pick one per soldier.' : lvl === 12 ? 'Long service. A second habit each: the one passed over at the start, or the trade\'s own.' : many ? 'Veterans. Each soldier takes as many as their name shows; the rest stays as it was.' : 'Veterans. One pick each; the rest stays as it was.'}</p>
+    <div class="picks">${who.map(id => `<div class="pk"><h4>${esc(NAME(id))} <span class="stat">${TPL[id].role}${needOf(id) > 1 ? ` · pick ${needOf(id)}` : ''}</span></h4><div class="opt2">${optsFor(id).map(o => `<button class="btn" data-id="${id}" data-k="${o[0]}"><b>${o[1]}</b>${o[2]}</button>`).join('')}</div></div>`).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="btn primary" id="bPick" disabled>Confirm</button></div></div>`;
-  const need = SQUAD().filter(id => optsFor(id).length).length;
-  m.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { AUDIO.play('click'); chosen[b.dataset.id] = b.dataset.k; m.querySelectorAll(`[data-id="${b.dataset.id}"]`).forEach(x => x.classList.toggle('on', x === b)); $('#bPick').disabled = Object.keys(chosen).length < need; });
-  $('#bPick').onclick = () => { AUDIO.play('up'); Object.entries(chosen).forEach(([id,k]) => (S.picks[id] ??= []).push(k)); /* v13.42.0: a squad set up mid-book (Book Six's Fourth) can start with no list yet */ S.picksDue.shift(); save(); m.hidden = true; if (S.picksDue.length) openPicks(done); else done && done(); };
+  m.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { AUDIO.play('click'); const id = b.dataset.id, c = chosen[id] ??= []; if (!c.includes(b.dataset.k)) { c.push(b.dataset.k); while (c.length > needOf(id)) c.shift(); } // one past the count drops the earliest
+    m.querySelectorAll(`[data-id="${id}"]`).forEach(x => x.classList.toggle('on', c.includes(x.dataset.k))); $('#bPick').disabled = !who.every(w => (chosen[w] || []).length === needOf(w)); });
+  $('#bPick').onclick = () => { AUDIO.play('up'); Object.entries(chosen).forEach(([id, ks]) => ks.forEach(k => (S.picks[id] ??= []).push(k))); /* v13.42.0: a squad set up mid-book (Book Six's Fourth) can start with no list yet */
+    if (vet) S.picksDue = S.picksDue.filter(l => !VET_LVLS.includes(l)); else S.picksDue.shift(); save(); m.hidden = true; if (S.picksDue.length) openPicks(done); else done && done(); };
   m.onclick = null;
 }

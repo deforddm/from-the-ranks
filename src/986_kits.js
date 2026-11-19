@@ -28,7 +28,8 @@ Object.assign(AB, {
       blog(`${u.name} takes a turn of the line round his forearm and heaves, the way you bring another ship's rail to yours, and ${t.name} comes across the ground to him.`);
       sparks(t.x, t.y, 8, '#c26a3a', .4); AUDIO.play('step'); float(t, 'hauled in', '#c26a3a');
       if (await forcedMove(t, at, 'dragged')) return;
-      t.facing = u.x >= t.x ? 1 : -1; }},
+      t.facing = u.x >= t.x ? 1 : -1;
+      if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'fouled', '#c26a3a'); } }},
   boardleap:{name:'Boarding leap', free:true, desc:()=>`Once a turn, and it does not use his action: cross to any open tile within ${3 + lvT()} in sight. No free swings against him. Grows with level.`, ok:u=>u.swungTurn !== B.turn,
     tiles:u=>AB.ropeswing.tiles(u),
     run(u,x,y){ u.swungTurn = B.turn; AUDIO.play('step'); sparks(u.x, u.y, 8, '#c26a3a', .4); u.x = x; u.y = y; sparks(x, y, 8, '#c26a3a', .4); blog(`${u.name} goes across the gap the way he would go across to another deck: all at once, and already swinging.`); enterFire(u); updBattleUI(); }},
@@ -45,18 +46,18 @@ Object.assign(AB, {
   sweep:{name:'Threshing sweep', desc:()=>`The flail goes round: 1d10+${3 + lvDmg()} at an adjacent enemy, and the same again at one other enemy beside Doss. No push. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const d = [1,10,3 + lvDmg()];
-      const o = foes().filter(f => f !== t && f.hp > 0 && cheb(u,f) === 1).sort((a, b) => a.hp - b.hp)[0];
+      const os = foes().filter(f => f !== t && f.hp > 0 && cheb(u,f) === 1).sort((a, b) => a.hp - b.hp).slice(0, has(u.id, 'fullcircle') ? 8 : 1);
       attack(u, t, {dmg:d, verb:'brings the flail round into'});
-      if (o) later(() => { if (B && !B.over && u.hp > 0 && o.hp > 0) { attack(u, o, {dmg:d, verb:'lets the flail carry on into'}); updBattleUI(); } }, pace(300)); }},
+      os.forEach((o, i) => later(() => { if (B && !B.over && u.hp > 0 && o.hp > 0) { attack(u, o, {dmg:d, verb:'lets the flail carry on into'}); updBattleUI(); } }, pace(300) * (i + 1))); }},
   /* Edrem, pilgrim guard: a long mace opens armour for everybody after him */
   breaker:{name:'Breaker', desc:()=>`The mace in both hands at an adjacent enemy: 1d10+${2 + lvDmg()} on a hit, and its armour is 2 worse against every blow through the next round. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const r = attack(u, t, {dmg:[1,10,2 + lvDmg()], verb:'brings the mace down two-handed on'});
-      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.kitBrokenUntil = B.round + 1; later(() => { if (B && t.hp > 0) float(t, 'guard broken', '#e8c073'); }, pace(260)); blog(`Something in ${t.name}'s guard gives. It will not sit right again this side of the fight.`); } }},
+      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { const sh = has(u.id, 'shatter'); t.kitBrokenUntil = B.round + (sh ? 2 : 1); t.kitBrokenBy = sh ? 3 : 2; later(() => { if (B && t.hp > 0) float(t, 'guard broken', '#e8c073'); }, pace(260)); blog(`Something in ${t.name}'s guard gives. It will not sit right again this side of the fight.`); } }},
   /* Brennet, carter: you do not stop a load, you turn it */
   turnload:{name:'Turn the load', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and Brennet swaps places with it. Every other squadmate it is turned out of reach of gets a free swing. The very heavy don't turn; a leader braces and holds about half the time. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
-    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); u.aooTurn = B.turn; // his own swing is spent on the turn
+    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); if (!has(u.id, 'followthrough')) u.aooTurn = B.turn; // his own swing is spent on the turn (Follow Through keeps it)
       const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'gets the wagon-pin behind'}); if (!r.hit) return;
       await wait(pace(250)); if (!B || t.hp <= 0 || u.hp <= 0) return;
       { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} is not a thing that turns.` : `${t.name} sets its feet and will not be turned.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
@@ -67,7 +68,7 @@ Object.assign(AB, {
   /* Pruss, heavy: the carter's maul, for when the weight has to go somewhere else */
   maul:{name:'The maul', desc:()=>`The carter's maul in both hands at an adjacent enemy: 1d10+${3 + lvDmg()} on a hit, and it is driven straight back up to 2 tiles. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6. Toward a pit or a drop: it saves to catch the lip, or goes over. The very heavy don't move; a leader braces and holds about half the time. Recharges after 3 rounds.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
-    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + 3; u.aooTurn = B.turn;
+    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + 3; if (!has(u.id, 'followthrough')) u.aooTurn = B.turn;
       const r = attack(u, t, {dmg:[1,10,3 + lvDmg()], verb:'swings the maul into'}); if (!r.hit) return;
       await wait(pace(250)); if (!B || t.hp <= 0) return;
       await kitDrive(u, t, 2); }},
@@ -75,16 +76,22 @@ Object.assign(AB, {
   hoofknife:{name:'Hoof-knife', desc:()=>`The hammer, then the knife into what it opened: 1d6+${2 + lvDmg()} at an adjacent enemy on a hit, and it bleeds for three rounds (1d4 a round). Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'puts the hammer and then the hoof-knife into'});
-      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.bleed = 3; later(() => { if (B && t.hp > 0) float(t, 'bleeding', '#e0574a'); }, pace(260));
+      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.bleed = has(u.id, 'deepcut') ? 5 : 3; later(() => { if (B && t.hp > 0) float(t, 'bleeding', '#e0574a'); }, pace(260));
         if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; later(() => { if (B && t.hp > 0) float(t, 'held', '#b0a0c8'); }, pace(520)); } } }}
 });
 /* the howl's fear and the mace's broken guard, in the to-hit sum */
 { const _atkCalc = atkCalc;
   atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o); if (!B || !a || !t) return c;
     if (a.side !== 'p' && a.kitHowlUntil >= B.round) c.bonus -= 2;
-    if (t.side !== 'p' && t.kitBrokenUntil >= B.round) c.ac -= 2;
+    if (t.side !== 'p' && t.kitBrokenUntil >= B.round) c.ac -= t.kitBrokenBy || 2;
     return c; }; }
 { const _squadTurnStart = squadTurnStart;
   squadTurnStart = function(u){ const r = _squadTurnStart(u); if (B && u && u.id === 'ottar') B.units.forEach(e => { if (e.kitHowlUntil != null) e.kitHowlUntil = -1; }); return r; }; }
 /* the level-12 talent reads its role from the kit (015 t2Role). The reworked heavies keep the Anvil they were offered when they carried the bash, so no save loses a pick. */
-const KIT_ANVIL = ['brannoc', 'darrut', 'ottar', 'doss', 'edrem', 'brask', 'brennet', 'pruss', 'tirren'];
+const KIT_ANVIL = ['darrut', 'ottar'];
+/* v13.52.0 (David, Nov 19, 2026): the level-12 talent written for each new kit, and for the three whose gift is their kit. A soldier who already took Anvil keeps it and is not asked again (015 t2Owed). */
+const KIT_T2 = {brannoc:'flurry', brask:'flurry', doss:'fullcircle', edrem:'shatter', brennet:'followthrough', pruss:'followthrough', tirren:'deepcut', warlock:'twiceblessed', tallow:'twiceblessed', hessa:'twiceblessed'};
+/* Twice Blessed: the gift's own count, then one more */
+[['b4_twins', 'tallow'], ['b2_bargain', 'warlock'], ['b4_wormgift', 'hessa']].forEach(([k, who]) => { const a = AB[k]; if (!a) return; const ok0 = a.ok, run0 = a.run;
+  a.ok = function(u){ return ok0.call(this, u) || !!(B && S && has(who, 'twiceblessed') && !B.used['tb_' + k]); };
+  a.run = function(u, x, y){ if (!ok0.call(this, u)) B.used['tb_' + k] = 1; return run0.call(this, u, x, y); }; });

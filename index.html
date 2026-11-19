@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.51.0';
+const VERSION = '13.52.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1700,6 +1700,14 @@ PICKS.t2 = {
   fieldsurgeon:['fieldsurgeon', 'Field Surgeon', 'Stanch also leaves a dressing that heals a little at the start of each of the squadmate\'s next three turns (2, and 1 more for every four squad levels past the first). Stitched, packed and talked to.'],
   anvil:['anvil', 'Anvil', 'Once a fight, without using the action: until the next turn, every blow aimed at a squadmate standing next to this one lands on this one instead.'],
   stakeline:['stakeline', 'Stake Line', 'Once a fight: a line of three sharpened stakes and cord across open ground within 4. An enemy that steps onto it stops there, its move done. No munition in it.'],
+  handover:['handover', 'Hand Over Hand', 'Whatever the hook hauls in takes a free blow from the one hauling as it arrives.'],
+  setbutt:['setbutt', 'Set the Butt', 'Once a round, the first enemy to step next to this soldier takes a free thrust as it comes.'],
+  twiceblessed:['twiceblessed', 'Twice Blessed', 'The gift comes once more each fight: the Twins, the old woman\'s bargain, or the Worm\'s giving back.'],
+  flurry:['flurry', 'Flurry', 'The first time each fight this soldier strikes with both hands, each hand strikes twice: four blows.'],
+  fullcircle:['fullcircle', 'Full Circle', 'The Threshing sweep strikes every enemy standing next to him, not two.'],
+  shatter:['shatter', 'Shatter', 'The Breaker\'s broken guard is 3 worse, not 2, and lasts a round longer.'],
+  followthrough:['followthrough', 'Follow Through', 'He keeps his own free swing when he turns or drives an enemy.'],
+  deepcut:['deepcut', 'Deep Cut', 'The Hoof-knife\'s wound bleeds for five rounds, not three.'],
   calledshot:['calledshot', 'Called Shot', 'An enemy this soldier marks also loses 2 armour while the Mark holds.'],
   deepwarren:['deepwarren', 'Deep Warren', 'Every spell costs 1 less strain (never under 1). Years of going in, and coming back.'],
 };
@@ -1910,6 +1918,9 @@ function migrate(s){
   // v13.4 (David, Nov 12): the Mockra Whisper is Tuft's from the start, so a Tuft who took it as her level-3 talent chooses again (Shadow Step or Shadow Lash)
   [s, ...Object.values(s.th || {})].forEach(t => { const p = t && t.picks && t.picks.tuft; if (!p || !p.includes('mockra')) return; t.picks.tuft = p.filter(k => k !== 'mockra');
     if ((t.lvl || s.lvl || 1) >= 3) { t.picksDue ??= []; if (!t.picksDue.includes(3)) t.picksDue.push(3); } });
+  // v13.52.0: a save made before every soldier had a level-3 talent and a level-12 choice of two is asked once for the ones it now owes (Book Six's four; the hooks, the lances, Keth, Tallow, Hessa)
+  if (!s.t52Asked && !(typeof window !== 'undefined' && window.FTR_AUTOPICK)) { s.t52Asked = 1; [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !Array.isArray(t.squad) || !t.picks) return; const o = t === s ? s : Object.assign({}, s, t);
+    t.picksDue ??= []; picksOwed(o).filter(l => l === 3 || l === 12).forEach(l => { if (!t.picksDue.includes(l)) t.picksDue.push(l); }); t.picksDue.sort((x, y) => x - y); }); }
   // v13.5: a save already at level 12 or past it is asked for the second talent (picksOwed checks who still owes it)
   [s, ...Object.values(s.th || {})].forEach(t => { if (!t || !t.picks || (t.lvl || s.lvl || 1) < 12 || t.t2Asked) return; t.t2Asked = 1; t.picksDue ??= []; if (!t.picksDue.includes(12)) t.picksDue.push(12); });
   if (s.book !== 'gotm') return s; // the fixes below are for Book One saves only
@@ -1947,7 +1958,7 @@ const HEALER = () => S && S.squad ? ['ohl', 'marrow', 'mirrel', 'ammet'].find(id
 const kitAb = id => { const ab = [...TPL[id].ab]; if (id === 'kettle' && S && ((S.inv && S.inv.smoker > 0) || (S.f && S.f.gotSmokers))) ab.splice(ab.indexOf('cusser') + 1, 0, 'smoker'); return ab; };
 /* a new squadmate. If the squad has already earned its level-3 habits, the recruit picks hers before the next conversation. */
 function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push(id); S.loy[id] ??= 0; S.gear[id] ??= {}; S.picks[id] ??= [];
-  if (S.lvl >= 3 && PICKS[3][id] && !S.picks[id].some(k => PICKS[3][id].some(o => o[0] === k)) && !S.picksDue.includes(3)) S.picksDue.push(3);
+  if (talentOwed(S, id) && !S.picksDue.includes(3)) S.picksDue.push(3);
   vetCatchUp(id);
   note(`${NAME(id)} joins the Fourth.`, 'good'); AUDIO.play('up'); save(); }
 /* v7.2.2 (David, Oct 27: a recruit joins at the sergeant's level, with its rewards): the squad's level is shared; what each soldier
@@ -1956,22 +1967,26 @@ function recruit(id){ if (!TPL[id] || S.squad.includes(id)) return; S.squad.push
    book; before, only Books Three and Four did it, and only on a first join. picksOwed(s): the levels someone walking still owes (b3PicksDue). */
 const VET_LVLS = [5,7,9,11,13,15];
 const vetCount = (s, k) => (((s.picks || {})[k]) || []).filter(p => PICKS.vet.some(v => v[0] === p)).length;
-const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
+const talentOwed = (s, k) => (s.lvl || 1) >= 3 && !!PICKS[3][k] && !(typeof window !== 'undefined' && window.FTR_AUTOPICK && ['mehet', 'ottar', 'brannoc', 'ressa'].includes(k)) && /* the test tools' seam: Book Six's four had no talent before v13.52.0, and the flow tests written then are not about picks */ !(((s.picks || {})[k]) || []).some(p => PICKS[3][k].some(o => o[0] === p));
 const vetOwedAt = (s, k, l) => (s.lvl || 1) >= l && VET_LVLS.includes(l) && vetCount(s, k) <= VET_LVLS.indexOf(l);
 /* v13.5: the level-12 talent (014 PICKS.t2). The role is read from the kit: sergeant, healer, heavy, sapper, bow, caster. */
-function t2Role(k){ const ab = (TPL[k] && TPL[k].ab) || []; if (k === 'sgt') return 'oldhand'; if (ab.includes('mend')) return 'fieldsurgeon'; if (ab.includes('bash') || (typeof KIT_ANVIL !== 'undefined' && KIT_ANVIL.includes(k))) return 'anvil';
+function t2Role(k){ const ab = (TPL[k] && TPL[k].ab) || []; if (k === 'sgt') return 'oldhand'; if (ab.includes('mend')) return 'fieldsurgeon'; if (typeof KIT_T2 !== 'undefined' && KIT_T2[k]) return KIT_T2[k]; if (ab.includes('bash') || (typeof KIT_ANVIL !== 'undefined' && KIT_ANVIL.includes(k))) return 'anvil'; if (ab.includes('grapple')) return 'handover'; if (ab.includes('b2_lance')) return 'setbutt';
   if (ab.includes('sharper')) return 'stakeline'; if (ab.includes('mark')) return 'calledshot'; if (ab.some(a => AB[a] && AB[a].strain && !['mend','wash','stanch'].includes(a))) return 'deepwarren'; return null; }
 const T2IDS = () => Object.keys(PICKS.t2);
 function t2Opts(s, k){ const t3 = PICKS[3][k]; if (!t3) return []; const mine = ((s.picks || {})[k]) || [], took = t3.find(o => mine.includes(o[0]));
   if (!took) return []; const out = t3.filter(o => o[0] !== took[0]); const r = t2Role(k); if (r) out.push(PICKS.t2[r]); return out; }
-const t2Owed = (s, k) => (s.lvl || 1) >= 12 && !!PICKS[3][k] && !talentOwed(s, k) && (() => { const o = t2Opts(s, k), mine = ((s.picks || {})[k]) || []; return o.length && !o.some(x => mine.includes(x[0])); })();
+const t2Owed = (s, k) => (s.lvl || 1) >= 12 && !!PICKS[3][k] && !talentOwed(s, k) && (() => { const o = t2Opts(s, k), mine = ((s.picks || {})[k]) || []; return o.length && !o.some(x => mine.includes(x[0])) && !mine.some(p => T2IDS().includes(p)); })();
 function picksOwed(s){ const sq = (s.squad || []).filter(k => TPL[k]), due = [];
   if (sq.some(k => talentOwed(s, k))) due.push(3);
   if (sq.some(k => t2Owed(s, k))) due.push(12);
   VET_LVLS.forEach(l => { if (sq.some(k => vetOwedAt(s, k, l))) due.push(l); });
   return due; }
 function vetCatchUp(id){ if (!S || !TPL[id] || id === 'sgt') return; S.picks[id] ??= []; const want = VET_LVLS.filter(l => (S.lvl || 1) >= l).length, have = vetCount(S, id);
-  if (have < want) PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k)).slice(0, want - have).forEach(k => S.picks[id].push(k)); }
+  if (have >= want) return; const left = PICKS.vet.map(v => v[0]).filter(k => !S.picks[id].includes(k));
+  if (want - have >= left.length) { left.forEach(k => S.picks[id].push(k)); return; } // every pick there is: nothing to choose
+  if (typeof window !== 'undefined' && window.FTR_AUTOPICK) { left.slice(0, want - have).forEach(k => S.picks[id].push(k)); return; } // the test tools' seam (tools/page.mjs): flow tests that are not about picks take them in order, as the game did before v13.52.0
+  /* v13.52.0 (David, Nov 19, 2026: "having the upgrades chosen manually will help"): the levels passed are owed, and the pick screen asks for them all at once (037 openPicks) */
+  S.picksDue ??= []; VET_LVLS.filter(l => vetOwedAt(S, id, l) && !S.picksDue.includes(l)).forEach(l => S.picksDue.push(l)); S.picksDue.sort((a, b) => a - b); }
 /* a squadmate who leaves by choice, for somewhere of their own (Ellis, to find Toc): no 'gone' flag, a plain note */
 function letGo(id, why){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.gear[id] = {}; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(why || `${NAME(id)} goes ${id === 'ohl' ? 'his' : 'her'} own way.`); save(); }
 function unrecruit(id){ if (!S.squad.includes(id) || id === 'sgt') return; S.squad = S.squad.filter(x => x !== id); S.f[id + 'Gone'] = 1; S.trail = S.trail.slice(0, Math.max(1, S.squad.length - 1)); note(`${NAME(id)} is gone.`, 'bad'); save(); }
@@ -7920,6 +7935,7 @@ function mkParty(id, x, y){
   trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
   u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld];
+  if (has(id, 'twoblades') && !(t.attacks > 1)) { u.attacks = 2; u.dmg2 = [1, 4, (t.dmg[2] || 0) + ld]; u.verb2 = 'puts the other knife into'; } // v13.52.0: Ressa's Both Knives
   if (t.attacks > 1 && !(B && B.def.nomagic && u.magic)) { u.attacks = t.attacks; const d2 = t.dmg2 || t.dmg; u.dmg2 = [d2[0], d2[1], (d2[2] || 0) + ld]; u.verb2 = t.verb2; } // v13.51: a blade in each hand. The off hand keeps its own dice whatever the main hand is given to carry // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.soak = squadSoak(id); // v10.2 (31c)
   u.hp = u.maxhp; const w = DIFF().carry ? woundOf(id) : null; if (w != null) u.hp = clamp(w, 1, u.maxhp); // Bridgeburner: the wounds the squad carried in
@@ -8130,7 +8146,7 @@ const AB = {
     ok:u=>!(u.cdMark >= B.round), tiles:u=>foes().filter(f => cheb(u,f) <= 5 && canShoot(u,f) && !(f.markedUntil >= B.round)),
     run(u,x,y){ const t = unitAt(x,y); u.cdMark = B.round + 2 - lvAt(6); t.markedUntil = B.round + 2; t.markDmg = 2 + lvT(); if (has(u.id, 'calledshot')) { if (t.calledUntil == null) t.ac -= 2; t.calledUntil = B.round + 2; } AUDIO.play('click'); float(t,'marked','#f2c46b'); blog(`${u.name} marks ${t.name}: a nick of chalk on the ground, a word to the squad, and it is a target.`); }},
   quickshot:{name:'Quick Shot', desc:()=>`Once a fight: ${lvAt(6) ? 'three' : 'two'} arrows at one target within range${lvAt(6) ? '' : ' (three from level 6)'}.`, ok:()=>!B.used.quickshot, tiles:u=>foes().filter(f => cheb(u,f) <= u.rng && canShoot(u,f)),
-    run(u,x,y){ const t = unitAt(x,y); B.used.quickshot = 1; attack(u, t); later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a second arrow into'}); }, pace(320)); if (lvAt(6)) later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a third arrow into'}); }, pace(640)); }},
+    run(u,x,y){ const t = unitAt(x,y); B.used.quickshot = 1; attack(u, t); later(() => { if (t.hp > 0) attack(u, t, {verb:u.id === 'mehet' ? 'puts a second shot into' : 'puts a second arrow into'}); }, pace(320)); if (lvAt(6)) later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a third arrow into'}); }, pace(640)); }},
   /* Vell's rope-and-hook: a throw at range that hauls whatever it bites to the tile beside him. The heavy take the hook and stay put. */
   grapple:{name:'Grappling Hook', desc:()=>`Throw the hook at an enemy 2 to ${grapR()} tiles off: 1d6+${1 + lvDmg()} on a hit, and it is hauled to the open tile beside Vell nearest it. Hauled across a pit or a drop, it saves to catch the lip and go down prone, or goes in. The very heavy take the hook but don't come; a leader braces against it about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdHook >= B.round), tiles:u=>foes().filter(f => cheb(u,f) >= 2 && cheb(u,f) <= grapR() && canShoot(u,f)),
@@ -8144,7 +8160,8 @@ const AB = {
       sparks(t.x, t.y, 8, '#b0a0c8', .4); AUDIO.play('step'); float(t, 'hauled in', '#b0a0c8');
       if (await forcedMove(t, at, 'dragged')) return;
       t.facing = u.x >= t.x ? 1 : -1;
-      if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'snared', '#b0a0c8'); } }},
+      if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'snared', '#b0a0c8'); }
+      if (has(u.id, 'handover') && B && t.hp > 0 && u.hp > 0 && cheb(u, t) === 1) { await wait(pace(200)); if (B && t.hp > 0) attack(u, t, {verb:'meets it, hand over hand, with a blow for'}); } }}, // v13.52.0
   /* the sergeant's shield, picked up at Nathilog and never put down: drive an enemy back, out of the squad's reach, and let the squad answer it */
   shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdShove >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
@@ -8304,8 +8321,8 @@ function battleTap(x, y){
     if (a.tiles(u).some(q => q === t || (q.x === x && q.y === y))) return useAb(B.mode, x, y);
     B.mode = 'act'; return updBattleUI();
   }
-  if (t && t.side === 'e' && !B.acted && cheb(u,t) <= u.rng && canShoot(u,t)) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; B.busy = true; attack(u, t); const nb = u.attacks || 1;
-    for (let i = 1; i < nb; i++) later(() => { if (!B || B.over || u.hp <= 0 || B.cur !== u) return; const nx = t.hp > 0 && cheb(u,t) <= u.rng ? t : foes().filter(f => f.hp > 0 && cheb(u,f) <= u.rng && canShoot(u,f)).sort((p, q) => p.hp - q.hp)[0]; if (nx) { attack(u, nx, {dmg:u.dmg2, verb:u.verb2 || 'cuts again at'}); updBattleUI(); } }, pace(380) * i); // v13.51: the off hand
+  if (t && t.side === 'e' && !B.acted && cheb(u,t) <= u.rng && canShoot(u,t)) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; B.busy = true; attack(u, t); let nb = u.attacks || 1; if (nb > 1 && has(u.id, 'flurry') && !B.used['flurry' + u.id]) { B.used['flurry' + u.id] = 1; nb = 4; later(() => { if (B) float(u, 'flurry', '#e8c073'); }, pace(120)); } // v13.52.0
+    for (let i = 1; i < nb; i++) later(() => { if (!B || B.over || u.hp <= 0 || B.cur !== u) return; const nx = t.hp > 0 && cheb(u,t) <= u.rng ? t : foes().filter(f => f.hp > 0 && cheb(u,f) <= u.rng && canShoot(u,f)).sort((p, q) => p.hp - q.hp)[0]; if (nx) { attack(u, nx, i % 2 ? {dmg:u.dmg2, verb:u.verb2 || 'cuts again at'} : {verb:'comes round again at'}); updBattleUI(); } }, pace(380) * i); // v13.51: the off hand
     later(() => { B.busy = false; afterAct(); }, pace(380) * nb); updBattleUI(); return; }
   if (t) { B.ping = {u:t, t:performance.now()}; blog(`${t.name}: ${t.hp}/${t.maxhp} health, armour ${t.ac}${t.soak ? `, soak ${t.soak}` : ''}${t.ward ? `, ward ${t.ward}` : ''}${t.rng > 1 ? `, range ${t.rng}` : ''}${t.side === 'e' && !B.acted ? (cheb(u,t) > u.rng ? ' · out of range' : !canShoot(u,t) ? ' · ' + noShotWhy(u,t) : '') : ''}.`); return; }
   if (!B.moved && B.reach && B.reach.has(K(x,y)) && !(x === u.x && y === u.y)) moveCur(x, y);
@@ -8415,6 +8432,7 @@ const leaveCost = (u, x, y) => u.side === 'p' && boon('rope') ? 0 : threatsAt(u,
 async function aiWalk(u, path, gone){
   if (u.rising === B.turn) return true; // spent getting up
   for (const st of path) { if (await opportunity(u, st) || gone()) break; const was = {x:u.x, y:u.y}; u.facing = st.x >= u.x ? 1 : -1; u.x = st.x; u.y = st.y; if (u.kind !== 'shade') AUDIO.play('step'); enterFire(u); await wait(160); if (gone()) return false; if (u.hp <= 0) break;
+    if (u.side === 'e' && u.hp > 0) { const p = party().find(q => !q.ally && q.hp > 0 && !q.stun && has(q.id, 'setbutt') && q.setRound !== B.round && cheb(q, u) === 1 && cheb(q, was) > 1); if (p) { p.setRound = B.round; blog(`<em>${p.name} sets the butt of the lance and lets ${u.name} come onto it.</em>`); attack(p, u, {aoo:true, verb:'takes on the point'}); updBattleUI(); await wait(420); if (gone()) return false; if (u.hp <= 0) break; } } // v13.52.0: Set the Butt
     if (u.side === 'e' && B.stakes && B.stakes.some(t => t.x === u.x && t.y === u.y)) { float(u, 'staked', '#c9a36b'); blog(`${u.name} goes into the stake line and stops there.`); break; } // v13.5: Stake Line
     if (u.side === 'e' && await postUp(u, was)) { if (gone()) return false; if (u.hp <= 0) break; } }
   return !gone();
@@ -9904,6 +9922,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.52.0', ['Every soldier now has a talent at level 3 and a choice of two at level 12. Book Six\'s four recruits (Mehet, Ottar, Brannoc, Ressa) had neither. The hook and lance soldiers, and Keth, Tallow and Hessa, were offered only one at 12.', 'New level-12 talents: Hand Over Hand (hooks), Set the Butt (lances), Twice Blessed (Keth, Tallow, Hessa), Flurry (Brannoc, Brask), Full Circle (Doss), Shatter (Edrem), Follow Through (Brennet, Pruss), Deep Cut (Tirren). All of them work by themselves: no new buttons. Anyone who already took Anvil keeps it.', 'A soldier who joins below level 15 now chooses their own veteran picks, all on one screen, where they used to be handed out in a fixed order. From level 15 a soldier has all six, so there is nothing to choose.', 'More horses redrawn: the Wickan riders on Book Two\'s title, the horse lines on the maps of Books Two and Three, the watchers on the skyline, the picketed horse at Pale, the far horsemen of Book Ten, and the giant\'s mount.']],
   ['13.51.0', ['New kits for the later books\' recruits, so no squad walks with two of the same shield. Brisk, Haddat, Thegg and Dannet keep the shield bash; nobody else does.', 'Brannoc is a Falari boarding marine: an axe in each hand and two blows a turn, a Boarding line that hauls an enemy to him, a Boarding leap, and no shield. Brask fights with sword and mace, two blows a turn. Vell has a knife in each hand.', 'Darrut drives an enemy back (Gate drive). Ottar howls, and enemies near him hit worse. Doss sweeps the flail through two enemies. Edrem\'s mace breaks a guard: armour 2 worse against everyone. Brennet swaps places with an enemy. Pruss\'s maul drives one back two tiles. Tirren\'s hoof-knife leaves it bleeding.', 'An enemy driven, hauled or turned out of a squadmate\'s reach gives that squadmate a free swing, as the sergeant\'s Shield Drive always has.', 'Tirren\'s talent The Twitch now does what it says. It never triggered before.', 'Brannoc has a new portrait and figure.', 'The animals are redrawn. The Jheck wolves and the great wolf of Book Five are wolves now, with three coats in a pack; the camp dogs of Book Nine are drawn on the same bones. Every horse in the scene art, from the Chain of Dogs to the Bonehunters\' road, is a horse and not an oval on sticks, and the oxen have their shoulders.']],
   ['13.50.3', ['Shadow Lash now leaps from each enemy it strikes to the next, and each link of the chain hangs in the air until it is done. Before, a bolt also flew from Tuft to every target. The numbers are unchanged.']],
   ['13.50.2', ['The Khundryl Burned Tears are drawn as the books describe them: pale skin, black tears inked from the eyes, and on Orvas a black moustache, a knotted chin beard and braids.']],
@@ -11629,14 +11648,18 @@ function openPicks(done){
   while (S.picksDue.length && !SQUAD().some(id => owesAt(id, S.picksDue[0]))) S.picksDue.shift(); // nobody walking owes it (they went to camp)
   const lvl = S.picksDue[0]; if (!lvl) { save(); return done && done(); }
   const m = $('#modal'); m.hidden = false; m.scrollTop = 0;
+  const vet = VET_LVLS.includes(lvl), vls = vet ? S.picksDue.filter(l => VET_LVLS.includes(l)) : [lvl]; // v13.52.0: every veteran level owed is asked on one screen, so a soldier who joins late chooses all of theirs at once
   const chosen = {};
-  const optsFor = id => !owesAt(id, lvl) ? [] : lvl === 3 ? PICKS[3][id] || [] : lvl === 12 ? t2Opts(S, id) : PICKS.vet.filter(v => !has(id, v[0]));
-  m.innerHTML = `<div class="mbox"><h2 class="m">Level ${lvl}</h2><p class="fine">${lvl === 3 ? 'The squad has been through enough to have habits. Pick one per soldier.' : lvl === 12 ? 'Long service. A second habit each: the one passed over at the start, or the trade\'s own.' : 'Veterans. One pick each; the rest stays as it was.'}</p>
-    <div class="picks">${SQUAD().filter(id => optsFor(id).length).map(id => `<div class="pk"><h4>${esc(NAME(id))} <span class="stat">${TPL[id].role}</span></h4><div class="opt2">${optsFor(id).map(o => `<button class="btn" data-id="${id}" data-k="${o[0]}"><b>${o[1]}</b>${o[2]}</button>`).join('')}</div></div>`).join('')}</div>
+  const optsFor = id => !vls.some(l => owesAt(id, l)) ? [] : lvl === 3 ? PICKS[3][id] || [] : lvl === 12 ? t2Opts(S, id) : PICKS.vet.filter(v => !has(id, v[0]));
+  const needOf = id => vet ? Math.min(optsFor(id).length, vls.filter(l => owesAt(id, l)).length) : 1;
+  const who = SQUAD().filter(id => optsFor(id).length), many = who.some(id => needOf(id) > 1);
+  m.innerHTML = `<div class="mbox"><h2 class="m">${vet && vls.length > 1 ? 'Veteran picks' : `Level ${lvl}`}</h2><p class="fine">${lvl === 3 ? 'The squad has been through enough to have habits. Pick one per soldier.' : lvl === 12 ? 'Long service. A second habit each: the one passed over at the start, or the trade\'s own.' : many ? 'Veterans. Each soldier takes as many as their name shows; the rest stays as it was.' : 'Veterans. One pick each; the rest stays as it was.'}</p>
+    <div class="picks">${who.map(id => `<div class="pk"><h4>${esc(NAME(id))} <span class="stat">${TPL[id].role}${needOf(id) > 1 ? ` · pick ${needOf(id)}` : ''}</span></h4><div class="opt2">${optsFor(id).map(o => `<button class="btn" data-id="${id}" data-k="${o[0]}"><b>${o[1]}</b>${o[2]}</button>`).join('')}</div></div>`).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="btn primary" id="bPick" disabled>Confirm</button></div></div>`;
-  const need = SQUAD().filter(id => optsFor(id).length).length;
-  m.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { AUDIO.play('click'); chosen[b.dataset.id] = b.dataset.k; m.querySelectorAll(`[data-id="${b.dataset.id}"]`).forEach(x => x.classList.toggle('on', x === b)); $('#bPick').disabled = Object.keys(chosen).length < need; });
-  $('#bPick').onclick = () => { AUDIO.play('up'); Object.entries(chosen).forEach(([id,k]) => (S.picks[id] ??= []).push(k)); /* v13.42.0: a squad set up mid-book (Book Six's Fourth) can start with no list yet */ S.picksDue.shift(); save(); m.hidden = true; if (S.picksDue.length) openPicks(done); else done && done(); };
+  m.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { AUDIO.play('click'); const id = b.dataset.id, c = chosen[id] ??= []; if (!c.includes(b.dataset.k)) { c.push(b.dataset.k); while (c.length > needOf(id)) c.shift(); } // one past the count drops the earliest
+    m.querySelectorAll(`[data-id="${id}"]`).forEach(x => x.classList.toggle('on', c.includes(x.dataset.k))); $('#bPick').disabled = !who.every(w => (chosen[w] || []).length === needOf(w)); });
+  $('#bPick').onclick = () => { AUDIO.play('up'); Object.entries(chosen).forEach(([id, ks]) => ks.forEach(k => (S.picks[id] ??= []).push(k))); /* v13.42.0: a squad set up mid-book (Book Six's Fourth) can start with no list yet */
+    if (vet) S.picksDue = S.picksDue.filter(l => !VET_LVLS.includes(l)); else S.picksDue.shift(); save(); m.hidden = true; if (S.picksDue.length) openPicks(done); else done && done(); };
   m.onclick = null;
 }
 
@@ -25655,10 +25678,8 @@ function b2Odhan(ctx, ch, x, y, T, N){
     for (let i=0;i<5;i++) ell(ctx, px + T*(.1 + hash(x,y,i+70)*.8), py + T*(.6 + hash(y,x,i+71)*.35), T*.04, T*.03, N ? 'rgba(0,0,0,.4)' : 'rgba(90,64,40,.45)');
     ctx.strokeStyle = N ? '#4a4038' : '#8a7454'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py + T*.3); ctx.lineTo(px + T, py + T*.3); ctx.stroke(); if (!b2At(x - 1, y, 'h')) { ctx.fillStyle = N ? '#2a2016' : '#5a4028'; ctx.fillRect(px + T*.04, py + T*.16, T*.06, T*.3); }
     if (hash(x,y,9) > .25) { const hx = px + T*.5, hy = py + T*.72, d = hash(x,y,10) > .5 ? 1 : -1, hc = N ? ['#1a1614','#2a2420','#141210'][Math.floor(h*3)] : ['#5a3a22','#8a6a44','#3a2a1e','#a89070'][Math.floor(h*4)];
-      ell(ctx, hx, hy + T*.2, T*.3, T*.06, N ? 'rgba(0,0,0,.4)' : 'rgba(70,46,26,.35)'); ctx.fillStyle = hc; for (let i=0;i<4;i++) ctx.fillRect(hx + T*(-.2 + (i%2)*.06 + (i > 1 ? .28 : 0))*d - T*.02, hy, T*.04, T*.2); // legs
-      ell(ctx, hx, hy - T*.02, T*.26, T*.1, hc); ctx.strokeStyle = hc; ctx.lineWidth = Math.max(2, T*.08); ctx.beginPath(); ctx.moveTo(hx + T*.18*d, hy - T*.04); ctx.lineTo(hx + T*.3*d, hy - T*.24); ctx.stroke(); ell(ctx, hx + T*.35*d, hy - T*.24, T*.08, T*.045, hc, .5*d); // body, neck, head
-      ctx.strokeStyle = N ? '#0a0808' : '#1e140c'; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.moveTo(hx - T*.26*d, hy - T*.04); ctx.lineTo(hx - T*.32*d, hy + T*.1); ctx.stroke(); // tail
-      ctx.fillStyle = N ? 'rgba(160,170,210,.12)' : 'rgba(255,240,210,.22)'; ctx.fillRect(hx - T*.2, hy - T*.11, T*.3, 1); ctx.strokeStyle = N ? '#3a3028' : '#6a5a40'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(hx + T*.38*d, hy - T*.22); ctx.lineTo(hx + T*.3*d, py + T*.3); ctx.stroke(); } }
+      ell(ctx, hx, hy + T*.2, T*.3, T*.06, N ? 'rgba(0,0,0,.4)' : 'rgba(70,46,26,.35)'); { const k = T*.047; ctx.save(); ctx.translate(hx, hy + T*.2); ctx.scale(d*k, k); beastHorse(ctx, hc, {mane:N ? '#0a0808' : '#1e140c'}); ctx.restore(); } // v13.52.0: the shared horse (017b)
+      ctx.fillStyle = N ? 'rgba(160,170,210,.12)' : 'rgba(255,240,210,.22)'; ctx.fillRect(hx - T*.17, hy - T*.2, T*.28, 1); ctx.strokeStyle = N ? '#3a3028' : '#6a5a40'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(hx + T*.4*d, hy - T*.26); ctx.lineTo(hx + T*.3*d, py + T*.3); ctx.stroke(); } }
   else exitArrow(ctx, ch, px, py, T);
   if (N) b2Firelit(ctx, x, y, T, .34, 3.2, '255,150,70');
 }
@@ -26115,7 +26136,7 @@ function b2DeckCard(n){ const D = B2DECK[n], r = b2Rd(), id = S.card && CARDS[S.
   const ridgeY = x => { const q = (a, c, b) => { let lo = 0, hi = 1; for (let n = 0; n < 24; n++) { const t = (lo + hi) / 2, xt = (1 - t) * (1 - t) * a[0] + 2 * t * (1 - t) * c[0] + t * t * b[0]; if (xt < x) lo = t; else hi = t; } const t = lo; return (1 - t) * (1 - t) * a[1] + 2 * t * (1 - t) * c[1] + t * t * b[1]; };
     return x < 1260 ? q([880, HZ + 2], [1060, HZ - 30], [1260, HZ - 22]) : q([1260, HZ - 22], [1400, HZ - 12], [1520, HZ + 4]); }; // the far ridge's crest, so the riders ride on it
   let rd = ''; for (let i = 0; i < 14; i++) { const x = 940 + i * 34 + (h(i, 271) - .5) * 30 + (i > 6 ? 40 : 0), y = ridgeY(x) + 1, k = .62;
-    rd += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${k})" fill="#100806"><path d="M-14 -16 Q-4 -22 10 -18 L16 -24 L20 -22 L16 -14 L12 -12 L10 0 L7 0 L6 -10 L-8 -10 L-10 0 L-13 0 L-12 -11 Q-18 -12 -14 -16 Z"/><path d="M-2 -18 L-3 -32 L3 -32 L2 -18 Z"/><circle cx="0" cy="-35" r="3"/><path d="M4 -24 L${10 + h(i, 272) * 6} -60" stroke="#100806" stroke-width="1.2"/></g>`; }
+    rd += `<g transform="translate(${f1(x)} ${f1(y)}) scale(${k})" fill="#100806"><g transform="scale(1.95)"><path d="M-5.8 -6.8 Q-5.6 -8.9 -3.6 -8.9 Q-.4 -7.9 2.7 -8.7 Q4.6 -11.2 6.4 -12.3 L6.5 -13.4 L7.1 -12.4 L9.3 -10.1 Q9.8 -9.3 9.1 -8.9 L7.3 -9.8 Q6.3 -9.4 5.9 -8.2 Q5.6 -7 5.5 -6.2 Q5.4 -4.5 4.1 -4.4 Q0 -3.5 -3.2 -4.6 Q-4.8 -4.4 -5.7 -5.4 Z"/><path d="M-5.2 -8.5 Q-8.2 -8.3 -8 -3.2 L-7.4 -2.2 Q-7.1 -6.4 -5.6 -7.6 Z"/><path d="M3 -5.2 L2.8 -2.7 L2.7 0 M4.3 -5.2 L4.4 -2.7 L4.4 0 M-3.2 -5.6 L-3.9 -2.9 L-3.1 0 M-4.6 -5.6 L-5.6 -2.9 L-4.9 0" stroke="#100806" stroke-width=".8" fill="none" stroke-linecap="round"/></g><path d="M-2 -16 L-3 -30 L3 -30 L2 -16 Z"/><circle cx="0" cy="-33" r="3"/><path d="M4 -22 L${10 + h(i, 272) * 6} -60" stroke="#100806" stroke-width="1.2"/></g>`; }
   s += rd;
   /* crows: hundreds over the column, wheeling */
   let cr = ''; for (let i = 0; i < 100; i++) { const a = h(i, 281) * Math.PI * 2, rr = 40 + Math.pow(h(i, 282), .7) * 360, x = 640 + Math.cos(a) * rr * 1.6, y = 300 + Math.sin(a) * rr * .45, k = .45 + h(i, 283) * .9; cr += TK.bird(x, y, k, h(i, 284) < .5, '#0c0608'); }
@@ -26160,8 +26181,7 @@ function paintChainStill(x, W, H){
   const crest = u => { const v = 1 - u; return [W*(v*v*v*.24 + 3*v*v*u*.29 + 3*v*u*u*.41 + u*u*u*.545), H*(v*v*v*.613 + 3*v*v*u*.578 + 3*v*u*u*.553 + u*u*u*.6)]; };
   const rh = Math.max(10, H*.03); x.fillStyle = '#120b09'; x.strokeStyle = '#120b09';
   for (let i=0;i<14;i++){ const [rx, ry] = crest(.15 + i*.055), s = rh/26, lead = i === 9; x.save(); x.translate(rx, ry); x.scale(s*(lead ? 1.15 : 1), s*(lead ? 1.15 : 1)); // Wickan riders, riding east; the lead in his feather cloak
-    x.beginPath(); x.moveTo(-9,-8); x.quadraticCurveTo(-10,-13,-4,-14); x.lineTo(5,-14); x.quadraticCurveTo(9,-14,10,-18); x.lineTo(13,-22); x.lineTo(15,-21); x.lineTo(13,-16); x.quadraticCurveTo(12,-10,7,-8); x.closePath(); x.fill();
-    x.lineWidth = 1.4; x.beginPath(); [[-8,-9,-9,0],[-5,-9,-5,0],[4,-9,5,0],[7,-9,8,0]].forEach(([a,b,c,d]) => { x.moveTo(a,b); x.lineTo(c,d); }); x.stroke();
+    { const c0 = x.fillStyle; x.save(); x.scale(1.62, 1.62); beastHorse(x, c0, {g:(i % 3 - 1)*.6}); x.restore(); x.fillStyle = c0; x.strokeStyle = c0; } // v13.52.0: the shared horse (017b)
     x.beginPath(); x.moveTo(-2,-14); x.lineTo(-1,-22); x.lineTo(2,-22); x.lineTo(3,-14); x.closePath(); x.fill(); x.beginPath(); x.arc(.6, -25, 2, 0, 7); x.fill();
     if (lead) poly(x, [[-1,-22],[-8,-20],[-12,-15],[-9,-16],[-13,-11],[-8,-13],[-10,-9],[-2,-14]], '#120b09'); x.restore(); }
   for (let i=0;i<4;i++){ const y = H*(.68 + i*.06); x.strokeStyle = `rgba(168,94,44,${.08 + i*.03})`; x.lineWidth = 1; x.beginPath(); x.moveTo(0, y); for (let j=0;j<=8;j++) x.quadraticCurveTo(W*(j/8 - .0625), y - H*.012*(j%2 ? 1 : -.4), W*j/8, y); x.stroke(); } // dune crests
@@ -30240,7 +30260,7 @@ SCENEX.b2_odhan_riders = (cv, t) => { SCENEX.b2_odhan_dusk(cv, t); const {ctx, W
   const sky = px => hz - 2 - (m => m > 4 ? Math.min(m, 14) : m*.3)(Math.max(0, Math.sin(px/60 + 1) - .55)*30 + Math.max(0, Math.sin(px/37 + 3) - .7)*24); // the line of the mesas, as 47b draws it
   const groups = [[.06, 3], [.22, 5], [.31, 2], [.47, 4], [.6, 2], [.74, 6], [.9, 3]];
   groups.forEach(([u, n], g) => { for (let i=0;i<n;i++){ const drift = mo && i === 0 && g%2 ? ((t/40000 + g*.3) % 1)*W*.06 : 0, px = W*u + i*W*.016 + (hash(i, g + 30) - .5)*4 + drift, py = sky(px) + .6, s = .48 + hash(i, g + 31)*.1, d = hash(i, g + 32) > .5 ? 1 : -1;
-    ctx.fillStyle = 'rgba(30,14,16,.95)'; ctx.strokeStyle = 'rgba(30,14,16,.95)'; ctx.lineCap = 'round'; ctx.beginPath(); ctx.ellipse(px, py - 6*s, 5*s, 2.3*s, 0, 0, 7); ctx.fill(); ctx.lineWidth = 1*s; [[3.4, 3.8], [2.2, 2.4], [-3.2, -3.4], [-4.2, -4.6]].forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(px + a*d*s, py - 5*s); ctx.lineTo(px + b*d*s, py); ctx.stroke(); });
+    ctx.fillStyle = 'rgba(30,14,16,.95)'; ctx.strokeStyle = 'rgba(30,14,16,.95)'; ctx.lineCap = 'round'; ctx.save(); ctx.translate(px, py); ctx.scale(d*s, s); beastHorse(ctx, 'rgba(30,14,16,.95)', {}); ctx.restore(); ctx.fillStyle = 'rgba(30,14,16,.95)'; ctx.fillRect(px - 1.2*s, py - 14.4*s, 2.4*s, 6.4*s); ctx.beginPath(); ctx.arc(px, py - 15.8*s, 1.3*s, 0, 7); ctx.fill(); /* v13.52.0: the shared horse (017b) */ ctx.lineWidth = 1*s; [[3.4, 3.8], [2.2, 2.4], [-3.2, -3.4], [-4.2, -4.6]].forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(px + a*d*s, py - 5*s); ctx.lineTo(px + b*d*s, py); ctx.stroke(); });
     ctx.lineWidth = 2*s; ctx.beginPath(); ctx.moveTo(px + 3.6*d*s, py - 7*s); ctx.lineTo(px + 6.4*d*s, py - 10.6*s); ctx.stroke(); ctx.fillRect(px - 1.2*s, py - 13*s, 2.4*s, 6.4*s); ctx.beginPath(); ctx.arc(px, py - 14.4*s, 1.3*s, 0, 7); ctx.fill(); // horse standing, the rider sitting up on it, watching
     if (hash(i, g + 33) > .35) { ctx.lineWidth = .6*s; ctx.beginPath(); ctx.moveTo(px + 1.6*s, py - 7*s); ctx.lineTo(px + 2.4*s, py - 24*s); ctx.stroke(); } ctx.lineCap = 'butt'; } }); // a lance, upright
   ctx.globalCompositeOperation = 'lighter'; groups.forEach(([u, n], g) => { const px = W*u + n*W*.008; ctx.fillStyle = 'rgba(255,170,110,.18)'; ctx.fillRect(px - n*W*.01, sky(px) - .4, n*W*.02, .8); }); ctx.globalCompositeOperation = 'source-over'; }; // the red behind them, along the crest
@@ -34466,9 +34486,7 @@ function b2Geleen(ctx, ch, x, y, T, N){
     ctx.strokeStyle = N ? '#4a4038' : '#8a7454'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py + T*.3); ctx.lineTo(px + T, py + T*.3); ctx.stroke(); if (!b2At(x - 1, y, 'h')) { ctx.fillStyle = N ? '#2a2016' : '#5a4028'; ctx.fillRect(px + T*.04, py + T*.16, T*.06, T*.3); }
     if (hash(x,y,9) > .2) { const hx = px + T*.5, hy = py + T*.72, d = hash(x,y,10) > .5 ? 1 : -1, hc = N ? ['#1a1614','#2a2420','#141210'][Math.floor(h*3)] : ['#5a3a22','#8a6a44','#3a2a1e','#c8b8a0','#6a4a34'][Math.floor(h*5)];
       b2Long(ctx, hx + T*.1, hy + T*.2, T*.08, T*(N ? .5 : 1.1), P);
-      ctx.fillStyle = hc; for (let i=0;i<4;i++) ctx.fillRect(hx + T*(-.2 + (i%2)*.06 + (i > 1 ? .28 : 0))*d - T*.02, hy, T*.04, T*.2); // legs
-      ell(ctx, hx, hy - T*.02, T*.26, T*.1, hc); ctx.strokeStyle = hc; ctx.lineWidth = Math.max(2, T*.08); ctx.beginPath(); ctx.moveTo(hx + T*.18*d, hy - T*.04); ctx.lineTo(hx + T*.3*d, hy + T*(hash(x,y,11) > .5 ? .04 : -.24)); ctx.stroke(); ell(ctx, hx + T*.35*d, hy + T*(hash(x,y,11) > .5 ? .08 : -.24), T*.08, T*.045, hc, .5*d); // body; neck; head up, or down to the grass
-      ctx.strokeStyle = N ? '#0a0808' : '#1e140c'; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.moveTo(hx - T*.26*d, hy - T*.04); ctx.lineTo(hx - T*.32*d, hy + T*.1); ctx.stroke(); // tail
+      { const k = T*.047; ctx.save(); ctx.translate(hx, hy + T*.2); ctx.scale(d*k, k); beastHorse(ctx, hc, {mane:N ? '#0a0808' : '#1e140c', down:hash(x,y,11) > .5}); ctx.restore(); } // v13.52.0: the shared horse (017b)
       ctx.fillStyle = N ? 'rgba(160,170,210,.12)' : 'rgba(255,200,130,.35)'; ctx.fillRect(hx - T*.22, hy - T*.11, T*.3, 1); if (hash(x,y,12) > .6) { ctx.fillStyle = N ? 'rgba(80,80,90,.4)' : 'rgba(240,232,210,.55)'; ell(ctx, hx - T*.06*d, hy - T*.04, T*.07, T*.05, ctx.fillStyle); } } } // light along the back; a pied one, now and then: Khundryl stock
   else if (ch === 'W') { b2Long(ctx, px + T*.6, py + T*.8, T*.18, T*(N ? .7 : 1.6), P); b2Wagon(ctx, px, py, T, N); if (P.day) { ctx.fillStyle = 'rgba(255,190,120,.22)'; ctx.beginPath(); ctx.moveTo(px + T*.06, py + T*.5); ctx.quadraticCurveTo(px + T*.2, py + T*.2, px + T*.4, py + T*.12); ctx.lineTo(px + T*.4, py + T*.2); ctx.quadraticCurveTo(px + T*.24, py + T*.26, px + T*.12, py + T*.5); ctx.fill(); } }
   else if (ch === 'c') { // the soldiers' wages: iron-bound chests, one open on its silver; jakatas spilled in the grass; the lot set out to be counted
@@ -39943,8 +39961,7 @@ function b3Camp(ctx, ch, x, y, T, N){
     [[.24], [.76]].forEach(([k]) => { ell(ctx, px + T*k, py + T*.76, T*.13, T*.13, N ? '#140e0a' : '#3a2a1a'); ell(ctx, px + T*k, py + T*.76, T*.04, T*.04, N ? '#3a2e22' : '#8a6a44'); }); }
   else if (ch === 'h') { ctx.strokeStyle = P.post; ctx.lineWidth = Math.max(1, T*.03); ctx.beginPath(); ctx.moveTo(px, py + T*.3); ctx.lineTo(px + T, py + T*.3); ctx.stroke(); ctx.fillStyle = P.post; ctx.fillRect(px + T*.46, py + T*.22, T*.06, T*.2); // the picket line, and a horse at it
     if (h > .3) { const d = h > .65 ? 1 : -1, cx = px + T*.5, cy = py + T*.62, c = N ? '#1e1812' : ['#5a3a22', '#3a2a1e', '#7a6a58'][Math.floor(h*3) % 3];
-      ell(ctx, cx, cy + T*.28, T*.36, T*.07, 'rgba(0,0,0,.4)'); ell(ctx, cx, cy, T*.28, T*.13, c); ctx.fillStyle = c; [[-.2], [-.1], [.12], [.22]].forEach(([k]) => ctx.fillRect(cx + k*T, cy + T*.06, T*.04, T*.2));
-      poly(ctx, [[cx + d*T*.2, cy - T*.04], [cx + d*T*.34, cy - T*.26], [cx + d*T*.42, cy - T*.22], [cx + d*T*.28, cy + T*.04]], c); B2F.line(ctx, P.post, .6, [[cx + d*T*.38, cy - T*.22], [cx + d*T*.3, py + T*.3]]); B2F.line(ctx, c, Math.max(1, T*.03), [[cx - d*T*.26, cy - T*.02], [cx - d*T*.34, cy + T*.14]]); }
+      ell(ctx, cx, cy + T*.28, T*.36, T*.07, 'rgba(0,0,0,.4)'); { const k = T*.05; ctx.save(); ctx.translate(cx, cy + T*.27); ctx.scale(d*k, k); beastHorse(ctx, c, {}); ctx.restore(); } B2F.line(ctx, P.post, .6, [[cx + d*T*.42, cy - T*.28], [cx + d*T*.3, py + T*.3]]); /* v13.52.0: the shared horse (017b) */ }
     ctx.fillStyle = N ? 'rgba(60,70,40,.4)' : 'rgba(150,140,80,.5)'; for (let i=0;i<3;i++) ell(ctx, px + T*(.2 + hash(x,y,i+70)*.6), py + T*.9, T*.06, T*.03, ctx.fillStyle); } // fodder
   else if (ch === 'r') { for (let i=0;i<5;i++){ const bx = px + T*(.1 + hash(x,y,i+40)*.7), by = py + T*(.2 + hash(x,y,i+41)*.6), w = T*(.12 + hash(x,y,i+42)*.18), hh = w*.6; // the rubble of Pale: dressed stone, broken
       ell(ctx, bx + w*.5, by + hh + T*.02, w*.6, hh*.3, 'rgba(0,0,0,.35)'); ctx.fillStyle = N ? '#3a3632' : '#8a8478'; ctx.fillRect(bx, by, w, hh); ctx.fillStyle = N ? '#4a4640' : '#aaa496'; ctx.fillRect(bx, by, w, hh*.3); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; ctx.strokeRect(bx, by, w, hh); }
@@ -41412,7 +41429,7 @@ function b3c1Pale(mode){ return (cv, t) => { const {ctx, W, H} = sceneFit(cv), m
     for (let i=0;i<120;i++){ const k = hash(i, 33), yy = hz + 3 + Math.pow(k, 1.3)*(H - hz), xx = hash(i, 34)*W, r = 1 + k*4; ell(x, xx, yy, r*2, r*.5, grey ? `rgba(40,54,40,${(.3 + k*.2).toFixed(2)})` : `rgba(${80 + k*20|0},${110 + k*24|0},60,${(.25 + k*.25).toFixed(2)})`); } // new grass coming through
     // the burial field of the Second, under the city: long low mounds gone green, and a horse picketed where the cadre row stood
     for (let i=0;i<9;i++){ const bx = W*(.05 + (i%5)*.07) + (i > 4 ? W*.035 : 0), by = hz + H*(.05 + (i > 4 ? .045 : 0)) + hash(i, 41)*3, bw = W*.03*(1 + (i > 4 ? .3 : 0)); ell(x, bx, by, bw, 2.4*s, grey ? '#222a24' : march ? '#5a6248' : '#7a9a5a'); ell(x, bx - bw*.2, by - 1.2*s, bw*.7, 1*s, grey ? 'rgba(120,140,130,.12)' : 'rgba(240,240,200,.22)'); }
-    { const hx = W*.33, hy = hz + H*.035; x.fillStyle = grey ? '#0e1010' : '#2a2018'; x.fillRect(hx - 4*s, hy - 3.4*s, 7*s, 2.4*s); x.fillRect(hx + 2.4*s, hy - 5.4*s, 1.6*s, 3*s); x.fillRect(hx - 3.4*s, hy - 1.2*s, .8*s, 1.4*s); x.fillRect(hx + 1.6*s, hy - 1.2*s, .8*s, 1.4*s); x.fillRect(hx - 6*s, hy - 6*s, .6*s, 6*s); } // the horse, and its picket
+    { const hx = W*.33, hy = hz + H*.035; x.fillStyle = grey ? '#0e1010' : '#2a2018'; { const c0 = x.fillStyle; x.save(); x.translate(hx, hy); x.scale(s*.62, s*.62); beastHorse(x, c0, {down:true}); x.restore(); x.fillStyle = c0; } /* v13.52.0: the shared horse (017b), grazing */ x.fillRect(hx - 6*s, hy - 6*s, .6*s, 6*s); } // the horse, and its picket
     // across the valley, right: Brood's camp, round hide tents and cones with no lines to them, the herds on the slope above
     for (let i=0;i<46;i++){ const k = hash(i, 51), tx = W*(.6 + hash(i, 52)*.42), ty = hz + 2 + k*H*.07, ts = (.7 + k*1.2)*s; if (march && hash(i, 55) > .45) continue; // at dawn most of them struck and gone
       x.fillStyle = grey ? (hash(i, 53) > .5 ? '#1a1814' : '#141210') : (hash(i, 53) > .5 ? '#6a5844' : '#584a3a');
@@ -62919,10 +62936,7 @@ function b47Ghost(ctx, h, t, o){ ctx.save(); const ph = o.phase || 0, g = o.stil
 /* a giant on a horse, very far off: a silhouette, the horse bigger than any horse, the rider as tall again, something long across his back */
 function b47Giant(ctx, h, t, o){ ctx.save(); const s = o.still ? 0 : Math.sin(t/300 + (o.phase || 0)), col = '#1c1612', rim = 'rgba(232,206,160,.28)';
   ctx.translate(0, -4); ctx.scale(1.5, 1.5); ctx.translate(0, 4);
-  ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(0, 1.6, 11.6, 4.6, 0, 0, 7); ctx.fill(); // the horse's barrel, bigger than any horse
-  poly(ctx, [[-8, -.6], [-12.4, -7.6], [-15.6, -7.4], [-13.4, 1.4]], col); ctx.beginPath(); ctx.ellipse(-15.6, -7, 3.2, 1.7, -.4, 0, 7); ctx.fill(); poly(ctx, [[-13.6, -8.4], [-12.8, -10.4], [-12.4, -8.2]], col); // neck and head up, an ear (facing left)
-  ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.lineCap = 'round'; [[-7.4, 5, -8.2 + s, 13], [-5, 5, -4.2 - s, 13], [6, 5, 6.8 - s, 13], [8.4, 5, 7.8 + s, 13]].forEach(([a, b, c, d]) => { ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(c, d); ctx.stroke(); });
-  ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(11, 0); ctx.quadraticCurveTo(14.4, 3, 13.6, 8); ctx.stroke(); // the tail, hanging
+  ctx.save(); ctx.translate(0, 13); ctx.scale(-2.05, 2.05); beastHorse(ctx, col, {g:s*.5}); ctx.restore(); ctx.fillStyle = col; ctx.strokeStyle = col; // v13.52.0: the shared horse (017b), bigger than any horse, facing left
   poly(ctx, [[-3.4, -1], [3.6, -1], [4.4, -10], [2, -16], [-2.4, -16], [-4.2, -10]], col); ell(ctx, -.2, -18.6, 2.6, 2.8, col); poly(ctx, [[-2.8, -1], [-4.4, 4], [-2.4, 4.4], [-1.2, -1]], col); // the rider, upright, huge, a leg down the horse's side
   ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(-6.4, -7); ctx.lineTo(6.4, -20); ctx.stroke(); ctx.lineCap = 'butt'; // something long across his back
   ctx.strokeStyle = rim; ctx.lineWidth = .7; ctx.beginPath(); ctx.moveTo(-3, -16); ctx.lineTo(-4.2, -10); ctx.lineTo(-3.4, -1); ctx.moveTo(-11, .6); ctx.quadraticCurveTo(-4, -3, 8, -2.4); ctx.stroke(); // the low sun on its edge
@@ -76726,6 +76740,12 @@ Object.assign(TPL, {
     get quest(){ return 'Away from the city. The Host is going away from the city.'; }},
 });
 Object.assign(VERB, {mehet:'slings a shot at', ottar:'brings the long sword down on', brannoc:'swings a boarding axe at', ressa:'cuts at'});
+/* v13.52.0 (David, Nov 19, 2026): Book Six's four had no level-3 talent, so no level-12 pick either */
+Object.assign(PICKS[3], {
+  mehet:[['quickshot', 'Potter\'s Aim', 'Once a fight: two sling-shots at one target within range (three from level 6). He threw clay at a mark for thirty years before he threw it at people.'], ['ghost', 'Nobody\'s Townsman', 'Enemies take −2 to hit Mehet. A man who has walked out of one burning city knows where not to stand in the next.']],
+  ottar:[['shieldwall', 'Shield of the Wolves', 'Squadmates standing next to Ottar get +2 armour. The Perish fight in a line, and the line is the point.'], ['holdline', 'The Wolf Holds', 'Ottar\'s free swings are unlimited and hit +2. What comes past a Grey Helm comes past bleeding.']],
+  brannoc:[['holdline', 'Repel Boarders', 'Brannoc\'s free swings are unlimited and hit +2. Anything that crosses his rail is cut on the way.'], ['snare', 'Fouled Line', 'Whatever the Boarding line hauls in is tangled in it: −2 to hit and −2 armour through its next turn.']],
+  ressa:[['twoblades', 'Both Knives', 'Ressa strikes twice a turn, the second with the off hand (1d4). She carries two for a reason.'], ['ghost', 'Already Buried Once', 'Enemies take −2 to hit Ressa. The fever looked straight at her and went past.']]});
 Object.assign(STATUP, {mehet:['guile', 'wits'], ottar:['might', 'wits'], brannoc:['might', 'guile'], ressa:['guile', 'wits']});
 Object.assign(TPL_ROLES, {mehet:['light', 'ranged', 'blade'], ottar:['heavy', 'mail', 'shield', 'blade', 'heavyweapon'], brannoc:['heavy', 'mail', 'blade', 'heavyweapon'], ressa:['light', 'blade']});
 /* Ressa has had the fever, and does not catch it again (her bio; bh-canon §8) */
@@ -116508,7 +116528,7 @@ function b102aGlassBand(x, W, H, hz, x0, when){ const c = when === 'eve' ? [[0,'
 /* the foreigners lying up at the glass's edge: a long dark smear with wagons in it and a few horsemen apart */
 function b102aLyingUp(x, W, H, hz, x0){ x.fillStyle = 'rgba(40,34,28,.6)'; for (let i = 0; i < 90; i++) x.fillRect(W*(x0 + i*.0042), hz + H*(.008 + hash(i, 10221)*.012), W*.003, H*.005);
   for (let i = 0; i < 7; i++) { x.fillStyle = '#4a4034'; x.fillRect(W*(x0 + .04 + i*.05), hz + H*.004, W*.012, H*.008); } // wagons
-  for (let i = 0; i < 5; i++) { x.fillStyle = '#2e2620'; x.fillRect(W*(x0 - .06 + i*.008), hz + H*(.012 + (i % 2)*.004), W*.005, H*.006); } } // the horsemen apart
+  for (let i = 0; i < 5; i++) { const hx = W*(x0 - .06 + i*.009), hy = hz + H*(.018 + (i % 2)*.004), k = H*.0011; x.save(); x.translate(hx, hy); x.scale(k, k); beastHorse(x, '#2e2620', {}); x.fillStyle = '#2e2620'; x.fillRect(-.9, -13.6, 1.9, 5.4); x.restore(); } /* v13.52.0: the shared horse (017b), a rider up */ } // the horsemen apart
 /* a big one, far: upright and leaning forward, a long head, a long tail held out, grey-green (never close) */
 function b102aBigOne(x, cx, cy, s, ph){ const c = '#4e5a4a', st = Math.sin(ph)*1.2;
   x.fillStyle = c; x.beginPath(); x.ellipse(cx, cy - 13*s, 3*s, 6*s, .55, 0, 7); x.fill(); // the body, leaning
@@ -123007,7 +123027,8 @@ Object.assign(AB, {
       blog(`${u.name} takes a turn of the line round his forearm and heaves, the way you bring another ship's rail to yours, and ${t.name} comes across the ground to him.`);
       sparks(t.x, t.y, 8, '#c26a3a', .4); AUDIO.play('step'); float(t, 'hauled in', '#c26a3a');
       if (await forcedMove(t, at, 'dragged')) return;
-      t.facing = u.x >= t.x ? 1 : -1; }},
+      t.facing = u.x >= t.x ? 1 : -1;
+      if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'fouled', '#c26a3a'); } }},
   boardleap:{name:'Boarding leap', free:true, desc:()=>`Once a turn, and it does not use his action: cross to any open tile within ${3 + lvT()} in sight. No free swings against him. Grows with level.`, ok:u=>u.swungTurn !== B.turn,
     tiles:u=>AB.ropeswing.tiles(u),
     run(u,x,y){ u.swungTurn = B.turn; AUDIO.play('step'); sparks(u.x, u.y, 8, '#c26a3a', .4); u.x = x; u.y = y; sparks(x, y, 8, '#c26a3a', .4); blog(`${u.name} goes across the gap the way he would go across to another deck: all at once, and already swinging.`); enterFire(u); updBattleUI(); }},
@@ -123024,18 +123045,18 @@ Object.assign(AB, {
   sweep:{name:'Threshing sweep', desc:()=>`The flail goes round: 1d10+${3 + lvDmg()} at an adjacent enemy, and the same again at one other enemy beside Doss. No push. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const d = [1,10,3 + lvDmg()];
-      const o = foes().filter(f => f !== t && f.hp > 0 && cheb(u,f) === 1).sort((a, b) => a.hp - b.hp)[0];
+      const os = foes().filter(f => f !== t && f.hp > 0 && cheb(u,f) === 1).sort((a, b) => a.hp - b.hp).slice(0, has(u.id, 'fullcircle') ? 8 : 1);
       attack(u, t, {dmg:d, verb:'brings the flail round into'});
-      if (o) later(() => { if (B && !B.over && u.hp > 0 && o.hp > 0) { attack(u, o, {dmg:d, verb:'lets the flail carry on into'}); updBattleUI(); } }, pace(300)); }},
+      os.forEach((o, i) => later(() => { if (B && !B.over && u.hp > 0 && o.hp > 0) { attack(u, o, {dmg:d, verb:'lets the flail carry on into'}); updBattleUI(); } }, pace(300) * (i + 1))); }},
   /* Edrem, pilgrim guard: a long mace opens armour for everybody after him */
   breaker:{name:'Breaker', desc:()=>`The mace in both hands at an adjacent enemy: 1d10+${2 + lvDmg()} on a hit, and its armour is 2 worse against every blow through the next round. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const r = attack(u, t, {dmg:[1,10,2 + lvDmg()], verb:'brings the mace down two-handed on'});
-      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.kitBrokenUntil = B.round + 1; later(() => { if (B && t.hp > 0) float(t, 'guard broken', '#e8c073'); }, pace(260)); blog(`Something in ${t.name}'s guard gives. It will not sit right again this side of the fight.`); } }},
+      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { const sh = has(u.id, 'shatter'); t.kitBrokenUntil = B.round + (sh ? 2 : 1); t.kitBrokenBy = sh ? 3 : 2; later(() => { if (B && t.hp > 0) float(t, 'guard broken', '#e8c073'); }, pace(260)); blog(`Something in ${t.name}'s guard gives. It will not sit right again this side of the fight.`); } }},
   /* Brennet, carter: you do not stop a load, you turn it */
   turnload:{name:'Turn the load', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and Brennet swaps places with it. Every other squadmate it is turned out of reach of gets a free swing. The very heavy don't turn; a leader braces and holds about half the time. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
-    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); u.aooTurn = B.turn; // his own swing is spent on the turn
+    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); if (!has(u.id, 'followthrough')) u.aooTurn = B.turn; // his own swing is spent on the turn (Follow Through keeps it)
       const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'gets the wagon-pin behind'}); if (!r.hit) return;
       await wait(pace(250)); if (!B || t.hp <= 0 || u.hp <= 0) return;
       { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} is not a thing that turns.` : `${t.name} sets its feet and will not be turned.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
@@ -123046,7 +123067,7 @@ Object.assign(AB, {
   /* Pruss, heavy: the carter's maul, for when the weight has to go somewhere else */
   maul:{name:'The maul', desc:()=>`The carter's maul in both hands at an adjacent enemy: 1d10+${3 + lvDmg()} on a hit, and it is driven straight back up to 2 tiles. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6. Toward a pit or a drop: it saves to catch the lip, or goes over. The very heavy don't move; a leader braces and holds about half the time. Recharges after 3 rounds.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
-    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + 3; u.aooTurn = B.turn;
+    async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + 3; if (!has(u.id, 'followthrough')) u.aooTurn = B.turn;
       const r = attack(u, t, {dmg:[1,10,3 + lvDmg()], verb:'swings the maul into'}); if (!r.hit) return;
       await wait(pace(250)); if (!B || t.hp <= 0) return;
       await kitDrive(u, t, 2); }},
@@ -123054,19 +123075,25 @@ Object.assign(AB, {
   hoofknife:{name:'Hoof-knife', desc:()=>`The hammer, then the knife into what it opened: 1d6+${2 + lvDmg()} at an adjacent enemy on a hit, and it bleeds for three rounds (1d4 a round). Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'puts the hammer and then the hoof-knife into'});
-      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.bleed = 3; later(() => { if (B && t.hp > 0) float(t, 'bleeding', '#e0574a'); }, pace(260));
+      if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.bleed = has(u.id, 'deepcut') ? 5 : 3; later(() => { if (B && t.hp > 0) float(t, 'bleeding', '#e0574a'); }, pace(260));
         if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; later(() => { if (B && t.hp > 0) float(t, 'held', '#b0a0c8'); }, pace(520)); } } }}
 });
 /* the howl's fear and the mace's broken guard, in the to-hit sum */
 { const _atkCalc = atkCalc;
   atkCalc = function(a, t, o = {}){ const c = _atkCalc(a, t, o); if (!B || !a || !t) return c;
     if (a.side !== 'p' && a.kitHowlUntil >= B.round) c.bonus -= 2;
-    if (t.side !== 'p' && t.kitBrokenUntil >= B.round) c.ac -= 2;
+    if (t.side !== 'p' && t.kitBrokenUntil >= B.round) c.ac -= t.kitBrokenBy || 2;
     return c; }; }
 { const _squadTurnStart = squadTurnStart;
   squadTurnStart = function(u){ const r = _squadTurnStart(u); if (B && u && u.id === 'ottar') B.units.forEach(e => { if (e.kitHowlUntil != null) e.kitHowlUntil = -1; }); return r; }; }
 /* the level-12 talent reads its role from the kit (015 t2Role). The reworked heavies keep the Anvil they were offered when they carried the bash, so no save loses a pick. */
-const KIT_ANVIL = ['brannoc', 'darrut', 'ottar', 'doss', 'edrem', 'brask', 'brennet', 'pruss', 'tirren'];
+const KIT_ANVIL = ['darrut', 'ottar'];
+/* v13.52.0 (David, Nov 19, 2026): the level-12 talent written for each new kit, and for the three whose gift is their kit. A soldier who already took Anvil keeps it and is not asked again (015 t2Owed). */
+const KIT_T2 = {brannoc:'flurry', brask:'flurry', doss:'fullcircle', edrem:'shatter', brennet:'followthrough', pruss:'followthrough', tirren:'deepcut', warlock:'twiceblessed', tallow:'twiceblessed', hessa:'twiceblessed'};
+/* Twice Blessed: the gift's own count, then one more */
+[['b4_twins', 'tallow'], ['b2_bargain', 'warlock'], ['b4_wormgift', 'hessa']].forEach(([k, who]) => { const a = AB[k]; if (!a) return; const ok0 = a.ok, run0 = a.run;
+  a.ok = function(u){ return ok0.call(this, u) || !!(B && S && has(who, 'twiceblessed') && !B.used['tb_' + k]); };
+  a.run = function(u, x, y){ if (!ok0.call(this, u)) B.used['tb_' + k] = 1; return run0.call(this, u, x, y); }; });
 
 /* ============ the finale's stingers (series polish §4, the sound pass) ============ */
 /* Every book from Six on wraps showFinale in its own file; this wraps them all (it loads after Book Ten), so it sees every page that

@@ -81,6 +81,7 @@ function mkParty(id, x, y){
   trickAbs(id).forEach(k => { if (AB[k] && !AB[k].passive) u.ab.splice(u.ab.length - 1, 0, k); }); // tricks won on hard checks (16b, 31b)
   if (B && B.def.nomagic && u.magic) { u.rng = 1; if (id === 'tuft') { u.dmg = [1,4,1]; u.verb = 'jabs a knife at'; } } // otataral: a knife, or the cudgel
   u.ac += lvAc(); const ld = lvDmg() + (has(id,'edge') ? 1 : 0); if (u.dmg && ld) u.dmg = [u.dmg[0], u.dmg[1], (u.dmg[2] || 0) + ld];
+  if (has(id, 'twoblades') && !(t.attacks > 1)) { u.attacks = 2; u.dmg2 = [1, 4, (t.dmg[2] || 0) + ld]; u.verb2 = 'puts the other knife into'; } // v13.52.0: Ressa's Both Knives
   if (t.attacks > 1 && !(B && B.def.nomagic && u.magic)) { u.attacks = t.attacks; const d2 = t.dmg2 || t.dmg; u.dmg2 = [d2[0], d2[1], (d2[2] || 0) + ld]; u.verb2 = t.verb2; } // v13.51: a blade in each hand. The off hand keeps its own dice whatever the main hand is given to carry // levels 3/5/7 hit harder, 4/8 stand harder (15)
   u.soak = squadSoak(id); // v10.2 (31c)
   u.hp = u.maxhp; const w = DIFF().carry ? woundOf(id) : null; if (w != null) u.hp = clamp(w, 1, u.maxhp); // Bridgeburner: the wounds the squad carried in
@@ -291,7 +292,7 @@ const AB = {
     ok:u=>!(u.cdMark >= B.round), tiles:u=>foes().filter(f => cheb(u,f) <= 5 && canShoot(u,f) && !(f.markedUntil >= B.round)),
     run(u,x,y){ const t = unitAt(x,y); u.cdMark = B.round + 2 - lvAt(6); t.markedUntil = B.round + 2; t.markDmg = 2 + lvT(); if (has(u.id, 'calledshot')) { if (t.calledUntil == null) t.ac -= 2; t.calledUntil = B.round + 2; } AUDIO.play('click'); float(t,'marked','#f2c46b'); blog(`${u.name} marks ${t.name}: a nick of chalk on the ground, a word to the squad, and it is a target.`); }},
   quickshot:{name:'Quick Shot', desc:()=>`Once a fight: ${lvAt(6) ? 'three' : 'two'} arrows at one target within range${lvAt(6) ? '' : ' (three from level 6)'}.`, ok:()=>!B.used.quickshot, tiles:u=>foes().filter(f => cheb(u,f) <= u.rng && canShoot(u,f)),
-    run(u,x,y){ const t = unitAt(x,y); B.used.quickshot = 1; attack(u, t); later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a second arrow into'}); }, pace(320)); if (lvAt(6)) later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a third arrow into'}); }, pace(640)); }},
+    run(u,x,y){ const t = unitAt(x,y); B.used.quickshot = 1; attack(u, t); later(() => { if (t.hp > 0) attack(u, t, {verb:u.id === 'mehet' ? 'puts a second shot into' : 'puts a second arrow into'}); }, pace(320)); if (lvAt(6)) later(() => { if (t.hp > 0) attack(u, t, {verb:'puts a third arrow into'}); }, pace(640)); }},
   /* Vell's rope-and-hook: a throw at range that hauls whatever it bites to the tile beside him. The heavy take the hook and stay put. */
   grapple:{name:'Grappling Hook', desc:()=>`Throw the hook at an enemy 2 to ${grapR()} tiles off: 1d6+${1 + lvDmg()} on a hit, and it is hauled to the open tile beside Vell nearest it. Hauled across a pit or a drop, it saves to catch the lip and go down prone, or goes in. The very heavy take the hook but don't come; a leader braces against it about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdHook >= B.round), tiles:u=>foes().filter(f => cheb(u,f) >= 2 && cheb(u,f) <= grapR() && canShoot(u,f)),
@@ -305,7 +306,8 @@ const AB = {
       sparks(t.x, t.y, 8, '#b0a0c8', .4); AUDIO.play('step'); float(t, 'hauled in', '#b0a0c8');
       if (await forcedMove(t, at, 'dragged')) return;
       t.facing = u.x >= t.x ? 1 : -1;
-      if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'snared', '#b0a0c8'); } }},
+      if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'snared', '#b0a0c8'); }
+      if (has(u.id, 'handover') && B && t.hp > 0 && u.hp > 0 && cheb(u, t) === 1) { await wait(pace(200)); if (B && t.hp > 0) attack(u, t, {verb:'meets it, hand over hand, with a blow for'}); } }}, // v13.52.0
   /* the sergeant's shield, picked up at Nathilog and never put down: drive an enemy back, out of the squad's reach, and let the squad answer it */
   shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdShove >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
@@ -465,8 +467,8 @@ function battleTap(x, y){
     if (a.tiles(u).some(q => q === t || (q.x === x && q.y === y))) return useAb(B.mode, x, y);
     B.mode = 'act'; return updBattleUI();
   }
-  if (t && t.side === 'e' && !B.acted && cheb(u,t) <= u.rng && canShoot(u,t)) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; B.busy = true; attack(u, t); const nb = u.attacks || 1;
-    for (let i = 1; i < nb; i++) later(() => { if (!B || B.over || u.hp <= 0 || B.cur !== u) return; const nx = t.hp > 0 && cheb(u,t) <= u.rng ? t : foes().filter(f => f.hp > 0 && cheb(u,f) <= u.rng && canShoot(u,f)).sort((p, q) => p.hp - q.hp)[0]; if (nx) { attack(u, nx, {dmg:u.dmg2, verb:u.verb2 || 'cuts again at'}); updBattleUI(); } }, pace(380) * i); // v13.51: the off hand
+  if (t && t.side === 'e' && !B.acted && cheb(u,t) <= u.rng && canShoot(u,t)) { B.acted = true; if (B.mvLeft < u.mv) B.moved = true; B.busy = true; attack(u, t); let nb = u.attacks || 1; if (nb > 1 && has(u.id, 'flurry') && !B.used['flurry' + u.id]) { B.used['flurry' + u.id] = 1; nb = 4; later(() => { if (B) float(u, 'flurry', '#e8c073'); }, pace(120)); } // v13.52.0
+    for (let i = 1; i < nb; i++) later(() => { if (!B || B.over || u.hp <= 0 || B.cur !== u) return; const nx = t.hp > 0 && cheb(u,t) <= u.rng ? t : foes().filter(f => f.hp > 0 && cheb(u,f) <= u.rng && canShoot(u,f)).sort((p, q) => p.hp - q.hp)[0]; if (nx) { attack(u, nx, i % 2 ? {dmg:u.dmg2, verb:u.verb2 || 'cuts again at'} : {verb:'comes round again at'}); updBattleUI(); } }, pace(380) * i); // v13.51: the off hand
     later(() => { B.busy = false; afterAct(); }, pace(380) * nb); updBattleUI(); return; }
   if (t) { B.ping = {u:t, t:performance.now()}; blog(`${t.name}: ${t.hp}/${t.maxhp} health, armour ${t.ac}${t.soak ? `, soak ${t.soak}` : ''}${t.ward ? `, ward ${t.ward}` : ''}${t.rng > 1 ? `, range ${t.rng}` : ''}${t.side === 'e' && !B.acted ? (cheb(u,t) > u.rng ? ' · out of range' : !canShoot(u,t) ? ' · ' + noShotWhy(u,t) : '') : ''}.`); return; }
   if (!B.moved && B.reach && B.reach.has(K(x,y)) && !(x === u.x && y === u.y)) moveCur(x, y);
@@ -576,6 +578,7 @@ const leaveCost = (u, x, y) => u.side === 'p' && boon('rope') ? 0 : threatsAt(u,
 async function aiWalk(u, path, gone){
   if (u.rising === B.turn) return true; // spent getting up
   for (const st of path) { if (await opportunity(u, st) || gone()) break; const was = {x:u.x, y:u.y}; u.facing = st.x >= u.x ? 1 : -1; u.x = st.x; u.y = st.y; if (u.kind !== 'shade') AUDIO.play('step'); enterFire(u); await wait(160); if (gone()) return false; if (u.hp <= 0) break;
+    if (u.side === 'e' && u.hp > 0) { const p = party().find(q => !q.ally && q.hp > 0 && !q.stun && has(q.id, 'setbutt') && q.setRound !== B.round && cheb(q, u) === 1 && cheb(q, was) > 1); if (p) { p.setRound = B.round; blog(`<em>${p.name} sets the butt of the lance and lets ${u.name} come onto it.</em>`); attack(p, u, {aoo:true, verb:'takes on the point'}); updBattleUI(); await wait(420); if (gone()) return false; if (u.hp <= 0) break; } } // v13.52.0: Set the Butt
     if (u.side === 'e' && B.stakes && B.stakes.some(t => t.x === u.x && t.y === u.y)) { float(u, 'staked', '#c9a36b'); blog(`${u.name} goes into the stake line and stops there.`); break; } // v13.5: Stake Line
     if (u.side === 'e' && await postUp(u, was)) { if (gone()) return false; if (u.hp <= 0) break; } }
   return !gone();

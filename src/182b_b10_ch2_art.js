@@ -57,7 +57,7 @@ function b102aGlassBand(x, W, H, hz, x0, when){ const c = when === 'eve' ? [[0,'
 /* the foreigners lying up at the glass's edge: a long dark smear with wagons in it and a few horsemen apart */
 function b102aLyingUp(x, W, H, hz, x0){ x.fillStyle = 'rgba(40,34,28,.6)'; for (let i = 0; i < 90; i++) x.fillRect(W*(x0 + i*.0042), hz + H*(.008 + hash(i, 10221)*.012), W*.003, H*.005);
   for (let i = 0; i < 7; i++) { x.fillStyle = '#4a4034'; x.fillRect(W*(x0 + .04 + i*.05), hz + H*.004, W*.012, H*.008); } // wagons
-  for (let i = 0; i < 5; i++) { x.fillStyle = '#2e2620'; x.fillRect(W*(x0 - .06 + i*.008), hz + H*(.012 + (i % 2)*.004), W*.005, H*.006); } } // the horsemen apart
+  for (let i = 0; i < 5; i++) { const hx = W*(x0 - .06 + i*.009), hy = hz + H*(.018 + (i % 2)*.004), k = H*.0011; x.save(); x.translate(hx, hy); x.scale(k, k); beastHorse(x, '#2e2620', {}); x.fillStyle = '#2e2620'; x.fillRect(-.9, -13.6, 1.9, 5.4); x.restore(); } /* v13.52.0: the shared horse (017b), a rider up */ } // the horsemen apart
 /* a big one, far: upright and leaning forward, a long head, a long tail held out, grey-green (never close) */
 function b102aBigOne(x, cx, cy, s, ph){ const c = '#4e5a4a', st = Math.sin(ph)*1.2;
   x.fillStyle = c; x.beginPath(); x.ellipse(cx, cy - 13*s, 3*s, 6*s, .55, 0, 7); x.fill(); // the body, leaning
