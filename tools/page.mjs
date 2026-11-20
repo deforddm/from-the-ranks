@@ -93,6 +93,8 @@ export async function openGame(br, url, opts = {}) {
   page.on('pageerror', e => errors.push(String(e && e.stack || e).split('\n').slice(0, 4).join(' | ')));
   page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push('console: ' + m.text()); });
   const settings = Object.assign(opts.fast ? { master: 0, music: 0, sfx: 0, amb: 0, speed: +(process.env.ASHES_SPEED || 0.02), motion: 'off', shake: false } : {}, opts.settings || {});
+  /* v13.56.0: the chapter tests press each trick's old button to prove its effect; the game itself fires most tricks unasked (src/989b_answers.js), and tools/trick_answers_test.mjs, balance.mjs and play.mjs test that */
+  if (opts.trickButtons ?? /(b\d+ch\d+|aren|b8engine|drymarch|sanimon|ridge|vathar|v103)_test\.mjs$/.test(process.argv[1] || '')) await page.addInitScript(() => { window.FTR_TRICKBTN = 1; });
   if (!opts.handPicks) await page.addInitScript(() => { window.FTR_AUTOPICK = 1; }); // v13.52.0: a joining recruit's veteran picks are taken in order, as before, unless the tool asks for the pick screen (handPicks) or clears the flag itself
   await page.addInitScript(({ settings, save }) => { try { localStorage.clear(); localStorage.setItem('from-the-ranks-settings', JSON.stringify(settings)); if (save) localStorage.setItem('from-the-ranks-v1', JSON.stringify(save)); } catch (e) {} }, { settings, save: opts.save || null });
   await page.goto(url);

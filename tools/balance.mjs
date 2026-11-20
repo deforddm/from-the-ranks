@@ -47,7 +47,12 @@ const VELL = process.argv.includes('--vell');
 const RUNS = +opt('runs', 20), NOE = +opt('noellis', 12), NAIVE = +opt('naive', 10), PAR = +opt('par', 4), LVL = +opt('lvl', 0);
 const ONLY = (opt('only', '') || '').split(',').filter(Boolean), LEAN = args.includes('--lean'), RICH = args.includes('--rich');
 const JSONOUT = opt('json', '/tmp/ashes-balance.json'), QUIET = args.includes('--quiet');
-const PATCH = opt('patch', '') ? fs.readFileSync(opt('patch', ''), 'utf8') : ''; // JS run in each page after boot, to try a tuning in memory
+/* --tricks (v13.56.0): the squad carries every trick its book teaches before the fight's chapter, shared out in turn. Most tricks now fire by themselves
+   (src/989b_answers.js), so this measures a squad that passed its hard checks; without the flag the squad carries none, as every earlier measurement did. */
+const TRICKS_ON = args.includes('--tricks');
+const TRICK_PATCH = `{ const _sb = startBattle; startBattle = function(){ try { if (S) { const n = S.book && BOOKS[S.book] ? BOOKS[S.book].n : 1, ch = S.chapter || 1, ids = (S.squad || []).filter(id => TPL[id] && !TPL[id].ally); S.tricks = {}; let i = 0;
+  Object.keys(TRICKS).forEach(k => { const m = /^b(\\d+)_/.exec(k), bn = m ? +m[1] : 1, T = TRICKS[k]; if (bn !== n || !T.ab || (T.ch || 0) >= ch || !ids.length) return; S.tricks[k] = {who:ids[i++ % ids.length], ch:T.ch || 0, left:T.n != null ? trickN(k) : null}; }); } } catch (e) { console.warn('tricks', e); } return _sb.apply(this, arguments); }; }`;
+const PATCH = (opt('patch', '') ? fs.readFileSync(opt('patch', ''), 'utf8') : '') + (TRICKS_ON ? '\n' + TRICK_PATCH : ''); // JS run in each page after boot, to try a tuning in memory
 const MAXR = 40;
 const BOOK = opt('book', 'gotm'), HOC = BOOK === 'hoc', MT = BOOK === 'mt', LATER = ['hoc', 'dg', 'moi', 'mt', 'bh', 'rg', 'tth', 'dod', 'tcg'].includes(BOOK), DIFF = opt('diff', ''), TRANSFER = args.includes('--transfer'), NOORVAS = args.includes('--noorvas'), NOGEAR = args.includes('--nogear');
 const FLAGS = Object.fromEntries((opt('flags', '') || '').split(',').filter(Boolean).map(kv => { const [k, v] = kv.split(':'); return [k, isNaN(+v) ? v : +v]; }));

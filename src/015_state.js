@@ -118,7 +118,7 @@ const listCount = () => 211 + (S.f.c2_key === 'light' ? 1 : 0) + (S.f.c4_key ===
 const has = (id, k) => (S.picks[id] || []).includes(k);
 /* stat with gear and veteran picks folded in */
 /* the role's Measure, grown at levels 4 and 8 */
-const lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0) + (u[0] === stat && l >= 12 ? 1 : 0); };
+let lvStat = (id, stat) => { const u = STATUP[id], l = (S && S.lvl) || 1; return !u ? 0 : (u[0] === stat && l >= 4 ? 1 : 0) + (u[1] === stat && l >= 8 ? 1 : 0) + (u[0] === stat && l >= 12 ? 1 : 0); };
 function statOf(id, stat){ let v = TPL[id].st[stat] + lvStat(id, stat); Object.values(S.gear[id] || {}).forEach(g => { const it = ITEMS[g]; if (it && it.stat && it.stat[stat]) v += it.stat[stat]; }); if (has(id,'nerve')) v += 1; if (has(id,'nerve2')) v += 1; return v; }
 function gain(id){ const it = ITEMS[id]; if (!it || S.kit.includes(id)) return; S.kit.push(id); note(`Found: ${it.name} (${itemStatShort(id)}).`, 'good'); AUDIO.play('pick');
   // auto-equip into an empty slot, on whoever it suits best (31c)
