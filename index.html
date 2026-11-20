@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.61.0';
+const VERSION = '13.61.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -871,7 +871,12 @@ const AUDIO = (() => {
   const f = (deg, oct = 0) => V.root * Math.pow(2, (V.scale[((deg % 7) + 7) % 7] + 12 * (Math.floor(deg / 7) + oct)) / 12);
   function voiceKey(){ try { return (typeof S !== 'undefined' && S ? S.book || 'gotm' : typeof BOOK !== 'undefined' && BOOK) || 'gotm'; } catch(e) { return 'gotm'; } }
   const rnd = (a, b) => a + Math.random() * (b - a), pick = a => a[Math.floor(Math.random() * a.length)], chance = p => Math.random() < p, P = () => rnd(-.8, .8);
-  const now = () => ac.currentTime;
+  /* v13.61.1 (David, Nov 20, 2026: "sound tends to get scratchy or have little clicks"). The clock the page reads is behind the clock the sound runs on,
+     by a buffer or more on a phone. A sound started "now" was already a little in the past when it reached the speaker, so its few-millisecond fade-in had
+     been skipped and it began at full level: a click. Everything is now scheduled a moment ahead (LEAD), and a fade-in is never allowed to start in the past. */
+  let LEAD = .045; // set from the device's own buffer when the sound starts: a bigger buffer, a longer lead (at most an eighth of a second)
+  const leadFor = c => { try { return Math.min(.12, Math.max(.045, (c.baseLatency || 0) * 2 + .02)); } catch (e) { return .045; } };
+  const now = () => ac.currentTime + LEAD;
   const live = () => !!ac && (offline || ac.state === 'running');
   const muted = () => !(SET.master > 0) || !(SET.music > 0 || SET.sfx > 0 || SET.amb > 0);
   const vol = k => Math.max(0, Math.min(1, +SET[k] || 0));
@@ -886,7 +891,7 @@ const AUDIO = (() => {
     if (ac) return true;
     const C = window.AudioContext || window.webkitAudioContext; if (!C) return false;
     try { ac = new C(); } catch(e) { return false; }
-    build(); ac.onstatechange = sync; return true;
+    LEAD = leadFor(ac); build(); ac.onstatechange = sync; return true;
   }
   function build(){
     const lim = ac.createDynamicsCompressor(); // a limiter: catches stacked explosions, leaves everything else alone
@@ -929,7 +934,7 @@ const AUDIO = (() => {
   const wide = k => bufs[k + '2'] || (bufs[k + '2'] = noiseBuf(k, 2, 4.5));
 
   /* ---- voices: every one is enveloped from and back to silence, and cleans itself up when it ends ---- */
-  function env(g, t, a, peak, d){ g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); }
+  function env(g, t, a, peak, d){ t = Math.max(t, ac.currentTime + .006); g.gain.value = 0; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); }
   function vout(head, t, a, v, d, to, pan, wet){
     const g = ac.createGain(); env(g, t, a, v, d); head.connect(g); let o = g;
     if (pan && ac.createStereoPanner) { o = ac.createStereoPanner(); o.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(o); }
@@ -10099,6 +10104,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.61.1', ['Sound: the small clicks at the start of sounds are fixed. A phone plays sound a moment behind the clock the game reads, so a sound started "now" had already missed its own fade-in and began at full level. Every sound is now set a twentieth of a second ahead, more on a phone with a bigger sound buffer.']],
   ['13.61.0', ['The towns of the later books have buildings now, drawn as roofs and street fronts the way Darujhistan is: Hissar and Y\'Ghatan in flat clay roofs with jars and rugs on them, Aren in pale limestone, Letheras in slate, tile and green copper over the canals, and Black Coral in black slate with very few lights. Doors, lattices and lit windows face the street.', 'The rest of the figures are redrawn to the new standard: the wight, Tool, Mammot, Garrow, the street child and the Fete\'s masked revellers in Book One; the faces the Deck shows in Books Two and Three (Lostara, Felisin, Heboric, Baudin, Minala, Icarium, Leoman, Toblakai, Sha\'ik, Brood, Korlat, Silverfox, Artanthos); and Book Five\'s cutpurse and river thief. Looks only: nothing plays differently.']],
   ['13.60.0', ['The new map art reaches the later books\' maps that were still drawn the old Book One way: Darujhistan in Book Eight (its streets, its alleys and the road out), Book Seven\'s night roads and fields, and the sap in Book Three. The other maps of Books Two to Ten were drawn later and already had ground in one piece; they are as they were. Looks only.']],
   ['13.59.0', ['Book One\'s walking figures are redrawn: forty-one of them, the enemies first (deserters, cutpurses, bruisers, hired knives, the Guild, the Claw, the Watch, the house guards, the Andii) and then everyone the Fourth meets, from Whiskeyjack to Kruppe. They have arms and hands now, and hold what they carry; boots, belts, faces, hoods and helms. Looks only.']],

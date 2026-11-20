@@ -114,7 +114,12 @@ const AUDIO = (() => {
   const f = (deg, oct = 0) => V.root * Math.pow(2, (V.scale[((deg % 7) + 7) % 7] + 12 * (Math.floor(deg / 7) + oct)) / 12);
   function voiceKey(){ try { return (typeof S !== 'undefined' && S ? S.book || 'gotm' : typeof BOOK !== 'undefined' && BOOK) || 'gotm'; } catch(e) { return 'gotm'; } }
   const rnd = (a, b) => a + Math.random() * (b - a), pick = a => a[Math.floor(Math.random() * a.length)], chance = p => Math.random() < p, P = () => rnd(-.8, .8);
-  const now = () => ac.currentTime;
+  /* v13.61.1 (David, Nov 20, 2026: "sound tends to get scratchy or have little clicks"). The clock the page reads is behind the clock the sound runs on,
+     by a buffer or more on a phone. A sound started "now" was already a little in the past when it reached the speaker, so its few-millisecond fade-in had
+     been skipped and it began at full level: a click. Everything is now scheduled a moment ahead (LEAD), and a fade-in is never allowed to start in the past. */
+  let LEAD = .045; // set from the device's own buffer when the sound starts: a bigger buffer, a longer lead (at most an eighth of a second)
+  const leadFor = c => { try { return Math.min(.12, Math.max(.045, (c.baseLatency || 0) * 2 + .02)); } catch (e) { return .045; } };
+  const now = () => ac.currentTime + LEAD;
   const live = () => !!ac && (offline || ac.state === 'running');
   const muted = () => !(SET.master > 0) || !(SET.music > 0 || SET.sfx > 0 || SET.amb > 0);
   const vol = k => Math.max(0, Math.min(1, +SET[k] || 0));
@@ -129,7 +134,7 @@ const AUDIO = (() => {
     if (ac) return true;
     const C = window.AudioContext || window.webkitAudioContext; if (!C) return false;
     try { ac = new C(); } catch(e) { return false; }
-    build(); ac.onstatechange = sync; return true;
+    LEAD = leadFor(ac); build(); ac.onstatechange = sync; return true;
   }
   function build(){
     const lim = ac.createDynamicsCompressor(); // a limiter: catches stacked explosions, leaves everything else alone
@@ -172,7 +177,7 @@ const AUDIO = (() => {
   const wide = k => bufs[k + '2'] || (bufs[k + '2'] = noiseBuf(k, 2, 4.5));
 
   /* ---- voices: every one is enveloped from and back to silence, and cleans itself up when it ends ---- */
-  function env(g, t, a, peak, d){ g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); }
+  function env(g, t, a, peak, d){ t = Math.max(t, ac.currentTime + .006); g.gain.value = 0; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); }
   function vout(head, t, a, v, d, to, pan, wet){
     const g = ac.createGain(); env(g, t, a, v, d); head.connect(g); let o = g;
     if (pan && ac.createStereoPanner) { o = ac.createStereoPanner(); o.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(o); }
