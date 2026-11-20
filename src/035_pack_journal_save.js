@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.55.2', ['Book Seven\'s map: the Malazans come ashore on Lether\'s north-western coast, as the novel has it, and march south-east on Letheras.']],
   ['13.55.1', ['The maps, a last pass against the novels\' own: the Tahlyn Mountains stand east of Pale and the road south goes round them by the Rhivi Plain; Darujhistan sits toward the east end of the lake; Kraig\'s Landing is upriver from Trate. No name on any map sits on another or runs off the sheet.']],
   ['13.55.0', ['Every map redrawn against the maps printed in the novels. Genabackis is tall and narrow, with Pale, Darujhistan, Capustan and Coral close together in its middle. Aren sits on its southern peninsula, and the Chain of Dogs goes west under the Karas Sea before it turns south. Raraku is in the north-east with Ehrlitan above it, and Y\'Ghatan is far to the west. Trate is north of Letheras, and Kolanse is on the far eastern coast. Looks only.']],
   ['13.54.2', ['The Seven Cities maps, checked against the Malazan Wiki: G\'danisban sits on Raraku\'s eastern edge with Ehrlitan due north of it, and Raraku lies a little further north and west.']],
