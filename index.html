@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.61.1';
+const VERSION = '13.61.2';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -7575,6 +7575,9 @@ function shelfHTML(list){
       <span class="cw">Book ${B.word}</span><b>${esc(B.name)}</b><small>${esc(B.title)}</small></button>`; }).join('')}</div></div>`; }
 function showTitle(fresh, want){
   if (S) save(); view = 'title'; B = null; S = null; AUDIO.setScene('title');
+  /* v13.61.2 (David, Nov 20, 2026: "returning to title leaves this dialogue up blocking the screen"): nothing that sat over the game follows it to the title.
+     The save keeps the conversation's place, so Continue opens it again. */
+  ['#sheet', '#chars', '#settings', '#cardfx', '#mg'].forEach(q => { const e = $(q); if (e) e.hidden = true; }); { const sh = $('#sheet'); if (sh) sh.classList.remove('vsheet'); document.body.classList.remove('vision'); if (typeof G !== 'undefined' && G) G.said = null; if (typeof VIS !== 'undefined') VIS = null; }
   const list = roster().list, form = !!(fresh || want), tb = want && BOOKS[want] ? want : titleBookOf(list), TB = BOOKS[tb];
   /* v8.0.2 (David, Oct 29: five books): the title shows only the sergeant played last; the rest wait on their book's page, where each can carry on or be erased */
   const rowsOf = (L, main) => L.map((e, i) => `<div class="sgtrow"><button class="btn load ${i ? '' : 'primary'}" data-id="${e.id}" ${i || !main ? '' : 'id="bCont"'}><b>${i ? '' : 'Continue as '}Sergeant ${esc(e.name)}</b><small>${[chLabel(e, main), e.done ? '' : e.where, `level ${e.lvl}`, agoText(e.upd)].filter(Boolean).map(esc).join(' · ')}</small></button><button class="btn icon del" data-id="${e.id}" aria-label="Erase Sergeant ${esc(e.name)} (press and hold)">×</button></div>`).join('');
@@ -10104,6 +10107,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.61.2', ['The Title button in the middle of a conversation no longer leaves the conversation lying over the title screen. Your place is saved, and Continue opens it again where you were.']],
   ['13.61.1', ['Sound: the small clicks at the start of sounds are fixed. A phone plays sound a moment behind the clock the game reads, so a sound started "now" had already missed its own fade-in and began at full level. Every sound is now set a twentieth of a second ahead, more on a phone with a bigger sound buffer.']],
   ['13.61.0', ['The towns of the later books have buildings now, drawn as roofs and street fronts the way Darujhistan is: Hissar and Y\'Ghatan in flat clay roofs with jars and rugs on them, Aren in pale limestone, Letheras in slate, tile and green copper over the canals, and Black Coral in black slate with very few lights. Doors, lattices and lit windows face the street.', 'The rest of the figures are redrawn to the new standard: the wight, Tool, Mammot, Garrow, the street child and the Fete\'s masked revellers in Book One; the faces the Deck shows in Books Two and Three (Lostara, Felisin, Heboric, Baudin, Minala, Icarium, Leoman, Toblakai, Sha\'ik, Brood, Korlat, Silverfox, Artanthos); and Book Five\'s cutpurse and river thief. Looks only: nothing plays differently.']],
   ['13.60.0', ['The new map art reaches the later books\' maps that were still drawn the old Book One way: Darujhistan in Book Eight (its streets, its alleys and the road out), Book Seven\'s night roads and fields, and the sap in Book Three. The other maps of Books Two to Ten were drawn later and already had ground in one piece; they are as they were. Looks only.']],

@@ -109,6 +109,9 @@ function shelfHTML(list){
       <span class="cw">Book ${B.word}</span><b>${esc(B.name)}</b><small>${esc(B.title)}</small></button>`; }).join('')}</div></div>`; }
 function showTitle(fresh, want){
   if (S) save(); view = 'title'; B = null; S = null; AUDIO.setScene('title');
+  /* v13.61.2 (David, Nov 20, 2026: "returning to title leaves this dialogue up blocking the screen"): nothing that sat over the game follows it to the title.
+     The save keeps the conversation's place, so Continue opens it again. */
+  ['#sheet', '#chars', '#settings', '#cardfx', '#mg'].forEach(q => { const e = $(q); if (e) e.hidden = true; }); { const sh = $('#sheet'); if (sh) sh.classList.remove('vsheet'); document.body.classList.remove('vision'); if (typeof G !== 'undefined' && G) G.said = null; if (typeof VIS !== 'undefined') VIS = null; }
   const list = roster().list, form = !!(fresh || want), tb = want && BOOKS[want] ? want : titleBookOf(list), TB = BOOKS[tb];
   /* v8.0.2 (David, Oct 29: five books): the title shows only the sergeant played last; the rest wait on their book's page, where each can carry on or be erased */
   const rowsOf = (L, main) => L.map((e, i) => `<div class="sgtrow"><button class="btn load ${i ? '' : 'primary'}" data-id="${e.id}" ${i || !main ? '' : 'id="bCont"'}><b>${i ? '' : 'Continue as '}Sergeant ${esc(e.name)}</b><small>${[chLabel(e, main), e.done ? '' : e.where, `level ${e.lvl}`, agoText(e.upd)].filter(Boolean).map(esc).join(' · ')}</small></button><button class="btn icon del" data-id="${e.id}" aria-label="Erase Sergeant ${esc(e.name)} (press and hold)">×</button></div>`).join('');
