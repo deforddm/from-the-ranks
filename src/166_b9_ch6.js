@@ -628,7 +628,7 @@ Finadd Ennic is at the squad's fire, waiting, which he has never done.`,
     b9_c6_edge:()=>({sp:'The east end of the rise', scene:'b9_c6_dusk', txt:
 `From the east end of the rise the plain falls away toward where the foreigners were. Their dust is still standing up against the last of the light, a long brown cloud, and under it things are burning, far off, small as lamps.
 
-Once, while you watch, a long dark line of horsemen goes into the dust at a gallop, very far off, a great many of them, under banners nobody can read at this distance. The dust closes over them.
+Earlier, with the sun still well up and the fight at its worst, a long dark line of horsemen went into that dust at a gallop, very far off, a great many of them, under banners nobody could read at that distance. The dust closed over them. Nobody on the rise has seen them since.
 
 There is nothing anybody on the rise can do about any of it. The escort watches anyway.`,
       ch:[{t:'Back.', go:()=>startExplore()}]}),

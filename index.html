@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.55.2';
+const VERSION = '13.55.3';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9937,6 +9937,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.55.3', ['Book Nine: the horsemen who go into the dust far off do so at the height of the fight, in daylight, as the novel has it. Chapters Six and Seven tell it as seen earlier in the day; the journal and Deeds lines say the same. Words only.']],
   ['13.55.2', ['Book Seven\'s map: the Malazans come ashore on Lether\'s north-western coast, as the novel has it, and march south-east on Letheras.']],
   ['13.55.1', ['The maps, a last pass against the novels\' own: the Tahlyn Mountains stand east of Pale and the road south goes round them by the Rhivi Plain; Darujhistan sits toward the east end of the lake; Kraig\'s Landing is upriver from Trate. No name on any map sits on another or runs off the sheet.']],
   ['13.55.0', ['Every map redrawn against the maps printed in the novels. Genabackis is tall and narrow, with Pale, Darujhistan, Capustan and Coral close together in its middle. Aren sits on its southern peninsula, and the Chain of Dogs goes west under the Karas Sea before it turns south. Raraku is in the north-east with Ehrlitan above it, and Y\'Ghatan is far to the west. Trate is north of Letheras, and Kolanse is on the far eastern coast. Looks only.']],
@@ -111206,7 +111207,7 @@ Finadd Ennic is at the squad's fire, waiting, which he has never done.`,
     b9_c6_edge:()=>({sp:'The east end of the rise', scene:'b9_c6_dusk', txt:
 `From the east end of the rise the plain falls away toward where the foreigners were. Their dust is still standing up against the last of the light, a long brown cloud, and under it things are burning, far off, small as lamps.
 
-Once, while you watch, a long dark line of horsemen goes into the dust at a gallop, very far off, a great many of them, under banners nobody can read at this distance. The dust closes over them.
+Earlier, with the sun still well up and the fight at its worst, a long dark line of horsemen went into that dust at a gallop, very far off, a great many of them, under banners nobody could read at that distance. The dust closed over them. Nobody on the rise has seen them since.
 
 There is nothing anybody on the rise can do about any of it. The escort watches anyway.`,
       ch:[{t:'Back.', go:()=>startExplore()}]}),
@@ -111834,7 +111835,7 @@ const B9CH7 = {
     if (f.b9_c7_cart === 'ok') x.push('A heavy with a broken leg went out on the surgeons\' last cart. The Third carried him to it.');
     if (f.b9_c7_cusser) x.push('The sappers\' last wagon gave the Third a cusser for the short-tails.');
     if (f.b9_c7_lowOk) x.push(`${trickBy('b9_c7_low') ? NAME(trickBy('b9_c7_low')) : 'The Third'} learned to fight them low, in the dark, where the plate has to bend.`);
-    if (f.b9_c7_horse) x.push('Horsemen went into the dust very far off as the light went. Fewer came back.');
+    if (f.b9_c7_horse) x.push('Horsemen went into the dust very far off at the height of the fight. Fewer came back.');
     if (f.b9_c7_news) x.push('The Fist is dead. The High Mage is missing. A captain went in alone. The Adjunct was carried off the field.');
     if (f.b9_c7_dogsDone === 'fought') x.push('Wastes dogs working the stragglers\' edge found the Third instead.');
     if (S.b9 && S.b9.wit && S.b9.wit.c7) x.push(S.b9.wit.c7 === 'kept' ? 'Before the dark, the Third still had an answer for what it stood there for.' : 'Before the dark, the Third said it stood there because it was put there.');
@@ -111846,7 +111847,7 @@ const B9CH7 = {
     f.b9_c7_pot && 'The retreat camp, days after. The column\'s pot, and a little in it.',
     f.b9_c7_news && 'The Fist is dead. The High Mage is missing. A captain went in alone. The Adjunct was carried off the field.',
     f.b9_c7_darkDone && 'The heavies held the dark until the column\'s lamps were gone, and walked back in step through the night.',
-    f.b9_c7_horse && 'Horsemen went into the dust very far off at dusk. Fewer came back. Nobody near the Third knew whose they were, or said.',
+    f.b9_c7_horse && 'Horsemen went into the dust very far off at the height of the fight, with the sun still up. Fewer came back. Nobody near the Third knew whose they were, or said.',
     f.b9_c7_rearDone && (b97Fell().length ? `The short-tails came onto the Third's stretch late in the day. ${b97And(b97Fell().map(NAME))} fell there.` : 'The short-tails came onto the Third\'s stretch late in the day. The Third held it.'),
     f.b9_c7_orders && 'The regulars broke. The heavies and the marines held the back of the army, so the column could get away in the dark.',
     'The short-tails came out of the dust in the morning. The Third spent the day behind the marines\' end of the field.'].filter(Boolean); },
@@ -112089,13 +112090,15 @@ The old marine comes along the back of the line with his deck in his fist, looki
 He does not say anything about the stretch, or about who is not on it. He puts a biscuit in your hand, the one he was saving, and goes on along the line.${b97If('brask', `\n\nBrask watches him go. "Corporal's a good heavy," he says. "Slow." It is the highest thing he says of anybody.`)}`,
       ch:[{t:'Back to the line.', go:()=>startExplore()}]}),
 
-    /* the horsemen far off (the Khundryl's charge; never named, never closer than very far off; rule 94) */
+    /* the horsemen far off (the Khundryl's charge; never named, never closer than very far off; rule 94). v13.55.3: told after dark as seen by day; the novel has the charge in the middle of the fight, in daylight (DoD pp. 1218-1221) */
     b9_c7_horse:()=>({sp:'The line\'s east end', scene:'b9_dark', fx:()=>{ S.f.b9_c7_horse = 1; }, again:()=>'The stone at the line\'s east end, and the dark east past it.', txt:
-`From the stone at the east end of the line, past the burning wagons, you can see a long way east in the last grey at the bottom of the sky.
+`From the stone at the east end of the line, past the burning wagons, there is nothing east now but the dark.
 
-Horsemen. Very far off, more than the eye can count, a long dark line of them going in at the gallop toward where the marines' end was, into the dust, with a sound that comes a long breath after them like distant surf. They go in. The dust takes them.
+By day you could see a long way from here. At the height of it, with the sun still up, you did.
 
-A long while later, some of them come back out of it. Fewer.${b97If('orvas', `\n\nOrvas watches them go in, and puts his hand flat over the black tears on his face, and holds it there.`)}${b97If('tegra', `\n\nTegra watches with her arms folded. "Horse-people charge like that when there is nothing else left to do," she says. "Mine would have."`)}`,
+Horsemen. Very far off, more than the eye could count, a long dark line of them going in at the gallop toward where the marines' end was, into the dust, with a sound that came a long breath after them like distant surf. They went in. The dust took them.
+
+A long while later, some of them came back out of it. Fewer.${b97If('orvas', `\n\nOrvas watched them go in, and put his hand flat over the black tears on his face, and held it there. He has not said a word about it since.`)}${b97If('tegra', `\n\nTegra watched with her arms folded. "Horse-people charge like that when there is nothing else left to do," she says now. "Mine would have."`)}`,
       ch:[{t:'Back to the line.', go:()=>startExplore()}]}),
 
     /* the burning wagons: the fallen laid by them, under cloaks (headline only) */
@@ -112405,7 +112408,7 @@ B97FIN.T = {
   rasp:{title:'Lovely', adjunct:'Rasp goes east with the satchel on her hip and the sappers\' last cusser in it, and says she is saving it for something that deserves it.', south:'Rasp goes south with the long column, where there are said to be walls, and is very happy about it.', home:'Rasp walks west toward the sea and the Malaz waterfront, and a cusser she means to throw into the harbour, she says, just to hear it.',
     mem:'She learned on the stretch that a cusser tears the plate open, and called it lovely, and did not smile.', warm:'"Lovely work, Sergeant," she tells you. "Lovely."'},
   orvas:{title:'The tears', adjunct:'Orvas goes east with his lance and the black tears on his face, and at night he looks back south-east, where the horsemen went in, and weeps for them, loudly, as is right.', south:'Orvas goes south with the long column, and does not say what he hopes to find, and weeps on the way, loudly, as is right.', home:'Orvas walks west with the Third, and at every halt he looks back south-east, where the horsemen went in, and weeps for them, loudly, as is right.',
-    mem:'He saw horsemen go into the dust very far off as the light went, and put his hand over the black tears on his face.', warm:'"You weep for none of them," he tells you. "So I weep for you as well. It is no trouble."'},
+    mem:'He saw horsemen go into the dust very far off at the height of the fight, and put his hand over the black tears on his face.', warm:'"You weep for none of them," he tells you. "So I weep for you as well. It is no trouble."'},
   redblade:{title:'The red scale', adjunct:'Ramin goes east with the army in his red scale, very straight, and has stopped asking whether the Red Blades would approve.', south:'Ramin goes south with the long column, and the Letherii take his red scale for an officer\'s, and he does not correct them.', home:'Ramin walks west in his red scale, and does not say whether he means to go back to the Red Blades or to find out why he left.',
     mem:'He went hungry in the Wastes and called it discipline, and then, quieter, said that was what they told him.', warm:'"You did not run," he tells you. "I have served officers who did."'},
   warlock:{title:'The grandmother', adjunct:'Keth goes east, and the grandmother complains about the dust every day of it, out of his mouth, and once, on the stretch, said thank you.', south:'Keth goes south with the long column, and the grandmother says she likes the Letherii, who are polite to old women, even ones who live in boys.', home:'Keth walks west, and the grandmother says it is about time, out of his mouth, every morning.',
