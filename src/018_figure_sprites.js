@@ -19,6 +19,7 @@ function drawFigure(ctx, kind, cx, cy, s, t, o = {}){
   const shield = (c1, c2, r = 6, x = -7, y = 0) => { ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = armor(c1, c2); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#111'; ctx.stroke(); ell(ctx, x, y, 1.4, 1.4, '#6b6155'); };
   const eyes = (c = 'rgba(255,255,255,.55)') => { ctx.fillStyle = c; ctx.fillRect(1, -11.6, 1.5, 1); ctx.fillRect(-2.5, -11.6, 1.5, 1); };
   const look = (c = 'rgba(24,14,10,.82)', y = -11.4) => { ctx.fillStyle = c; ctx.fillRect(-.9, y, 1.2, 1.1); ctx.fillRect(2, y, 1.2, 1.1); }; // eyes, turned the way the figure faces
+  if (typeof FIG1 !== 'undefined' && FIG1[kind] && !(typeof window !== 'undefined' && window.FTR_OLDFIGS)) { FIG1[kind](ctx, t, o); ctx.restore(); return; } // v13.59.0: Book One's figures redrawn (018b)
   switch (kind) {
     case 'sgt': legs('#2a2320'); torso('#6b4a2e', '#3d2a19'); ctx.fillStyle = '#d6a24a'; ctx.fillRect(-6.5, -6, 13, 1.2); ctx.fillRect(-6.5, -6, 3, 2.6); head('#a8826a'); look();
       poly(ctx, [[-3.2,-9.8],[4.4,-9.8],[4,-7.2],[1.6,-5.6],[-1.4,-6],[-3,-7.6]], '#2e2016'); ctx.fillStyle = 'rgba(170,160,150,.5)'; ctx.fillRect(.2, -6.6, 1.6, .8); // a short dark beard, greying at the chin

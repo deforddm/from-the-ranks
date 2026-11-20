@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.58.0';
+const VERSION = '13.59.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -2564,6 +2564,7 @@ function drawFigure(ctx, kind, cx, cy, s, t, o = {}){
   const shield = (c1, c2, r = 6, x = -7, y = 0) => { ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = armor(c1, c2); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#111'; ctx.stroke(); ell(ctx, x, y, 1.4, 1.4, '#6b6155'); };
   const eyes = (c = 'rgba(255,255,255,.55)') => { ctx.fillStyle = c; ctx.fillRect(1, -11.6, 1.5, 1); ctx.fillRect(-2.5, -11.6, 1.5, 1); };
   const look = (c = 'rgba(24,14,10,.82)', y = -11.4) => { ctx.fillStyle = c; ctx.fillRect(-.9, y, 1.2, 1.1); ctx.fillRect(2, y, 1.2, 1.1); }; // eyes, turned the way the figure faces
+  if (typeof FIG1 !== 'undefined' && FIG1[kind] && !(typeof window !== 'undefined' && window.FTR_OLDFIGS)) { FIG1[kind](ctx, t, o); ctx.restore(); return; } // v13.59.0: Book One's figures redrawn (018b)
   switch (kind) {
     case 'sgt': legs('#2a2320'); torso('#6b4a2e', '#3d2a19'); ctx.fillStyle = '#d6a24a'; ctx.fillRect(-6.5, -6, 13, 1.2); ctx.fillRect(-6.5, -6, 3, 2.6); head('#a8826a'); look();
       poly(ctx, [[-3.2,-9.8],[4.4,-9.8],[4,-7.2],[1.6,-5.6],[-1.4,-6],[-3,-7.6]], '#2e2016'); ctx.fillStyle = 'rgba(170,160,150,.5)'; ctx.fillRect(.2, -6.6, 1.6, .8); // a short dark beard, greying at the chin
@@ -2748,6 +2749,138 @@ function drawFigure(ctx, kind, cx, cy, s, t, o = {}){
 /* figures added by later books: FIGX[kind](ctx, helpers, t, o), drawn in the same ~32px frame, already translated, scaled and bobbing */
 const FIGX = {};
 
+
+/* ============ v13.59.0: Book One's walking figures redrawn (David, Nov 19, 2026, 11:01 PM PST: "redraw these enemies… review all sprites and upgrade them") ============
+   The review (every figure of all ten books on one sheet): the figures from Book Two on have arms, hands, layered kit and faces. Book One's own, the
+   first drawn, were a trapezoid, two legs and a ball. These are redrawn here to the later standard on one shared body: legs with boots, a shouldered
+   torso, two arms that hold what the soldier holds, a neck, a head with an ear, a nose and a jaw in shadow, then hair, helm or hood, and the kit.
+   Looks only: a figure's kind, size on the tile and footprint are what they were. 018's drawFigure asks FIG1 first. Colours and each one's telling
+   detail are carried over from the old drawings (the Adjunct's rust-red sword, Toc's patch, Kruppe's waistcoat, Hedge's leather cap). */
+const FIG1 = {};
+function fig1Man(ctx, t, s){
+  const w = s.w || 6.4, sk = s.sk || '#b08c76', top = s.top || ['#5a4632', '#33251a'], sl = s.sleeve || shade(top[0], -.12), dkS = shade(sk, -.22);
+  const grad = (c1, c2) => { const g = ctx.createLinearGradient(-7, -8, 7, 9); g.addColorStop(0, c1); g.addColorStop(1, c2); return g; };
+  const line = (pts, col, lw, cap = 'round') => { ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.lineCap = cap; ctx.lineJoin = 'round'; ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke(); ctx.lineCap = 'butt'; };
+  if (s.sc) { ctx.save(); ctx.translate(0, 13); ctx.scale(s.sc[0], s.sc[1]); ctx.translate(0, -13); }
+  const POSE = {low:[[1.7, -.4], [1.3, 4]], fwd:[[1.9, -1.6], [4, -.8]], up:[[2.6, -4.2], [2.8, -9]], chest:[[1.4, .2], [-2.6, .4]], hip:[[2.2, -.6], [.2, 3]]};
+  const armPts = (side, pose) => { const p = POSE[pose || 'low'], sx = side * (w - .5); return [[sx, -4.8], [sx + side * p[0][0], p[0][1]], [sx + side * p[1][0], p[1][1]]]; };
+  const item = (it, hx, hy, side) => { if (!it) return; const [k, c1, c2] = Array.isArray(it) ? it : [it]; const steel = c1 || '#cfc8b8';
+    if (k === 'sword' || k === 'rapier' || k === 'knife' || k === 'long') { const L = k === 'knife' ? 5.4 : k === 'long' ? 15 : 11.5, dx = side * (k === 'rapier' ? 4.4 : 3.2) * L / 11.5, lw = k === 'rapier' ? .9 : k === 'long' ? 1.9 : 1.5;
+      line([[hx, hy], [hx + dx, hy - L]], steel, lw, 'butt'); line([[hx + side * .5, hy - 1], [hx + dx * .9 + side * .4, hy - L * .9]], 'rgba(255,255,255,.35)', .4); line([[hx - side * 1.3, hy - 1.2], [hx + side * 1.9, hy - .2]], c2 || '#6b4f2a', 1.1); line([[hx - side * .4, hy + 1.6], [hx, hy]], '#3a2a18', 1.3); }
+    else if (k === 'club' || k === 'maul') { line([[hx - side * .4, hy + 2], [hx + side * 1.6, hy - 11]], '#4a3320', 1.7); if (k === 'maul') { ctx.fillStyle = '#5c5952'; ctx.fillRect(hx + side * 1.6 - 2.8, hy - 14.4, 5.6, 4); ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(hx + side * 1.6 - 2.8, hy - 14.4, 5.6, .8); } else { line([[hx + side * 1.1, hy - 7.5], [hx + side * 1.8, hy - 12.4]], c1 || '#5a4630', 3.4); ell(ctx, hx + side * 1.4, hy - 11.6, .5, .5, 'rgba(0,0,0,.4)'); } }
+    else if (k === 'spear' || k === 'halberd' || k === 'staff') { line([[hx, 13], [hx, k === 'staff' ? -19 : -21]], c2 || '#6b5236', 1.4, 'butt'); if (k === 'spear') poly(ctx, [[hx, -25.5], [hx - 1.5, -20.5], [hx + 1.5, -20.5]], steel); if (k === 'halberd') { poly(ctx, [[hx, -25.5], [hx - 1.1, -21], [hx + 1.1, -21]], steel); poly(ctx, [[hx + side * .6, -21.4], [hx + side * 4.4, -22.6], [hx + side * 4.8, -18.4], [hx + side * .6, -17.6]], steel); ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(hx + side * 2.4, -22, side * 2.2, 4); } if (k === 'staff') ell(ctx, hx, -19.6, 1.3, 1.3, c1 || '#8b7355'); }
+    else if (k === 'xbow') { line([[hx - side * 4, hy + .8], [hx + side * 5.6, hy - .6]], '#4a3320', 2); ctx.strokeStyle = '#8d8a86'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(hx + side * 5, hy - 5.4); ctx.quadraticCurveTo(hx + side * 7.6, hy - .6, hx + side * 5, hy + 4.2); ctx.stroke(); line([[hx + side * 5, hy - 5.4], [hx + side * 1.4, hy - .4], [hx + side * 5, hy + 4.2]], 'rgba(220,214,200,.6)', .4); line([[hx + side * 1.4, hy - .9], [hx + side * 6.6, hy - 1]], '#d8d0c0', .6); }
+    else if (k === 'bow') { ctx.strokeStyle = c1 || '#7a5a3a'; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(hx, hy - 11); ctx.quadraticCurveTo(hx + side * 4.6, hy, hx, hy + 11); ctx.stroke(); line([[hx, hy - 11], [hx, hy + 11]], 'rgba(230,224,208,.6)', .4); }
+    else if (k === 'round') { ctx.beginPath(); ctx.arc(hx, hy, 6, 0, 7); ctx.fillStyle = grad(c1 || '#6a4a30', c2 || '#2a1c10'); ctx.fill(); ctx.strokeStyle = '#141210'; ctx.lineWidth = 1; ctx.stroke(); ctx.beginPath(); ctx.arc(hx, hy, 4.2, 0, 7); ctx.strokeStyle = 'rgba(255,240,210,.14)'; ctx.lineWidth = .6; ctx.stroke(); ell(ctx, hx, hy, 1.5, 1.5, '#8a8274'); ell(ctx, hx - .4, hy - .4, .6, .6, 'rgba(255,255,255,.4)'); }
+    else if (k === 'tankard') { ctx.fillStyle = '#4a3a2a'; ctx.fillRect(hx - 1.6, hy - 3.4, 3.4, 4.4); ctx.fillStyle = '#e8d8b0'; ctx.fillRect(hx - 1.6, hy - 4.2, 3.4, 1); ctx.strokeStyle = '#4a3a2a'; ctx.lineWidth = .8; ctx.beginPath(); ctx.arc(hx + side * 2.2, hy - 1.2, 1.3, 0, 7); ctx.stroke(); }
+    else if (k === 'ledger') { ctx.fillStyle = c1 || '#c9b89a'; ctx.fillRect(hx - 2.4, hy - 3.4, 4.8, 5.8); ctx.fillStyle = '#2a1e14'; ctx.fillRect(hx - 2.4, hy - 3.4, 4.8, .9); ctx.fillStyle = 'rgba(40,30,20,.45)'; for (let i = 0; i < 3; i++) ctx.fillRect(hx - 1.6, hy - 1.6 + i * 1.3, 3.2, .4); }
+    else if (k === 'bag') { poly(ctx, [[hx - 2.6, hy - 1], [hx + 2.6, hy - 1], [hx + 3, hy + 4.6], [hx - 3, hy + 4.6]], c1 || '#4a3a2c'); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(hx - 2.6, hy - 1, 5.2, 1.2); ctx.fillStyle = c2 || '#d2c8b0'; ctx.fillRect(hx - .6, hy + .6, 1.2, 1.2); }
+    else if (k === 'coin') { ell(ctx, hx, hy - 1, 1.3, 1.3, '#e8c073'); ell(ctx, hx - .3, hy - 1.3, .5, .5, 'rgba(255,255,255,.5)'); } };
+  const arm = (side, a) => { if (!a || a.none) return; const p = armPts(side, a.pose), col = a.bare ? sk : a.col || sl; line(p, 'rgba(0,0,0,.35)', 3.6); line(p, col, 2.8); if (!a.bare) line([p[0], p[1]], 'rgba(255,255,255,.07)', 1); const h = p[2];
+    if (a.item && a.under) item(a.item, h[0], h[1], side); ell(ctx, h[0], h[1], 1.5, 1.5, a.glove || sk); ell(ctx, h[0] - .3, h[1] - .4, .6, .5, 'rgba(255,255,255,.18)'); if (a.item && !a.under) item(a.item, h[0], h[1], side); };
+  /* behind the body */
+  if (s.cloak) { poly(ctx, [[-w - 1.2, -6.4], [w * .5, -6.6], [w * .3, 11], [-w - 3.2, 11.6]], grad(s.cloak, shade(s.cloak, -.45))); line([[-w - 2, -1], [-w - 2.8, 11]], 'rgba(0,0,0,.25)', .7); }
+  if (s.hairB) poly(ctx, [[-5.2, -14], [-1, -15.6], [1, -9], [-2.4, s.hairLen || -1], [-6.4, s.hairLen || -1]], s.hairB);
+  if (s.slung) item(s.slung, -w - .6, -3, -1);
+  arm(-1, s.bk === undefined ? {} : s.bk);
+  /* legs and boots */
+  if (!s.gown) { const lc = s.leg || '#2a2320', bc = s.boot || '#17120e'; ctx.fillStyle = lc; ctx.fillRect(-4.6, 4.6, 3.7, 6.8); ctx.fillRect(1, 4.6, 3.7, 6.8); ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.fillRect(-.9, 4.6, .9, 6.8); ctx.fillRect(3.7, 4.6, 1, 6.8);
+    ctx.fillStyle = bc; ctx.fillRect(-5, 9.6, 4.9, 3.5); ctx.fillRect(.6, 9.6, 4.9, 3.5); ctx.fillRect(-.6, 11.6, 1.2, 1.5); ctx.fillRect(5, 11.6, 1.2, 1.5); ctx.fillStyle = 'rgba(255,240,215,.12)'; ctx.fillRect(-5, 9.6, 4.9, .7); ctx.fillRect(.6, 9.6, 4.9, .7); }
+  /* the body */
+  const hem = s.gown ? 13 : s.robe ? 12 : s.long ? 9.4 : 7, hw = s.gown ? (s.gown === true ? 10 : s.gown) : s.robe ? w + 2 : s.long ? w + .6 : w * .9, T = [[-w, -6.6], [w, -6.6], [w + .5, -4.8], [hw, hem], [-hw, hem], [-w - .5, -4.8]];
+  poly(ctx, T, grad(top[0], top[1])); ctx.save(); ctx.beginPath(); T.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.clip();
+  ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(w * .45, -7, w, 22); ctx.fillStyle = 'rgba(255,245,225,.08)'; ctx.fillRect(-w - 1, -7, w * .7, 22);
+  if (s.mail) { ctx.strokeStyle = 'rgba(0,0,0,.3)'; ctx.lineWidth = .5; for (let y = -5; y < hem; y += 1.5) { ctx.beginPath(); ctx.setLineDash([1.2, .8]); ctx.moveTo(-hw - 1 + (y % 3 ? .6 : 0), y); ctx.lineTo(hw + 1, y); ctx.stroke(); } ctx.setLineDash([]); }
+  if (s.folds) { ctx.strokeStyle = 'rgba(0,0,0,.2)'; ctx.lineWidth = .7; for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(i * 2, 1); ctx.lineTo(i * hw * .55, hem); ctx.stroke(); } }
+  if (s.front) { ctx.fillStyle = s.front; ctx.fillRect(-.8, -6.6, 1.6, hem + 7); }
+  if (s.open) { poly(ctx, [[-2.4, -6.6], [2.4, -6.6], [1.4, hem], [-1.4, hem]], s.open); }
+  if (s.sash) poly(ctx, [[-w, -5.6], [-w + 2.2, -6.6], [w * .9, 5.4], [w * .9 - 2.2, 6.4]], s.sash);
+  if (s.apron) { poly(ctx, [[-4.6, -2.6], [4.6, -2.6], [5.4, hem], [-5.4, hem]], s.apron); ctx.fillStyle = 'rgba(120,40,30,.3)'; ctx.fillRect(-3.4, 4, 2.8, 2); }
+  if (s.trim) { ctx.fillStyle = s.trim; ctx.fillRect(-w - 1, -6.6, w * 2 + 2, 1.3); }
+  if (s.hemTrim) { ctx.fillStyle = s.hemTrim; ctx.fillRect(-hw - 1, hem - 1.2, hw * 2 + 2, 1.2); }
+  if (s.patch) { ctx.fillStyle = s.patch; ctx.fillRect(1.6, -4.6, 3, 2.6); }
+  ctx.restore();
+  if (s.belt) { ctx.fillStyle = s.belt; ctx.fillRect(-w * .93, 3.2, w * 1.86, 1.7); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-w * .93, 4.5, w * 1.86, .4); ctx.fillStyle = s.buckle || '#b8a070'; ctx.fillRect(-.9, 3.1, 1.8, 1.9); }
+  if (s.hip) item(s.hip, -w * .6, 5, -1);
+  /* neck and head */
+  const hy = s.hy == null ? -11 : s.hy, hr = s.hr || 4.5;
+  ctx.fillStyle = dkS; ctx.fillRect(-1.7, hy + 3.2, 3.4, 2.4);
+  if (s.hood && !s.hoodOver) poly(ctx, [[-6.8, -4.6], [-5.6, hy - 3.4], [-1.6, hy - 6.8], [2.6, hy - 6.2], [5.8, hy - 2.4], [6.2, -5]], s.hood);
+  if (s.coif) ell(ctx, -.4, hy + .4, hr + 1.3, hr + 2, s.coif);
+  ell(ctx, 0, hy, hr, hr * 1.05, sk); ell(ctx, -hr * .82, hy + .3, .95, 1.35, dkS); ell(ctx, hr * .96, hy + .6, .8, .7, shade(sk, -.1));
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0, hy, hr, hr * 1.05, 0, 0, 7); ctx.clip(); ctx.fillStyle = 'rgba(0,0,0,.16)'; ctx.fillRect(-hr, hy + hr * .45, hr * 2, hr); ctx.fillStyle = 'rgba(0,0,0,.1)'; ctx.fillRect(-hr, hy - hr, hr * .7, hr * 2.2); ctx.restore();
+  if (s.beard) { poly(ctx, [[-3.5, hy + 1.4], [4.6, hy + 1.4], [4.3, hy + 4], [1.7, hy + (s.beardLen || 5.8)], [-1.5, hy + 5.4], [-3.3, hy + 3.6]], s.beard); ctx.fillStyle = 'rgba(255,255,255,.1)'; ctx.fillRect(.4, hy + 2.2, 2.6, .5); }
+  if (!s.noFace) { if (s.eye) { ctx.fillStyle = s.eye; ctx.fillRect(-.9, hy - .5, 1.3, 1.1); ctx.fillRect(2.1, hy - .5, 1.3, 1.1); } else { ctx.fillStyle = 'rgba(24,14,10,.85)'; ctx.fillRect(-.9, hy - .4, 1.2, 1.1); ctx.fillRect(2, hy - .4, 1.2, 1.1); }
+    ctx.fillStyle = 'rgba(30,18,12,.5)'; ctx.fillRect(-1.3, hy - 1.5, 1.9, .5); ctx.fillRect(1.7, hy - 1.5, 1.9, .5); if (!s.beard && !s.scarf) { ctx.fillStyle = 'rgba(60,30,24,.45)'; ctx.fillRect(.6, hy + 2.3, 2, .5); } }
+  if (s.scar) line([[1, hy - 3], [3.4, hy + 2.4]], 'rgba(120,50,40,.7)', .6);
+  if (s.scarf) { ctx.fillStyle = s.scarf; ctx.fillRect(-hr + .1, hy + .7, hr * 2, hr * .85); ctx.fillStyle = 'rgba(255,255,255,.07)'; ctx.fillRect(-hr + .1, hy + .7, hr * 2, .5); }
+  const hair = s.hair; if (hair) { const [k, c] = hair; ctx.fillStyle = c;
+    if (k === 'short' || k === 'long') { ctx.beginPath(); ctx.arc(0, hy - 1.3, hr + .4, Math.PI, 0); ctx.fill(); ctx.fillRect(-hr - .4, hy - 1.4, 2, k === 'long' ? 6.4 : 3); if (k === 'long') ctx.fillRect(hr - 1.6, hy - 1.4, 2, 5.4); poly(ctx, [[-1, hy - 1.4], [hr + .4, hy - 1.4], [hr + .4, hy - 2.6]], c); ctx.fillStyle = 'rgba(255,255,255,.1)'; ctx.fillRect(-2.6, hy - hr - .6, 3, .7); }
+    else if (k === 'cap') { poly(ctx, [[-hr - .6, hy - 1.4], [hr + .8, hy - 1.4], [hr + 2.2, hy - .5], [hr + .6, hy - 1.9], [hr - 1.2, hy - 5.2], [-hr + 1, hy - 5.4], [-hr - .4, hy - 3]], c); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-hr - .6, hy - 1.9, hr * 2 + 1.4, .6); }
+    else if (k === 'leather') { ctx.beginPath(); ctx.arc(0, hy - .9, hr + .5, Math.PI, 0); ctx.fill(); ctx.fillRect(-hr - .5, hy - 1, 2.2, 4.6); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(-2, hy - 2.6, 4, .8); ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.fillRect(-2.8, hy - hr - .2, 3, .7); }
+    else if (k === 'fringe') { ctx.beginPath(); ctx.arc(0, hy - 1.2, hr + .3, Math.PI * .95, Math.PI * 2.05); ctx.fill(); ctx.fillRect(-hr - .2, hy - 1.3, hr * 2 + .4, 1.6); ctx.fillRect(-hr - .3, hy - 1.3, 1.9, 7); }
+    else if (k === 'top') { ctx.beginPath(); ctx.arc(0, hy - 1.5, hr + .3, Math.PI, 0); ctx.fill(); ell(ctx, -2.4, hy - 5.6, 1.6, 1.2, c); }
+    else if (k === 'bald') { ctx.beginPath(); ctx.arc(0, hy - 2, hr - .3, Math.PI * 1.1, Math.PI * 1.9); ctx.fill(); }
+    else if (k === 'bun') { ctx.beginPath(); ctx.arc(0, hy - 1.3, hr + .3, Math.PI, 0); ctx.fill(); ell(ctx, -hr * .7, hy - 4.4, 2, 1.8, c); } }
+  const helm = s.helm; if (helm) { const [k, c] = helm; ctx.fillStyle = c; ctx.beginPath(); ctx.arc(0, hy - 1, hr + .8, Math.PI, 0); ctx.fill();
+    if (k === 'kettle') { ctx.fillRect(-hr - 2.6, hy - 1.8, hr * 2 + 5.2, 1.5); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(-hr - 2.6, hy - .5, hr * 2 + 5.2, .5); } else { ctx.fillRect(-hr - 1.3, hy - 1.5, hr * 2 + 2.6, 1.5); if (k === 'nasal') ctx.fillRect(2.6, hy - 1.5, 1, 3.6); if (k === 'cheek') { ctx.fillRect(-hr - 1.2, hy - 1.5, 2.4, 5); } }
+    ctx.fillStyle = 'rgba(255,250,240,.22)'; ctx.fillRect(-3.4, hy - hr - 1, 3, .9); ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(1, hy - hr - .4, hr, 3); }
+  if (s.hood && s.hoodOver) { poly(ctx, [[-6.8, -4.6], [-5.6, hy - 3.4], [-1.6, hy - 6.8], [2.6, hy - 6.2], [5.8, hy - 2.4], [6.2, -5]], s.hood); ell(ctx, .8, hy + .4, 3.5, 3.9, s.hoodDark || '#070605'); line([[-5.4, hy - 3], [-1.6, hy - 6.4], [2.4, hy - 5.8]], 'rgba(255,255,255,.08)', .6); if (s.hoodEye) { ctx.fillStyle = s.hoodEye; ctx.fillRect(-.6, hy - .2, 1.3, 1); ctx.fillRect(2.2, hy - .2, 1.3, 1); } }
+  else if (s.hood) { line([[-5.4, hy - 3], [-1.6, hy - 6.6], [2.6, hy - 6], [5.6, hy - 2.4]], s.hood, 2.2); }
+  if (s.extra) s.extra(ctx, {line, item, grad, hy, hr, w});
+  arm(1, s.fr === undefined ? {} : s.fr);
+  if (s.sc) ctx.restore();
+}
+{ const M = (kind, spec) => { FIG1[kind] = (ctx, t, o) => fig1Man(ctx, t, typeof spec === 'function' ? spec(t, o) : spec); };
+  const HOT = 'rgba(255,150,120,.75)';
+  /* the Host's own gone bad */
+  M('deserter', {top:['#6a5238', '#33251a'], patch:'#7a2a22', belt:'#2a1c12', sk:'#a58268', helm:['cap', '#56524a'], beard:'#3a2a1e', fr:{pose:'fwd', item:['sword', '#b4aea0']}, bk:{pose:'low'}, long:true});
+  M('xbow', {top:['#5a5038', '#2c2418'], belt:'#2a1c12', sk:'#a58268', hair:['cap', '#3a2f22'], fr:{pose:'fwd', item:'xbow'}, bk:{pose:'chest'}, slung:null, long:true, hip:['bag', '#3a2c1e', '#8a8070']});
+  /* Darujhistan's streets */
+  M('cutpurse', {top:['#5a4a52', '#261e26'], w:5.8, belt:'#1a1210', sk:'#b08a70', hair:['cap', '#4a3424'], scarf:'#6a2c2c', fr:{pose:'fwd', item:'knife'}, bk:{pose:'hip', item:'coin'}, leg:'#2e2a2e', hip:['bag', '#5a4630', '#e8c073']});
+  M('thug', {top:['#5c4a34', '#2a1e14'], w:6.8, belt:'#1a1210', sk:'#a8826a', hair:['cap', '#3a2a1a'], beard:'#2a1c12', fr:{pose:'up', item:'club', bare:true}, bk:{pose:'low', bare:true}, sleeve:'#5c4a34', open:'#8a7458'});
+  M('bruiser', {sc:[1.28, 1.22], top:['#6a4e36', '#2a1e14'], w:7.6, belt:'#1a1210', buckle:'#8a8274', sk:'#b08a70', hair:['bald', '#3a2c20'], beard:'#3a2a1c', scar:true, fr:{pose:'up', item:['club', '#6a5238'], bare:true}, bk:{pose:'low', bare:true}, apron:'#4a3a2a', hr:4.8});
+  M('knife', {top:['#34323a', '#101012'], w:6, belt:'#0c0c0e', sk:'#8a6a52', hair:['short', '#16161a'], scarf:'#1c1c22', fr:{pose:'fwd', item:'knife'}, bk:{pose:'fwd', item:'knife'}, leg:'#141416', cloak:'#1e1c22'});
+  M('guard', {top:['#52647a', '#1e262e'], w:6.9, trim:'#c9a44a', belt:'#2a2018', sk:'#b08c76', helm:['kettle', '#737a84'], fr:{pose:'fwd', item:'halberd'}, bk:{pose:'low'}, leg:'#2a2a2e', mail:true, long:true, hip:['bag', '#3a3026', '#9ab4e0']});
+  M('houseguard', {top:['#34468a', '#121a36'], w:6.9, trim:'#b8bcc8', front:'#b8bcc8', belt:'#141a2c', sk:'#b08c76', helm:['nasal', '#a4aab6'], fr:{pose:'fwd', item:['halberd', '#e0e4ec']}, bk:{pose:'low'}, leg:'#1a1e2a', long:true, cloak:'#1c2650'});
+  M('crimson', {top:['#5a4636', '#2a1e16'], w:6.6, belt:'#1a1210', sk:'#b08c76', hair:['short', '#2a1e16'], beard:'#2a1e16', cloak:'#8a3832', fr:{pose:'low', item:['sword', '#c0b8a8']}, bk:{pose:'low'}, mail:true, leg:'#1e1814', extra:(c, k) => { poly(c, [[3, -6.6], [7.4, -6.6], [8.6, 9], [5, 9]], k.grad('#7a3430', '#2a100e')); }});
+  /* the Guild, the Claw, the Andii */
+  M('assassin', {top:['#2e2c2a', '#0d0c0b'], robe:true, w:6.2, belt:'#050505', sk:'#1e1a18', hood:'#2a2724', hoodOver:true, hoodEye:HOT, fr:{pose:'fwd', item:['knife', '#a8a296']}, bk:{pose:'fwd', item:['knife', '#a8a296']}, leg:'#0e0d0c'});
+  M('claw', {top:['#66645f', '#242322'], robe:true, w:6.6, sk:'#2a2624', hood:'#62605b', hoodOver:true, fr:{pose:'hip'}, bk:{pose:'hip'}, leg:'#141414', cloak:'#4a4844', belt:'#1a1a1a'});
+  M('clawknife', (t) => ({top:['#403e3b', '#121110'], robe:true, w:6.6, sk:'#2a2624', hood:'#403e3a', hoodOver:true, hoodEye:`rgba(232,192,115,${.45 + Math.sin(t / 200) * .3})`, fr:{pose:'fwd', item:['knife', '#e6dac2']}, bk:{pose:'fwd', item:['knife', '#e6dac2']}, leg:'#111', cloak:'#2a2826', belt:'#0a0a0a'}));
+  M('guildknife', {top:['#2c2a24', '#0b0a09'], robe:true, w:6.2, sk:'#8a6a52', hood:'#302e28', hoodOver:true, hoodDark:'#0c0b0a', fr:{pose:'fwd', item:'knife'}, bk:{pose:'fwd', item:'knife'}, leg:'#0e0d0c', belt:'#050505', sash:'#4a3c28'});
+  M('guildveteran', {sc:[1.12, 1.12], top:['#38352e', '#0f0e0c'], robe:true, w:6.6, sk:'#7a5a42', hood:'#3e3a33', hoodOver:true, hoodDark:'#0c0b0a', fr:{pose:'fwd', item:['sword', '#e6dac2']}, bk:{pose:'fwd', item:['knife', '#e6dac2']}, leg:'#0e0d0c', belt:'#050505', buckle:'#c9a44a'});
+  M('rallick', {top:['#302e2c', '#0d0c0b'], robe:true, w:6.2, sk:'#8a6a52', hair:['short', '#1a1210'], fr:{pose:'fwd', item:'knife'}, bk:{pose:'fwd', item:'knife'}, leg:'#111', belt:'#050505', cloak:'#1c1a18', extra:(c, k) => { c.fillStyle = '#6a6a6a'; c.fillRect(-4.6, k.hy - 1.2, 1.6, 1.6); }});
+  const andii = (hunter) => ({sc:hunter ? [1.15, 1.2] : null, top:hunter ? ['#1a1a28', '#050508'] : ['#20202e', '#07070c'], robe:true, w:6.3, sk:hunter ? '#4a4a56' : '#5a5a66', hairB:'#d8d8e0', hairLen:2, hair:['long', '#e2e2ea'], eye:'rgba(200,190,240,.8)', fr:{pose:'fwd', item:['long', '#b8b8c8']}, bk:{pose:'low'}, leg:'#0e0d12', belt:'#2a2a3a', buckle:'#8a8aa0', hy:-12});
+  M('andii', andii(false)); M('andiihunter', andii(true));
+  /* the Bridgeburners and the Host */
+  M('wj', {top:['#524e46', '#26231f'], w:6.8, trim:'#8d8a86', belt:'#1a1612', sk:'#9a7a62', hair:['short', '#5a5248'], beard:'#8a8478', fr:{pose:'low', item:['sword', '#b8b2a4']}, bk:{pose:'low'}, mail:true, long:true, cloak:'#3a342e'});
+  M('qb', {top:['#40324e', '#17121f'], robe:true, w:5.8, sk:'#5a3a2a', hair:['short', '#12100a'], hr:4.2, hy:-11.5, fr:{pose:'chest'}, bk:{pose:'hip'}, leg:'#1e1c24', belt:'#1a1420', sash:'#5a4a30'});
+  M('kalam', {sc:[1.1, 1.08], top:['#34302c', '#141210'], w:7.2, sk:'#4a3020', hair:['short', '#1a1614'], eye:'rgba(235,225,205,.8)', hr:4.8, fr:{pose:'fwd', item:'long'}, bk:{pose:'fwd', item:'long'}, leg:'#1a1816', belt:'#0c0a08', cloak:'#1e1a16'});
+  M('paran', {top:['#75603c', '#3a2c1c'], w:6.5, trim:'#c9a44a', front:'#c9a44a', belt:'#2a1c12', sk:'#c9a58a', hair:['short', '#3a2a1a'], fr:{pose:'low', item:['sword', '#e8d8a8']}, bk:{pose:'low'}, long:true, cloak:'#4a3a26'});
+  M('toc', {top:['#52525c', '#22222a'], w:6.5, trim:'#8d8a86', belt:'#1a1612', sk:'#b08c76', hair:['short', '#3a2a1a'], fr:{pose:'low', item:'sword'}, bk:{pose:'low'}, mail:true, long:true, extra:(c, k) => { k.line([[-4.4, k.hy - 2.6], [4.4, k.hy + .6]], '#1a1410', .7); ell(c, 2.6, k.hy - .1, 1.7, 1.4, '#16110d'); }});
+  M('fiddler', {top:['#62523c', '#2c2418'], w:6.2, belt:'#2a1c12', sk:'#b08c76', hair:['short', '#5a4a3a'], beard:'#6a5a48', fr:{pose:'fwd', item:'xbow'}, bk:{pose:'chest'}, leg:'#3a3128', long:true, sash:'#c9a44a', hip:['bag', '#3a2a1a', '#8b7355']});
+  M('hedge', {top:['#75522f', '#33230f'], w:6.6, belt:'#2a1c12', sk:'#c29a7e', hair:['leather', '#b8482a'], fr:{pose:'chest'}, bk:{pose:'low'}, leg:'#2e2a24', long:true, hip:['bag', '#4a3a2c', '#d2c8b0'], extra:(c, k) => { k.item(['bag', '#4a3a2c', '#d2c8b0'], 6.4, -1, 1); }});
+  M('mallet', {top:['#526450', '#1c241b'], w:6.8, robe:false, long:true, belt:'#2a2018', sk:'#b08c76', hair:['bald', '#2a2018'], hr:4.7, fr:{pose:'chest'}, bk:{pose:'low'}, leg:'#2a2b25', extra:(c) => { c.fillStyle = '#cfc8b8'; c.fillRect(-9.6, -1.6, 3.4, 7.6); c.fillStyle = '#7a2a22'; c.fillRect(-8.9, .6, 2, 2.6); }});
+  M('trotts', {sc:[1.25, 1.25], top:['#52392a', '#1e140c'], w:7.4, sk:'#7a5a42', hairB:'#1a1210', hairLen:0, hair:['long', '#1a1210'], hr:5, hy:-11.5, fr:{pose:'up', item:['long', '#8d8a86'], bare:true}, bk:{pose:'low', bare:true}, leg:'#2a1e16', belt:'#3a2a18', buckle:'#e8d8a8', sash:'#3a2a1c', extra:(c, k) => { c.fillStyle = '#e8d8a8'; c.fillRect(.4, k.hy + 2.1, 2.4, .7); k.line([[-3, k.hy - 1], [3.6, k.hy - 1]], 'rgba(60,90,120,.5)', .8); }});
+  M('sorry', {top:['#403c48', '#15131a'], w:5.2, robe:true, sk:'#c9b5a6', hairB:'#1a1410', hairLen:-2, hair:['fringe', '#1a1410'], eye:'#0a0a0c', hr:4, hy:-11.5, fr:{pose:'fwd', item:'knife'}, bk:{pose:'fwd', item:'knife'}, leg:'#1e1c22', belt:'#0c0a10'});
+  M('dujek', {top:['#625c50', '#2a2620'], w:6.9, trim:'#8d8a86', belt:'#1a1612', sk:'#a8826a', hair:['bald', '#b8b4ac'], beard:'#bab6ae', beardLen:4.6, hr:4.7, fr:{pose:'low', item:'sword'}, bk:{none:true}, mail:true, long:true, cloak:'#4a2a26', extra:(c) => { c.fillStyle = '#3a342c'; c.fillRect(-8.2, -5.6, 2.4, 5); c.fillStyle = 'rgba(0,0,0,.4)'; c.fillRect(-8.2, -1.4, 2.4, .8); }});
+  M('lorn', {top:['#75603c', '#2e2416'], w:6.6, trim:'#c9a44a', belt:'#2a1c12', sk:'#c9b5a6', hair:['fringe', '#5a4a3a'], fr:{pose:'up', item:['long', '#a8543a', '#5a2c1e']}, bk:{pose:'low'}, long:true, cloak:'#3a3026', mail:true, extra:(c) => ell(c, 10, -14, 3.6, 8, 'rgba(168,84,58,.14)')});
+  M('pell', {top:['#75633f', '#3a2f1e'], w:6.9, long:true, belt:'#2a1c12', sk:'#b08c76', hair:['short', '#3a3230'], fr:{pose:'chest', item:'ledger'}, bk:{pose:'low'}, apron:'#5a4a30'});
+  M('tat', {top:['#62528a', '#251d33'], robe:true, w:7, sk:'#d0b9a8', hairB:'#3a2a22', hairLen:-3, hair:['long', '#3a2a22'], hr:4.4, fr:{pose:'chest', item:['ledger', '#d8ccb0']}, bk:{pose:'hip'}, leg:'#1e1b24', trim:'#9a7ad0', cloak:'#3a2e5a'});
+  M('rhivi', {top:['#86633f', '#3a2a1c'], w:6, long:true, belt:'#c9a44a', sk:'#8a6a4a', hair:['top', '#1a1210'], fr:{pose:'fwd', item:'bow'}, bk:{pose:'low'}, leg:'#3a2e24', hemTrim:'#5a3a22', extra:(c, k) => { ell(c, -3.6, k.hy - 7.4, .8, 3, '#e8d8a8', -.7); ell(c, -4.6, k.hy - 6.4, .7, 2.6, '#b8a478', -1); }});
+  /* the city's own */
+  M('kruppe', {top:['#b23e2c', '#4a1810'], w:8.6, gown:false, long:true, sk:'#d8b898', hair:['short', '#2a2018'], hr:5.2, hy:-11.5, fr:{pose:'chest'}, bk:{pose:'hip', item:'coin'}, leg:'#3a2e24', sleeve:'#e8e0d0', belt:'#3a1410', extra:(c, k) => { c.fillStyle = '#e8c073'; for (let i = 0; i < 4; i++) c.fillRect(-.9, -4.4 + i * 2.6, 1.8, 1.2); k.line([[-1.4, k.hy + 2.2], [1.2, k.hy + 3], [3.6, k.hy + 2.2]], 'rgba(40,20,15,.7)', .6); ell(c, 0, -3, 7.6, 1, 'rgba(255,255,255,.05)'); }});
+  M('crokus', {top:['#42425a', '#14141c'], w:5.6, long:true, sk:'#c9a48a', hair:['fringe', '#3a2a1a'], hr:4.2, hy:-11.5, fr:{pose:'hip'}, bk:{pose:'hip', item:'coin'}, leg:'#2a2b30', belt:'#1a1612'});
+  M('coll', {sc:[1.15, 1.15], top:['#62523f', '#26201a'], w:7.6, long:true, sk:'#b08c76', hair:['short', '#6b5a4a'], beard:'#7a5a4a', hr:4.9, hy:-11.5, fr:{pose:'chest', item:'tankard'}, bk:{pose:'low'}, belt:'#2a1c12', cloak:'#3a3028'});
+  M('murillio', {top:['#62529a', '#221a3a'], w:6, long:true, trim:'#e8c073', front:'#e8c073', sk:'#d0b9a0', hair:['long', '#2a2018'], fr:{pose:'fwd', item:'rapier'}, bk:{pose:'hip'}, leg:'#2a2440', sleeve:'#e8e0d8', belt:'#1a1430', cloak:'#3a2e6a'});
+  M('irilta', {sc:[1.2, 1.12], top:['#75523f', '#2a1a12'], w:7.4, long:true, sk:'#b89a80', hair:['bun', '#5a3a26'], fr:{pose:'up', item:'club', bare:true}, bk:{pose:'hip', bare:true}, apron:'#d4c8b0', leg:'#2a2018', belt:null});
+  M('meese', {top:['#42424a', '#141418'], w:5.4, robe:true, sk:'#b89a80', hairB:'#1a1410', hairLen:-4, hair:['long', '#1a1410'], hr:4, hy:-11.5, fr:{pose:'fwd', item:'knife'}, bk:{pose:'hip'}, leg:'#1a1616', belt:'#8a8478'});
+  M('orr', {top:['#34562f', '#0e1e0c'], w:6.6, long:true, trim:'#c9a44a', sash:'#c9a44a', sk:'#c0a088', hair:['short', '#2a1c14'], beard:'#2a1c14', beardLen:4.4, fr:{pose:'fwd', item:['rapier', '#e0d8c0', '#c9a44a']}, bk:{pose:'hip'}, leg:'#181c14', belt:'#1a2414', cloak:'#1e3a1c'});
+  M('baruk', {top:['#7a2626', '#220707'], robe:true, w:6.6, front:'#c9a44a', hemTrim:'#c9a44a', sk:'#b89478', hair:['bald', '#4a1a1a'], beard:'#8a8478', fr:{pose:'chest'}, bk:{pose:'chest'}, folds:true, extra:(c, k) => { c.fillStyle = '#5a1a1a'; c.beginPath(); c.arc(0, k.hy - 1.6, 4.9, Math.PI, 0); c.fill(); c.fillStyle = '#c9a44a'; c.fillRect(-4.9, k.hy - 2, 9.8, .8); }});
+  M('simtal', {top:['#e8e0d2', '#6a6458'], gown:10, w:4.8, folds:true, sk:'#d8c0ac', hair:['bun', '#7a3a26'], hr:4.2, hy:-11.5, fr:{pose:'hip', col:'#d8d0c2'}, bk:{pose:'hip', col:'#d8d0c2'}, trim:'#c9a44a', extra:(c, k) => { for (let i = -1; i <= 1; i++) ell(c, i * 1.7, -5.4, .6, .6, i ? '#e8c073' : '#7ac0e0'); }});
+  M('challice', {top:['#7494bc', '#1e2a40'], gown:9, w:4.4, folds:true, sk:'#e0c8b4', hairB:'#e8cc7a', hairLen:-1, hair:['long', '#e8cc7a'], hr:4.1, hy:-11.5, fr:{pose:'hip', col:'#6a8ab0'}, bk:{pose:'hip', col:'#6a8ab0'}, trim:'#c9a44a', extra:(c, k) => { c.fillStyle = '#f4f0e8'; c.fillRect(-3.6, k.hy - 1.4, 7.6, 2); c.fillStyle = '#1a1410'; c.fillRect(-.8, k.hy - .8, 1.2, .9); c.fillRect(2, k.hy - .8, 1.2, .9); }});
+  FIG1.thug = FIG1.thug; }
 
 /* ============ portraits ============ */
 /* A painted bust of each squadmate, lit by a lantern low on the left, with a rim of the squadmate's own colour on the right.
@@ -9937,6 +10070,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.59.0', ['Book One\'s walking figures are redrawn: forty-one of them, the enemies first (deserters, cutpurses, bruisers, hired knives, the Guild, the Claw, the Watch, the house guards, the Andii) and then everyone the Fourth meets, from Whiskeyjack to Kruppe. They have arms and hands now, and hold what they carry; boots, belts, faces, hoods and helms. Looks only.']],
   ['13.58.0', ['Book One\'s maps are redrawn, the places you walk and the boards you fight on. The ground is one surface now and not a board of squares. In Darujhistan a wall is a building: a slate roof from above, and a front with doors and windows where it faces the street, some of them lit. The camp at Pale has broken walls and rubble round it, the plains and hills have grass and thickets, the saps have rock and props.', 'Looks only: every map is laid out exactly as it was. The roofs, Simtal\'s estate, the lakefront, the dock and the cellar are as they were. The other nine books follow, a book at a time.']],
   ['13.57.0', ['Twelve new pieces of armour, three each in Books Three, Four, Five and Eight, where there was too little to go round: a mail piece early, a light piece in every book, something heavier later. Each is found where the squad already passes; Book Five\'s brigandine is bought from the quartermaster for a line in the paybook.', 'A save already past the chapter where a piece is found is given it. Nothing already worn is moved.']],
   ['13.56.0', ['Most tricks no longer need pressing. A trick now works by itself the first time its moment comes: the shield locks go up when an enemy first strikes at the line, the songs and cures go round when a squadmate first falls below half, the hand-signs mark the first enemy the bearer hits. Each trick\'s page says when it fires. They are used as often as before, and none of them takes the action.', 'Still buttons, because where they land is yours to choose: the six swaps (the Rope\'s Way and its kin) and the six thrown or called bursts (Blue Fire, the Oil Bola, the Brand-Pot and the squares).', 'The coins roll a failed check again by themselves, and in a fight the bearer\'s first miss is struck again. A near miss on a check is still yours to spin or let stand.', 'Every soldier now starts on the same total of Might, Wits and Guile (5, none above 3). Twenty-four gained a point where they were lowest; Vasso gave one back. The +1 gains at levels 4, 8 and 12 carry on at 16, 20 and 24.']],
