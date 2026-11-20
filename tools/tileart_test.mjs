@@ -15,14 +15,16 @@ const R = await page.evaluate(() => { const out = {painted:0, skipped:[], errs:[
     Object.entries(CH.battles || {}).forEach(([id, d]) => run(id, d.map, 8, 10, d.dark, !d.open && !d.style, d.style || (d.open ? 'plain' : ''), true)); });
   out.kinds = ['city_night', 'city_dusk', 'pale', 'camp_night', 'plain', 'hills_night'].map(s => tileArtKind(s, false)).join() + ',' + tileArtKind('', true);
   out.left = ['roof_night', 'estate_night', 'lakefront', 'dock', 'cellar', 'odhan', 'b5_c1_canal'].every(s => tileArtKind(s, false) === null);
-  S.book = 'dg'; out.otherBook = tileArtOn(false, 'plain', false); S.book = 'gotm'; window.FTR_NOTILEART = 1; out.seam = tileArtOn(false, 'plain', false); window.FTR_NOTILEART = 0;
+  out.otherBook = tileArtOn(false, 'odhan', false) || tileArtOn(false, 'b8_c2_town', false); out.byBook = {};
+  for (const b of ['tth', 'rg', 'moi']) { try { setBook(b); S = b === 'tth' ? newStateTTH('Hask') : b === 'moi' ? newStateMOI('Hask') : newStateRG('Hask', 'Hask'); S.picksDue = []; const n0 = out.painted; Object.values(CHAPTERS).forEach(CH => { (CH.areas || []).forEach(a => run(a.id, a.map, a.map[0].length, a.map.length, !!a.dark || /night/.test(a.decor || ''), false, a.decor || 'camp_night', false)); Object.entries(CH.battles || {}).forEach(([id, d]) => run(id, d.map, 8, 10, d.dark, !d.open && !d.style, d.style || (d.open ? 'plain' : ''), true)); }); out.byBook[b] = out.painted - n0; } catch (e) { out.errs.push(b + ': ' + e.message); } }
+  setBook('gotm'); S = newState('Hask'); window.FTR_NOTILEART = 1; out.seam = tileArtOn(false, 'plain', false); window.FTR_NOTILEART = 0;
   console.warn = warn0; return out; });
 ok(R.painted >= 25, `Book One: ${R.painted} maps painted`);
 ok(!R.errs.length, 'no painter errors ' + R.errs.slice(0, 3).join(' / '));
 ok(!R.changed.length, 'no map changed ' + R.changed);
 ok(R.kinds === 'city,city,earth,earth,grass,grass,sap', 'each style has its painter (' + R.kinds + ')');
 ok(R.left, 'the roofs, the estate, the lake, the dock, the cellar and other books\' styles are left alone');
-ok(R.otherBook === false, 'a book not yet covered is not painted'); ok(R.seam === false, 'the off switch for tools works');
+ok(R.otherBook === false, 'a later book\'s own style is not painted over'); ok(R.byBook.tth >= 10 && R.byBook.rg >= 3, 'the later books\' borrowed Book One styles are painted ' + JSON.stringify(R.byBook)); ok(R.seam === false, 'the off switch for tools works');
 console.log('left as they were: ' + R.skipped.length + ' maps');
 ok(!errors.length, 'no page errors ' + errors.slice(0, 2).join(' / '));
 await br.close(); console.log(fails ? `FAIL (${fails})` : 'PASS'); process.exit(fails ? 1 : 0);

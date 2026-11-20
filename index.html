@@ -693,7 +693,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.59.0';
+const VERSION = '13.60.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -10070,6 +10070,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.60.0', ['The new map art reaches the later books\' maps that were still drawn the old Book One way: Darujhistan in Book Eight (its streets, its alleys and the road out), Book Seven\'s night roads and fields, and the sap in Book Three. The other maps of Books Two to Ten were drawn later and already had ground in one piece; they are as they were. Looks only.']],
   ['13.59.0', ['Book One\'s walking figures are redrawn: forty-one of them, the enemies first (deserters, cutpurses, bruisers, hired knives, the Guild, the Claw, the Watch, the house guards, the Andii) and then everyone the Fourth meets, from Whiskeyjack to Kruppe. They have arms and hands now, and hold what they carry; boots, belts, faces, hoods and helms. Looks only.']],
   ['13.58.0', ['Book One\'s maps are redrawn, the places you walk and the boards you fight on. The ground is one surface now and not a board of squares. In Darujhistan a wall is a building: a slate roof from above, and a front with doors and windows where it faces the street, some of them lit. The camp at Pale has broken walls and rubble round it, the plains and hills have grass and thickets, the saps have rock and props.', 'Looks only: every map is laid out exactly as it was. The roofs, Simtal\'s estate, the lakefront, the dock and the cellar are as they were. The other nine books follow, a book at a time.']],
   ['13.57.0', ['Twelve new pieces of armour, three each in Books Three, Four, Five and Eight, where there was too little to go round: a mail piece early, a light piece in every book, something heavier later. Each is found where the squad already passes; Book Five\'s brigandine is bought from the quartermaster for a line in the paybook.', 'A save already past the chapter where a piece is found is given it. Nothing already worn is moved.']],
@@ -124032,7 +124033,7 @@ function mapRelief(ctx, map, cols, rows, T, dark, style, battle){
    - In a town a wall is a building: a roof seen from above, and a front with a window or a door where it faces the street.
    - In open ground a wall is broken masonry and heaped rubble; in a sap it is rock, propped with timber.
    Each tile's own feature (a lamp, a door, a tent, the crater, the pit) is drawn again on top by the old painter, with its flat backing left out. */
-const TILEART_BOOKS = ['gotm'];
+const TILEART_BOOKS = ['gotm', 'dg', 'moi', 'hoc', 'mt', 'bh', 'rg', 'tth', 'dod', 'tcg']; // v13.60.0: every book. Only Book One's own styles have a painter here, so in the later books this reaches the maps that borrowed them (Book Eight's Darujhistan, Book Seven's night roads, a sap in Book Three); their own styles (TILEX) were drawn later, to this standard, and are left alone
 /* which painter a map gets; null leaves it as it was (roofs, the estate, the lake and the dock draw their own) */
 const tileArtKind = (style, tunnel) => !style ? (tunnel ? 'sap' : 'earth') : style.startsWith('city') ? 'city' : style === 'pale' || style === 'camp_night' ? 'earth' : style.startsWith('plain') || style.startsWith('hills') ? 'grass' : null;
 const tileArtOn = (battle, style, tunnel) => { try { if (typeof window !== 'undefined' && window.FTR_NOTILEART) return false; return !!S && TILEART_BOOKS.includes(S.book || 'gotm') && !!tileArtKind(style, tunnel); } catch (e) { return false; } };
@@ -124099,8 +124100,9 @@ function tileArt(ctx, map, cols, rows, T, dark, tunnel, style, battle){
           ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(px, yy + ch - 1, T, 1); ctx.fillStyle = 'rgba(200,215,235,.07)'; ctx.fillRect(px, yy, T, 1); }
         const g = ctx.createLinearGradient(0, py, 0, py + T); g.addColorStop(0, 'rgba(180,200,230,.10)'); g.addColorStop(1, 'rgba(0,0,0,.22)'); ctx.fillStyle = g; ctx.fillRect(px, py, T, T);
         if (!wall(x, y - 1) || open(x, y - 1)) { ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(px, py, T, T * .07); } // the far eave
-        { const up = wall(x, y - 1) || at(x, y - 1) === undefined, dn = wall(x, y + 1) && !open(x, y + 2) || at(x, y + 1) === undefined, lf = wall(x - 1, y), rt = wall(x + 1, y), vert = (up || dn) && !(lf && rt); // the ridge, and the slope away from the light
+        { const up = wall(x, y - 1) || at(x, y - 1) === undefined, dn = wall(x, y + 1) && !open(x, y + 2) || at(x, y + 1) === undefined, lf = wall(x - 1, y), rt = wall(x + 1, y), vert = (up || dn) && !lf && !rt, top = !wall(x, y - 1); // the ridge, and the slope away from the light: one ridge a building, on its far row, or down the middle of a single file of roofs
           if (vert) { const g2 = ctx.createLinearGradient(px, 0, px + T, 0); g2.addColorStop(0, 'rgba(190,210,240,.10)'); g2.addColorStop(.5, 'rgba(190,210,240,.02)'); g2.addColorStop(.5, 'rgba(0,0,0,.2)'); g2.addColorStop(1, 'rgba(0,0,0,.34)'); ctx.fillStyle = g2; ctx.fillRect(px, py, T, T); ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(px + T * .5 - 1.5, py, 3, T); ctx.fillStyle = 'rgba(210,225,245,.2)'; ctx.fillRect(px + T * .5 - 2.5, py, 1, T); }
+          else if (!top) { ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(px, py, T, T); }
           else { const g2 = ctx.createLinearGradient(0, py, 0, py + T); g2.addColorStop(0, 'rgba(190,210,240,.10)'); g2.addColorStop(.45, 'rgba(190,210,240,.02)'); g2.addColorStop(.45, 'rgba(0,0,0,.2)'); g2.addColorStop(1, 'rgba(0,0,0,.34)'); ctx.fillStyle = g2; ctx.fillRect(px, py, T, T); ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(px, py + T * .45 - 1.5, T, 3); ctx.fillStyle = 'rgba(210,225,245,.2)'; ctx.fillRect(px, py + T * .45 - 2.5, T, 1); } }
         if (hash(x, y, 77) > .86 && wall(x, y - 1)) { const cx = px + T * (.3 + hash(x, y, 78) * .4), cy = py + T * .4; ctx.fillStyle = '#1c1614'; ctx.fillRect(cx - T * .13, cy - T * .12, T * .26, T * .24); ctx.fillStyle = '#4a3a34'; ctx.fillRect(cx - T * .13, cy - T * .12, T * .26, T * .05); ctx.fillStyle = '#050404'; ctx.fillRect(cx - T * .07, cy - T * .05, T * .14, T * .1); // a chimney, cold or not
           soft(cx + T * .1, cy - T * .25, T * .3, 'rgba(170,180,200,.10)'); } }
