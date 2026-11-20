@@ -67,6 +67,7 @@ Chapters are content modules (`src/040_chapter1.js`, …) registered at boot; ea
 
 Newest first.
 
+- v13.61.0 — Town buildings and the last plain figures (David, Nov 20, 2026): `src/989g_townart.js` repaints wall tiles as roofs and fronts in the towns of Books Two to Seven (`TOWNART_STYLE` maps a style to a palette; `window.FTR_NOTOWNART` turns it off); `src/018b_figs_b1.js` gains 22 more `FIG1` figures. Looks only.
 - v13.60.0 — Tile art in every book that borrowed Book One's styles (David, Nov 19, 2026): `TILEART_BOOKS` is all ten; only Book One's styles have a painter, so this reaches Book Eight's Darujhistan, Book Seven's night roads and Book Three's sap. The later books' own `TILEX` styles are left alone.
 - v13.59.0 — Book One's figures redrawn (David, Nov 19, 2026): `src/018b_figs_b1.js`, one shared body (`fig1Man`: boots, shouldered torso, two posed arms holding items, neck, head, hair/helm/hood) and 41 specs in `FIG1`; `drawFigure` (018) asks `FIG1` first; `window.FTR_OLDFIGS` shows the old ones for a comparison.
 - v13.58.0 — Tile art, Book One (David, Nov 19, 2026): `src/989f_tileart.js` paints over `prerender`'s sheet for the books in `TILEART_BOOKS`: ground drawn in map space, buildings as roofs and fronts, broken masonry, thickets, propped rock (`tileArtKind` maps a style to a painter; the old painter redraws each tile's own feature without its backing). Looks only. `tools/tileart_test.mjs`.
