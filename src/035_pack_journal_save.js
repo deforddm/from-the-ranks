@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.2', ['Portraits: a high collar now goes on under the coat. On eleven busts the collar sat on top of the outerwear like a yoke; the coat is laid back over it, so only what stands up out of the neck opening shows. Looks only.']],
   ['13.62.1', ['Sharpers are small cones of fired clay, as the books have them. Hedge\'s line in Book Seven, the sharper\'s description and its picture had it as a round egg. Saves are unchanged.']],
   ['13.62.0', ['Hold a healing trick for your word. The nine tricks that mend or ward a squadmate answer by themselves the first time anyone drops below half. On the bearer\'s sheet each now has a switch: held, it is a button in the fight again, used when you say (and it costs what it used to); let go, it answers by itself as before. Your choice is saved.', 'A spear\'s or halberd\'s box on the battle map now says "reach" where it said "range".', 'New figures for the plains raiders of Book Eight, the Bolkando deserters of Book Ten, the Patriotists\' street men of Book Seven and the collectors\' muscle of Book Five. Looks only.']],
   ['13.61.2', ['The Title button in the middle of a conversation no longer leaves the conversation lying over the title screen. Your place is saved, and Continue opens it again where you were.']],

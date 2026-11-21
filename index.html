@@ -697,7 +697,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.62.1';
+const VERSION = '13.62.2';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -3176,7 +3176,11 @@ const BP = {
     const ex = sw*.84, ey = sy + 3;
     const shape = () => { ctx.beginPath(); ctx.moveTo(x - ex, ey); ctx.bezierCurveTo(x - sw*.62, sy - 5, x - jw - 2.2, jy + 10, x - jw - 1.4, jy); ctx.quadraticCurveTo(x - jw*.5, cb - .6, x, cb); ctx.quadraticCurveTo(x + jw*.5, cb - .6, x + jw + 1.4, jy);
       ctx.bezierCurveTo(x + jw + 2.2, jy + 10, x + sw*.62, sy - 5, x + ex, ey); ctx.quadraticCurveTo(x + sw*.98, sy + 7, x + sw*.6, sy + 7.5); ctx.quadraticCurveTo(x, sy + 9, x - sw*.6, sy + 7.5); ctx.quadraticCurveTo(x - sw*.98, sy + 7, x - ex, ey); ctx.closePath(); };
-    ctx.save(); shape(); ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 3; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, c1, c2, x - sw, x + sw); ctx.fill(); ctx.restore();
+    /* v13.62.1 (David, Nov 20, 2026, circling eleven busts: "the portion covering the neck is sitting on top of the outerwear"): the collar goes on under the coat.
+       The bust as painted so far is kept; the collar is painted; then the coat is laid back over everything below its own neck opening (a shallow U under the chin),
+       with the opening's edge lit and its shadow thrown up onto the collar. What shows of the collar is what stands up out of the coat. o.over:false keeps the old yoke. */
+    let under = null; if (o.over !== false) { try { under = document.createElement('canvas'); under.width = ctx.canvas.width; under.height = ctx.canvas.height; under.getContext('2d').drawImage(ctx.canvas, 0, 0); } catch (e) { under = null; } }
+    ctx.save(); shape(); if (!under) { ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 3; ctx.shadowOffsetY = 1; } ctx.fillStyle = PR.lit(ctx, c1, c2, x - sw, x + sw); ctx.fill(); ctx.restore();
     ctx.save(); shape(); ctx.clip(); PR.soft(ctx, x + sw*.55, sy - 6, sw*.6, 12, '#000000', .5); PR.soft(ctx, x - sw*.45, sy - 6, sw*.35, 5, '#fff0d8', .12);
       const st = o.style || 'rib';
       if (lines && st === 'rib') PR.stroke(ctx, lines, .5, () => { for (let i = -3; i <= 3; i++){ const k = i/3.4; ctx.moveTo(x + k*(jw + 1), cb - (1 - k*k)*.2 - Math.abs(k)*(cb - jy)*.9 + 1); ctx.quadraticCurveTo(x + k*(jw + 4), sy - 6, x + k*sw*.8, sy + 2); } }); // quilted
@@ -3184,7 +3188,13 @@ const BP = {
       if (lines && st === 'fold') PR.stroke(ctx, lines, .8, () => { [-1, 1].forEach(sd => { for (let i = 0; i < 2; i++){ ctx.moveTo(x + sd*(jw*.35 + i*4), cb + .6); ctx.quadraticCurveTo(x + sd*(jw + 1 + i*4), cb + 4, x + sd*(jw + 6 + i*6), sy - 1); } }); }); // folds
       PR.soft(ctx, x + 1.4, cb + 1, jw*.9, 3.2, '#0a0604', .62); ctx.restore(); // the jaw's shadow on the cloth
     ctx.lineCap = 'round'; PR.stroke(ctx, 'rgba(0,0,0,.6)', .7, top); ctx.save(); ctx.beginPath(); ctx.rect(x - sw - 4, -200, sw*.95, 400); ctx.clip(); PR.stroke(ctx, o.pip || 'rgba(255,236,200,.32)', o.pip ? .7 : .5, () => { ctx.moveTo(x - jw - 1.2, jy + .4); ctx.quadraticCurveTo(x - jw*.5, cb - .2, x, cb + .4); }); ctx.restore();
-    if (o.pip) PR.stroke(ctx, o.pip, .5, () => { ctx.moveTo(x + jw + 1.2, jy + .4); ctx.quadraticCurveTo(x + jw*.5, cb - .2, x, cb + .4); }); },
+    if (o.pip) PR.stroke(ctx, o.pip, .5, () => { ctx.moveTo(x + jw + 1.2, jy + .4); ctx.quadraticCurveTo(x + jw*.5, cb - .2, x, cb + .4); });
+    if (under) { const hw = o.hemW ?? jw + 7.5, hy = o.hemY ?? jy + 7.5, hd = o.hemD ?? cb + 8.5, hem = () => { ctx.moveTo(x - hw, hy); ctx.bezierCurveTo(x - hw*.72, hd + 1.5, x + hw*.72, hd + 1.5, x + hw, hy); };
+      ctx.save(); ctx.beginPath(); hem(); ctx.lineTo(x + sw + 30, hy - 6); ctx.lineTo(x + sw + 30, 40); ctx.lineTo(x - sw - 30, 40); ctx.lineTo(x - sw - 30, hy - 6); ctx.closePath(); ctx.clip(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(under, 0, 0); ctx.restore();
+      /* the opening's shadow on the collar, inside the collar's own shape and above the hem */
+      ctx.save(); shape(); ctx.clip(); ctx.beginPath(); hem(); ctx.lineTo(x + hw, hy - 30); ctx.lineTo(x - hw, hy - 30); ctx.closePath(); ctx.clip(); ctx.lineCap = 'round'; ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 3.2; PR.stroke(ctx, 'rgba(8,5,3,.6)', 2.2, hem); ctx.restore();
+      /* the coat's own edge: a dark line under, a thin light along the lit side */
+      ctx.save(); shape(); ctx.clip(); ctx.lineCap = 'butt'; PR.stroke(ctx, 'rgba(10,6,4,.7)', .8, hem); ctx.beginPath(); ctx.rect(x - hw - 2, -200, hw*1.2, 400); ctx.clip(); ctx.translate(0, .8); PR.stroke(ctx, 'rgba(255,236,204,.26)', .55, hem); ctx.restore(); } }, // only where the collar is: no line runs out over the shoulder
   /* hair at the back of the head, falling behind the neck to the collar, so the head and the shoulders are one shape */
   back(ctx, F, c1, c2, len = 18, wx = 1.4){ const W = F.w + wx; ctx.beginPath(); ctx.moveTo(-W, F.cy - 6); ctx.quadraticCurveTo(-W - 1, F.cy + len*.6, -W + 1.6, F.cy + len); ctx.lineTo(W - 1.6, F.cy + len); ctx.quadraticCurveTo(W + 1, F.cy + len*.6, W, F.cy - 6); ctx.closePath();
     ctx.fillStyle = PR.lin(ctx, -W, 0, W, 0, [[0, c1], [.5, c2], [1, '#040302']]); ctx.fill(); },
@@ -10121,6 +10131,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.2', ['Portraits: a high collar now goes on under the coat. On eleven busts the collar sat on top of the outerwear like a yoke; the coat is laid back over it, so only what stands up out of the neck opening shows. Looks only.']],
   ['13.62.1', ['Sharpers are small cones of fired clay, as the books have them. Hedge\'s line in Book Seven, the sharper\'s description and its picture had it as a round egg. Saves are unchanged.']],
   ['13.62.0', ['Hold a healing trick for your word. The nine tricks that mend or ward a squadmate answer by themselves the first time anyone drops below half. On the bearer\'s sheet each now has a switch: held, it is a button in the fight again, used when you say (and it costs what it used to); let go, it answers by itself as before. Your choice is saved.', 'A spear\'s or halberd\'s box on the battle map now says "reach" where it said "range".', 'New figures for the plains raiders of Book Eight, the Bolkando deserters of Book Ten, the Patriotists\' street men of Book Seven and the collectors\' muscle of Book Five. Looks only.']],
   ['13.61.2', ['The Title button in the middle of a conversation no longer leaves the conversation lying over the title screen. Your place is saved, and Continue opens it again where you were.']],
