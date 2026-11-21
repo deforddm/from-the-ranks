@@ -298,7 +298,7 @@ const BP = {
      o: {wide, drop, trap: how hard the trapezius rises, nx: half-width where it meets the neck, ny: how high it climbs at the neck's sides, cb: the neckline's low point in front, v: a V opening, c1, c2}.
      Returns {path, top (the neckline as a sub-path), topIn (the same, continuing a path from (−nx, ny)), pt(t, off): a point on the neckline, t −1..1, off pushes down, nx, ny, cb, wd}.
      Draw the neck first, then this, then textures clipped to B.path, then BP.light; any bust in any book can use it. */
-  body(ctx, F, o){ PR.wear(F); const u = F.h/20, wd = o.wide, dr = (o.drop || 0) - (o.shrug ?? SHRUG), /* v13.5.5 (David: the necks run long): every shoulder line sits SHRUG higher */ nx = o.nx ?? F.w*(F.jaw ?? .8) + 1.6, ny = o.ny ?? F.cy + 15*u, cb = o.cb ?? F.cy + 20*u, tr = o.trap ?? 0, v = o.v;
+  body(ctx, F, o){ PR.wear(F); const bf = BODY_FILL || {w:1, up:0, trap:0}; const u = F.h/20, wd = o.wide*bf.w, dr = (o.drop || 0) - (o.shrug ?? SHRUG) - bf.up, /* v13.5.5 (David: the necks run long): every shoulder line sits SHRUG higher */ nx = o.nx ?? F.w*(F.jaw ?? .8) + 1.6, ny = o.ny ?? F.cy + 15*u, cb = o.cb ?? F.cy + 20*u, tr = (o.trap ?? 0) + bf.trap, v = o.v;
     const topIn = () => { if (v) { ctx.lineTo(0, cb); ctx.lineTo(nx, ny); } else { ctx.quadraticCurveTo(-nx*.6, cb, 0, cb); ctx.quadraticCurveTo(nx*.6, cb, nx, ny); } };
     const path = () => { ctx.beginPath(); ctx.moveTo(-wd - 2, 2); ctx.lineTo(-wd, -20 + dr); ctx.bezierCurveTo(-wd, -34 + dr, -wd*.82, -41 + dr, -wd*.52, -43 + dr); ctx.bezierCurveTo(-wd*.3, -44 + dr - tr, -nx - 2 - tr*.3, ny + 8 - tr*.4, -nx, ny); topIn();
       ctx.bezierCurveTo(nx + 2 + tr*.3, ny + 8 - tr*.4, wd*.3, -44 + dr - tr, wd*.52, -43 + dr); ctx.bezierCurveTo(wd*.82, -41 + dr, wd, -34 + dr, wd, -20 + dr); ctx.lineTo(wd + 2, 2); ctx.closePath(); };
@@ -580,12 +580,16 @@ const POR = {
     for (let i=0;i<4;i++){ const x = -6 + i*3.6, y = F.cy - 15.4 + (i%2)*1.1; ctx.fillStyle = ['#2a1e18','#1a1210'][i%2]; ctx.beginPath(); ctx.arc(x, y, 2.1, 0, 7); ctx.fill(); } // a curl or two over the brow
     return F; },
 };
+let BODY_FILL = null;
 const POR_LIFT = {mehet:1, ressa:1, doss:1, ilsa:1, wenna:1, sorvan:1, vasso:1.15, edrem:1, brask:1, tegra:1, brennet:1, kaedra:1, pruss:1, tirren:1};
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
   const look = porLook(id); WEAR_NOW = wearFor(look);
   if (POR_LIFT[look]) ctx.scale(1.1, 1.1); // v13.50.1: the later recruits were drawn a size smaller in the frame than the rest; this brings them up to it (about the feet of the frame)
-  try { const F = (POR[look] || POR.sgt)(ctx, st); if (WEAR_NOW && F && F.cy != null) PR.wearAfter(ctx, F, WEAR_NOW); } finally { WEAR_NOW = null; }
+  /* v13.62.4 (David, Nov 20, 2026, 7:52 PM PST, of the fourteen later busts: "fill out and raise shoulders a bit"): while one of them is painted, the shared body is drawn
+     broader and its shoulder line higher (BODY_FILL, read by BP.body). Nothing else in the bust moves, so heads, hands and weapons stay where they were. */
+  BODY_FILL = POR_LIFT[look] && !(typeof window !== 'undefined' && window.FTR_NOFILL) ? {w:1.15, up:4.5, trap:1.5} : null;
+  try { const F = (POR[look] || POR.sgt)(ctx, st); if (WEAR_NOW && F && F.cy != null) PR.wearAfter(ctx, F, WEAR_NOW); } finally { WEAR_NOW = null; BODY_FILL = null; }
   ctx.restore();
   /* v13.50 (the contact-sheet read, Nov 18): the later books' recruits were painted in darker cloth and read dimmer than the rest of the
      shelf. The lantern's light is laid over the painted bust only, as an overlay so the cloth keeps its colour: warm from the lower left, a cool rim from the upper right. */
@@ -593,5 +597,6 @@ function paintPortrait(ctx, id, W, H, st){
     const g = tx.createRadialGradient(W*.24, H*.6, 0, W*.24, H*.6, H*.95); g.addColorStop(0, 'rgba(255,220,170,1)'); g.addColorStop(.6, 'rgba(255,205,150,.5)'); g.addColorStop(1, 'rgba(255,200,150,0)'); tx.fillStyle = g; tx.fillRect(0, 0, W, H);
     const r = tx.createLinearGradient(W*.98, H*.12, W*.62, H*.42); r.addColorStop(0, 'rgba(200,215,245,.6)'); r.addColorStop(1, 'rgba(200,215,245,0)'); tx.fillStyle = r; tx.fillRect(0, 0, W, H);
     tx.globalCompositeOperation = 'destination-in'; tx.drawImage(ctx.canvas, 0, 0); // the light falls on the painted bust only
-    ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = Math.min(1, .5*k); ctx.drawImage(tc, 0, 0); ctx.restore(); }
+    ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = Math.min(1, .5*k); ctx.drawImage(tc, 0, 0); ctx.restore();
+ }
 }
