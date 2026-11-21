@@ -165,13 +165,12 @@ POR.pruss = function(ctx){ const F = {cy:-74, w:13.8, h:20, jaw:.94, chin:5.6, s
     PR.soft(ctx, -24, -38, 16, 8, '#fff0d8', .12); PR.soft(ctx, 28, -16, 22, 24, '#000000', .45); ctx.restore();
   BP.light(ctx, F, B, false);
   const roll = (o0, o1, c, c2) => { BP.band(ctx, B, o0, o1); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 2.2; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, c, c2, -B.nx - 4, B.nx + 4); ctx.fill(); ctx.restore(); }; roll(-2, 2.8, '#6a5e4a', '#18140e'); PR.stitch(ctx, 'rgba(226,204,160,.35)', .3, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1 + i/10, 2); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); // the padded collar under the scale
-  ctx.save(); B.path(); ctx.clip(); BP.sling(ctx, -40, -46, 30, 6, '#4a3420', 5.4); PR.stroke(ctx, 'rgba(20,12,6,.5)', .4, () => { for (let k = 0; k < 9; k++){ const t = k/9, x = lerp(-40, 30, t), y = lerp(-46, 6, t); ctx.moveTo(x - 1.6, y + 2.2); ctx.lineTo(x + 1.6, y - 2.2); } }); ctx.restore(); // the trace-strap from the haul, worn dark where the hands go
+  ctx.save(); B.path(); ctx.clip(); BP.sling(ctx, -40, -46, 44, 16, '#4a3420', 5.4); PR.stroke(ctx, 'rgba(20,12,6,.5)', .4, () => { for (let k = 0; k < 9; k++){ const t = k/9, x = lerp(-40, 44, t), y = lerp(-46, 16, t); ctx.moveTo(x - 1.6, y + 2.2); ctx.lineTo(x + 1.6, y - 2.2); } }); ctx.restore(); // the trace-strap from the haul, worn dark where the hands go
   F.under = (ctx, F) => { PR.dots(ctx, F, 60, 'rgba(60,44,30,.26)', .4, [6, 19, (x, y) => (Math.abs(x) < 4.4 && y > 10.6 && y < 14)]); PR.soft(ctx, -6, F.cy + 4*u, 4.4, 2.6, '#b85a3a', .12); PR.soft(ctx, 6, F.cy + 4*u, 4.4, 2.6, '#b85a3a', .1); }; // not much beard yet
   PR.face(ctx, F);
   PR.stroke(ctx, 'rgba(236,204,182,.7)', 1, () => { ctx.moveTo(-F.w*.52, F.cy - 7.6*u); ctx.lineTo(-F.w*.3, F.cy - 3.4*u); }); PR.stroke(ctx, 'rgba(110,56,38,.4)', .4, () => { ctx.moveTo(-F.w*.52 + .6, F.cy - 7.6*u); ctx.lineTo(-F.w*.3 + .6, F.cy - 3.4*u); }); // the scar through the near brow
   BP.hair(ctx, F, {c:['#5a4634', '#3a2a1c', '#1a120a'], v:1, wx:1.05, hl:10.6, ey:.6, n:60, sw:.36, seed:181, sh:'#c8b090', shA:.12}); // cropped
-  /* the near fist closed on the trace-strap, the way he hauled */
-  ctx.save(); ctx.translate(-19, -29); ctx.scale(.74, .74); BP.fist(ctx, 0, 0, .64, {k:'gaunt', c:['#b6b2a6', '#6e6a60', '#22201c']}, 26); ctx.restore();
+  /* v13.62.14 (David, Nov 21, 2026, 3:08 AM PST, circled): the gauntlet on the trace-strap is gone; it read as a block lying on his chest. The sword and helm are slung, so no hand is needed */
   return F; };
 /* Tirren: twenty-one, a farrier's daughter; sun-browned, freckled; hair tied up under a dust scarf; a leather farrier's apron over a quilted
    shirt; a rasp on a thong at the throat; the farrier's hammer's head up by the right shoulder, held */

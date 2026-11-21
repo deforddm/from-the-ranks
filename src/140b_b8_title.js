@@ -139,7 +139,7 @@ POR.vasso = function(ctx){ const F = {cy:-76, w:12, h:19.6, jaw:.74, chin:4.2, s
   ctx.save(); B.path(); ctx.clip(); BP.quilt(ctx, -44, 44, -58, 4, 6, 'rgba(8,6,12,.6)');
     PR.stroke(ctx, 'rgba(0,0,0,.6)', .9, () => { ctx.moveTo(-3, -51); ctx.quadraticCurveTo(-9, -30, -8, 6); }); PR.stitch(ctx, 'rgba(170,160,190,.3)', .35, () => { ctx.moveTo(-4.4, -51); ctx.quadraticCurveTo(-10.4, -30, -9.4, 6); }); // the jack closes off-centre, the Guild's way
     [-44, -34, -24, -14].forEach(y => { const x = -4.4 - (y + 51)*.12; ell(ctx, x, y, 1, 1, PR.rad(ctx, x - .3, y - .3, .1, 1.1, [[0, '#8a849a'], [1, '#18161e']])); }); // dull bone toggles, blackened
-    BP.sling(ctx, -30, -4, 22, -49, '#2c2018', 3.6); ell(ctx, -3.4, -27.4, 1.9, 1.9, PR.rad(ctx, -4, -28, .2, 2.2, [[0, '#b8b2c0'], [.5, '#5a5462'], [1, '#141218']])); // the sheath-strap across the chest, its buckle
+    BP.sling(ctx, -50, 14, 22, -49, '#2c2018', 3.6); ell(ctx, -3.4, -27.4, 1.9, 1.9, PR.rad(ctx, -4, -28, .2, 2.2, [[0, '#b8b2c0'], [.5, '#5a5462'], [1, '#141218']])); // the sheath-strap across the chest, its buckle
     PR.soft(ctx, -20, -40, 13, 7, '#e8dcf0', .1); PR.soft(ctx, 24, -16, 17, 22, '#000000', .45); ctx.restore();
   BP.light(ctx, F, B, false);
   const roll = (o0, o1, c, c2) => { BP.band(ctx, B, o0, o1); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 2.2; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, c, c2, -B.nx - 4, B.nx + 4); ctx.fill(); ctx.restore(); }; roll(-2.2, 2.4, '#4c4658', '#0e0c12'); // the high close collar, standing
@@ -150,8 +150,7 @@ POR.vasso = function(ctx){ const F = {cy:-76, w:12, h:19.6, jaw:.74, chin:4.2, s
   F.under = (ctx, F) => { PR.soft(ctx, 0, F.cy + 11, 7, 3, '#2a1a14', .12); PR.stroke(ctx, 'rgba(236,206,184,.45)', .5, () => { ctx.moveTo(F.w*.2, F.cy + 10.6*u); ctx.lineTo(F.w*.36, F.cy + 12.4*u); }); }; // a nick on the chin, from learning
   PR.face(ctx, F);
   BP.hair(ctx, F, {c:['#2a2018', '#160e08', '#060402'], v:2, wx:1.05, hl:12.4, ey:-.6, n:74, sw:.45, seed:812, sh:'#8a7a90', shA:.16}); // cropped dark hair
-  /* the near hand up at the sheath-strap, thumb hooked under it: a journeyman's habit, a hand never far from the knife */
-  ctx.save(); ctx.translate(-22, -11); BP.fist(ctx, 0, 0, .5, {k:'glove', c:['#4a4452', '#26222c', '#0a080c']}, 13); ctx.restore();
+  /* v13.62.14 (David, Nov 21, 2026, 3:08 AM PST, circled): the gloved hand at the sheath-strap is gone; a fist drawn for gripping a haft read as a block lying on his chest. The knife is slung, so no hand is needed */
   return F; };
 /* Edrem: forty-one, weathered, grey stubble and short grey hair; old grey scale with the Seer's marks filed off; a pilgrim's brown cloak over
    the left shoulder, pinned; the mace's haft slung on a strap behind the right shoulder; a bit of coral on a cord at the throat */
@@ -161,7 +160,7 @@ POR.edrem = function(ctx){ const F = {cy:-75, w:13.6, h:20.2, jaw:.92, chin:5.8,
   const B = BP.body(ctx, F, {wide:45, drop:2, trap:6, nx:11.8, ny:F.cy + 15.8, cb:-46, c1:'#8a8e92', c2:'#24262a'});
   ctx.save(); B.path(); ctx.clip(); BP.scales(ctx, -50, 50, -64, 4, 5.6, '#80848a', 81); // old grey scale
     [[-4, -30, 5, 3.4], [10, -22, 4, 3], [-2, -14, 4.6, 3]].forEach(([x, y, w, h]) => { PR.soft(ctx, x, y, w, h, '#2e3034', .6); PR.stroke(ctx, 'rgba(210,214,220,.3)', .3, () => { for (let k = -2; k <= 2; k++){ ctx.moveTo(x - w*.7, y + k*.8); ctx.lineTo(x + w*.7, y + k*.8 - .6); } }); }); // where the Seer's marks were filed off, the file's scratches still bright
-    BP.sling(ctx, 30, -47, -8, -6, '#3a2a1c', 3.6); // the mace's carrying strap
+    BP.sling(ctx, 30, -47, -44, 30, '#3a2a1c', 3.6); /* v13.62.14 (David, Nov 21, 2026, 3:08 AM PST, circled): the strap runs on under the cloak and out of the frame; it had stopped short */ // the mace's carrying strap
     PR.soft(ctx, 26, -16, 20, 22, '#000000', .45); ctx.restore();
   BP.light(ctx, F, B, false);
   const roll = (o0, o1, c, c2) => { BP.band(ctx, B, o0, o1); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 2.2; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, c, c2, -B.nx - 4, B.nx + 4); ctx.fill(); ctx.restore(); }; roll(-2, 2.6, '#5a5348', '#16130f'); PR.stitch(ctx, 'rgba(220,200,160,.35)', .3, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1 + i/10, 1.8); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); // the padded arming collar under the scale

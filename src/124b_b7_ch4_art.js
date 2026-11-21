@@ -50,7 +50,7 @@ POR.sorvan = function(ctx){ const F = {cy:-74, w:12.6, h:20, jaw:.9, chin:4.8, s
     for (let r = 0; r < 10; r++) for (let k = -7; k <= 7; k++){ const x = k*5.4 + (r % 2)*2.7, y = -60 + r*6.2; if (x < 8) ell(ctx, x - 1.1, y + 1.3, .55, .9, 'rgba(214,230,255,.28)'); } // the enamel's glint, plate by plate
     PR.stroke(ctx, 'rgba(70,46,26,.55)', .7, () => { for (let r = 0; r < 10; r++) { ctx.moveTo(-46, -57.4 + r*6.2); ctx.lineTo(46, -57.4 + r*6.2); } }); // the lacing between the rows
     [[-17, -30], [9, -19], [-6, -8]].forEach(([x, y]) => PR.soft(ctx, x, y, 2.4, 1.8, '#1a1410', .5)); // plates lost on the road and not replaced
-    BP.sling(ctx, 30, -47, -26, 0, '#3e2c1c', 4); ell(ctx, 4, -24.6, 2, 2, PR.rad(ctx, 3.4, -25.2, .2, 2.4, [[0, '#f0e4c0'], [.5, '#a08848'], [1, '#2a2008']])); // the sabre's baldric
+    BP.sling(ctx, 30, -47, -52, 20, '#3e2c1c', 4); /* v13.62.14 (David, Nov 21, 2026, 3:08 AM PST, circled): the baldric runs on out of the frame; it had stopped short on the chest */ ell(ctx, 4, -24.6, 2, 2, PR.rad(ctx, 3.4, -25.2, .2, 2.4, [[0, '#f0e4c0'], [.5, '#a08848'], [1, '#2a2008']])); // the sabre's baldric
     PR.soft(ctx, -20, -38, 13, 7, '#dce8ff', .14); PR.soft(ctx, 26, -16, 19, 22, '#000000', .45); ctx.restore(); BP.light(ctx, F, B, false);
   /* the riding coat's collar, turned up over the scale and open at the front */
   [[3.2, -2.8, '#5c4c3c']].forEach(([o1, o0, c]) => { BP.band(ctx, B, o0, o1); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 2.4; ctx.shadowOffsetY = 1.2; ctx.fillStyle = PR.lit(ctx, c, '#16100a', -B.nx - 4, B.nx + 4); ctx.fill(); ctx.restore();

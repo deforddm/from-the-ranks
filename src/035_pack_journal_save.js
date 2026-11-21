@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.14', ['Portraits: Sorvan\'s and Edrem\'s straps run out of the frame instead of stopping on the chest; Mehet holds his keys in an upright fist; the hands lying on Vasso\'s and Pruss\'s chests are gone.']],
   ['13.62.13', ['Sorvan\'s moustache is one trimmed shape, not loose strokes; Tirren\'s plait comes from under her scarf, lies against her neck and falls over the shoulder.']],
   ['13.62.12', ['Brannoc\'s boarding axes lean outward behind his shoulders and sit lower.']],
   ['13.62.11', ['The last four recruit portraits repainted. Vasso: the Guild\'s quilted jack and close collar, the knotted cord, a hand at his knife-strap. Edrem: old grey scale under the pilgrim\'s cloak, the mace in a gauntlet. Pruss: scale patched at one shoulder, his fist on the trace-strap, his sergeant\'s helm behind. Tirren: her dust scarf and plait, the farrier\'s apron, the hammer in her hand.']],

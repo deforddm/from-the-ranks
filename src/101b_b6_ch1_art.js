@@ -149,10 +149,11 @@ POR.mehet = function(ctx){ const F = {cy:-76, w:11.8, h:20, jaw:.78, chin:4.6, s
   PR.face(ctx, F);
   BP.hair(ctx, F, {c:['#3a302a', '#141010', '#050404'], v:2.8, wx:1.2, hl:13, ey:-2, n:80, sw:.45, seed:233, sh:'#c0a080', shA:.18}); // close black hair, cut short with a knife
   /* the ring of keys to doors that are no longer there, held up a little in his near hand */
-  ctx.save(); ctx.translate(-31, -27);
-  BP.fist(ctx, 0, 0, .06, {k:'wrap', c:['#c0a482', '#84664a', '#281a10']}, 22); // the hand, bound against the sling's burn
-  ctx.strokeStyle = '#0e0c0a'; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.ellipse(.6, 8, 5.2, 4.6, 0, 0, 7); ctx.stroke(); ctx.strokeStyle = PR.lin(ctx, -6, 0, 6, 0, [[0, '#d0c8b8'], [.5, '#6e685e'], [1, '#222018']]); ctx.lineWidth = 1.3; ctx.beginPath(); ctx.ellipse(.6, 8, 5.2, 4.6, 0, 0, 7); ctx.stroke(); // the ring, hooked over his fingers
-  [[-3.8, 9.4, .5, '#8a7a5a'], [-1.4, 11.8, .2, '#c09a50'], [1.4, 12.2, -.08, '#847c70'], [3.8, 11, -.4, '#a8823e'], [5.2, 8.4, -.8, '#6e6a62']].forEach(([x, y, a, c]) => { ctx.save(); ctx.translate(x, y); ctx.rotate(a);
+  /* v13.62.14 (David, Nov 21, 2026, 3:08 AM PST, circled): the hand read as a block with the keys stuck to its wrist. It is an upright fist at the bottom of the frame now, the forearm running down out of it as the other busts' do; the ring is gripped in it and the keys hang over the knuckles */
+  ctx.save(); ctx.translate(-25, -15);
+  ctx.strokeStyle = '#0e0c0a'; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.ellipse(0, -5.4, 5, 5.6, 0, Math.PI*.95, Math.PI*2.05); ctx.stroke(); ctx.strokeStyle = PR.lin(ctx, -6, 0, 6, 0, [[0, '#d0c8b8'], [.5, '#6e685e'], [1, '#222018']]); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(0, -5.4, 5, 5.6, 0, Math.PI*.95, Math.PI*2.05); ctx.stroke(); // the ring's top, above his fist
+  BP.fist(ctx, 0, -1, 0, {k:"wrap", c:["#c0a482", "#84664a", "#281a10"]}, 24); // the hand, bound against the sling's burn
+  [[-4.6, -1.4, .34, '#8a7a5a'], [-1.8, .2, .12, '#c09a50'], [1.2, .6, -.06, '#847c70'], [4.2, -.4, -.3, '#a8823e']].forEach(([x, y, a, c]) => { ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(0, 2.8, 1.2, 7.6);
     ctx.strokeStyle = c; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.arc(0, 1.3, 1.4, 0, 7); ctx.stroke(); ctx.fillStyle = c; ctx.fillRect(-.5, 2.6, 1, 7.4); ctx.fillRect(-.5, 7.8, 2.4, 1); ctx.fillRect(-.5, 9.4, 1.7, 1);
     PR.stroke(ctx, 'rgba(255,240,210,.5)', .3, () => { ctx.moveTo(-.3, 2.8); ctx.lineTo(-.3, 9.8); }); ctx.restore(); });
   ctx.restore();
