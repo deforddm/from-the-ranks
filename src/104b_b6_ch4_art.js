@@ -73,14 +73,14 @@ POR.ressa = function(ctx){ const F = {cy:-73, w:12, h:19, jaw:.68, chin:4, skin:
   PR.face(ctx, F);
   /* dark hair, wet, pulled back hard; a few strands stuck to the brow and cheek */
   ctx.beginPath(); ctx.moveTo(-13, F.cy + 1); ctx.bezierCurveTo(-14.6, F.cy - 14, -8.4, F.cy - 21.6, 0, F.cy - 21.4); ctx.bezierCurveTo(8.6, F.cy - 21.6, 14.4, F.cy - 14, 13, F.cy + 1);
-  ctx.quadraticCurveTo(12.2, F.cy - 10, 4.6, F.cy - 13.8); ctx.quadraticCurveTo(0, F.cy - 15, -4.6, F.cy - 13.8); ctx.quadraticCurveTo(-12.2, F.cy - 10, -13, F.cy + 1);
-  ctx.fillStyle = PR.lin(ctx, -14, 0, 14, 0, [[0, '#3a2c24'], [.42, '#1a120e'], [1, '#050303']]); ctx.fill();
-  PR.strands(ctx, 34, ['#2e221c', '#120c0a', '#4a3a30'], .5, 133, (i, r) => { const sd = r() < .5 ? -1 : 1, x0 = sd*r()*3, y0 = F.cy - 14.4; return [x0, y0, x0 + sd*5, F.cy - 21, sd*(8 + r()*5), F.cy - 18 + r()*13]; });
+  ctx.quadraticCurveTo(12.4, F.cy - 5.4, 4.6, F.cy - 8.9); ctx.quadraticCurveTo(0, F.cy - 9.8, -4.6, F.cy - 8.9); ctx.quadraticCurveTo(-12.4, F.cy - 5.4, -13, F.cy + 1); // v13.62.7: the hairline lower and the hair darker, so no scalp reads through it
+  ctx.fillStyle = PR.lin(ctx, -14, 0, 14, 0, [[0, '#2e221c'], [.42, '#18100c'], [1, '#050303']]); ctx.fill();
+  PR.strands(ctx, 34, ['#2e221c', '#120c0a', '#4a3a30'], .5, 133, (i, r) => { const sd = r() < .5 ? -1 : 1, x0 = sd*r()*3, y0 = F.cy - 9.6; return [x0, y0, x0 + sd*5, F.cy - 21, sd*(8 + r()*5), F.cy - 18 + r()*13]; });
   PR.strands(ctx, 8, ['#2e221c', '#120c0a', '#4a3a30'], .55, 139, (i, r) => { const sd = i % 2 ? 1 : -1, x = sd*(F.w + .4 + r()*1.2); return [x, F.cy - 8, x + sd*(1 + r()*1.4), F.cy + 2, x + sd*(.4 + r()*1.2), F.cy + 9 + r()*4]; }); // loose locks by the cheeks, wet, come out of the knot
   ell(ctx, -13.6, F.cy - 9, 4.4, 5.2, PR.lin(ctx, -18, 0, -9, 0, [[0, '#4a3a30'], [.5, '#22180f'], [1, '#080505']])); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { ctx.ellipse(-13.6, F.cy - 9, 4.4, 5.2, 0, 0, 7); });
   PR.stroke(ctx, 'rgba(120,90,70,.4)', .4, () => { ctx.ellipse(-13.6, F.cy - 9, 2.6, 3.4, .3, 3.4, 5.6); }); ctx.fillStyle = '#5a4a8a'; ctx.fillRect(-11.4, F.cy - 12, 1.6, 6); // the knot, tied with a strip of dyed cloth
   PR.stroke(ctx, 'rgba(200,214,236,.32)', .6, () => { ctx.moveTo(-9, F.cy - 17); ctx.quadraticCurveTo(-4, F.cy - 21, 2, F.cy - 20.6); }); // the wet sheen
-  PR.strands(ctx, 3, ['#1a120e', '#2e221c'], .45, 137, (i, r) => { const x = 3 + i*1.6, y = F.cy - 14; return [x, y, x + 2.4, y + 5, x + 1.4 + r()*2, y + 10 + i*2.4]; }); // strands stuck to her brow
+  PR.strands(ctx, 3, ['#1a120e', '#2e221c'], .45, 137, (i, r) => { const x = 3 + i*1.6, y = F.cy - 9.2; return [x, y, x + 2, y + 3, x + 1.4 + r()*2, y + 10 + i*2.4]; }); // strands stuck to her brow
   /* a long knife held up by the left shoulder, in a hand dyed blue to the wrist */
   ctx.save(); ctx.translate(-29, -18); ctx.rotate(-.12);
     const bl = () => { ctx.beginPath(); ctx.moveTo(-2.2, -14); ctx.lineTo(2.4, -14); ctx.lineTo(2.2, -50); ctx.quadraticCurveTo(1.8, -58, -.6, -62); ctx.lineTo(-2.2, -50); ctx.closePath(); };

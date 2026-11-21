@@ -74,10 +74,12 @@ POR.brask = function(ctx){ const F = {cy:-74, w:13.6, h:20, jaw:.94, chin:5.6, s
   PR.face(ctx, F);
   // the helm, cheek-guards bent back
   const u = F.h/20, top = F.cy - 21*u;
-  ctx.save(); ctx.beginPath(); ctx.ellipse(0, top + 8*u, F.w + 2.4, 10.6*u, 0, Math.PI, 0); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#8a8476', '#1e1c18', -F.w, F.w); ctx.fill(); ctx.restore();
-  ctx.fillStyle = '#4a463e'; ctx.fillRect(-F.w - 2.4, top + 7*u, (F.w + 2.4) * 2, 2.4);
-  [-1, 1].forEach(sd => { ctx.save(); ctx.translate(sd * (F.w + 1.2), top + 9*u); ctx.rotate(sd * .5); ctx.fillStyle = sd < 0 ? '#7a7466' : '#2a2822'; ctx.fillRect(-2, 0, 4, 9); ctx.restore(); });
-  PR.stroke(ctx, 'rgba(255,240,215,.35)', .8, () => { ctx.moveTo(-F.w, top + 6*u); ctx.quadraticCurveTo(-F.w*.4, top - 1.5*u, 0, top - 2*u); });
+  /* v13.62.7 (David, Nov 20, 2026: "check all models for heads sticking through their hair, hats, helms"): the helm sat on the crown like a lid, the bare skull under it. It comes down to the brow now, with a rim, and the cheek-guards hang from the rim */
+  const hy = F.cy - 8.6*u; ctx.save(); ctx.beginPath(); ctx.ellipse(0, hy, F.w + 2.6, 14.8*u, 0, Math.PI, 0); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#8a8476', '#1e1c18', -F.w - 2, F.w + 2); ctx.fill(); ctx.restore();
+  [-1, 1].forEach(sd => { ctx.save(); ctx.translate(sd * (F.w + 1.4), hy + 1.6); ctx.rotate(sd * .42); ctx.fillStyle = sd < 0 ? '#7a7466' : '#2a2822'; ctx.fillRect(-2.2, 0, 4.4, 10); ctx.restore(); });
+  ctx.fillStyle = PR.lit(ctx, '#6a6458', '#1a1814', -F.w - 3, F.w + 3); ctx.fillRect(-F.w - 3, hy - .4, (F.w + 3) * 2, 2.6); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { ctx.moveTo(-F.w - 3, hy + 2.2); ctx.lineTo(F.w + 3, hy + 2.2); });
+  PR.soft(ctx, 0, hy + 4, F.w, 2.4, '#000000', .35); // the rim's shadow on the brow
+  PR.stroke(ctx, 'rgba(255,240,215,.35)', .8, () => { ctx.moveTo(-F.w - .6, hy - 4*u); ctx.quadraticCurveTo(-F.w*.5, hy - 13*u, 0, hy - 14*u); });
   return F; };
 /* Tegra: twenty-nine, a Barghast woman; white paint in two bars under the eyes; dark hair in a long braid over the left shoulder; painted
    hide over a quilted shirt; a string of small bones at the throat; a throwing-axe's haft in the belt, its head up by the right shoulder */
@@ -108,8 +110,11 @@ POR.brennet = function(ctx){ const F = {cy:-75, w:12.6, h:19.8, jaw:.86, chin:4.
   F.under = (ctx, F) => { PR.dots(ctx, F, 40, 'rgba(40,24,14,.22)', .4, [5, 19]); };
   PR.face(ctx, F);
   const u = F.h/20, top = F.cy - 21*u;
-  ctx.save(); ctx.beginPath(); ctx.ellipse(0, top + 7*u, F.w + 1.2, 9*u, 0, Math.PI, 0); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#6a5a44', '#241c12', -F.w, F.w); ctx.fill(); ctx.restore(); // the padded cap
-  PR.stroke(ctx, 'rgba(20,12,6,.5)', .7, () => { for (let i = -2; i <= 2; i++) { ctx.moveTo(i * 4, top - 1*u); ctx.lineTo(i * 5, top + 6.6*u); } });
+  /* v13.62.7: the padded cap sat on a bare skull like a lid. It is pulled down to the brow with a rolled edge, and cropped hair shows under it at the temples */
+  { const cyy = F.cy - 9.4*u; [-1, 1].forEach(sd => { ctx.fillStyle = sd < 0 ? '#3a2a1a' : '#140c06'; PR.path(ctx, [[sd*(F.w - 2.2), cyy], [sd*(F.w + .5), cyy], [sd*(F.w + .3), cyy + 7.4], [sd*(F.w - .9), cyy + 5.6]]); ctx.fill(); }); // cropped hair at the temples
+    ctx.save(); ctx.beginPath(); ctx.ellipse(0, cyy, F.w + 1.8, 14*u, 0, Math.PI, 0); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#6a5a44', '#241c12', -F.w - 1, F.w + 1); ctx.fill(); ctx.clip();
+      PR.stroke(ctx, 'rgba(20,12,6,.5)', .7, () => { for (let i = -3; i <= 3; i++) { ctx.moveTo(i * 2.2, cyy - 14*u); ctx.quadraticCurveTo(i * 4.2, cyy - 9*u, i * 4.9, cyy); } }); PR.soft(ctx, -F.w*.4, cyy - 9*u, 6, 3, '#ffe6c0', .14); ctx.restore(); // the quilted seams
+    ctx.fillStyle = PR.lit(ctx, '#7a684e', '#1e160e', -F.w - 2, F.w + 2); ctx.beginPath(); ctx.roundRect(-F.w - 2.2, cyy - 1.4, (F.w + 2.2)*2, 2.8, 1.4); ctx.fill(); PR.soft(ctx, 0, cyy + 2.6, F.w, 1.8, '#000000', .3); } // the rolled edge and its shadow
   return F; };
 /* Kaedra: twenty-six, half Bolkando; a dun scout's coat with the hood down round the shoulders, dry grass sewn at them; a blue bead on a
    thong at the throat; the horn bow's upper limb over the left shoulder, slung */

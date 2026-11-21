@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.7', ['Portraits: Ammet\'s turtleneck slumps in soft rolls from under the chin down onto the shoulders, with no turned-down fold; the Third\'s sergeant wears a proper desert head-wrap, wound high over the whole head with a twisted roll at the brow; and after a check of every portrait for a head showing through its cover, Brask\'s helm and Brennet\'s cap come down to the brow, Ressa\'s hairline is lower and Pruss\'s hair reaches his ears.']],
   ['13.62.6', ['Ammet\'s turtleneck is a turtleneck: the knit stands round his neck from the shoulders to the jaw and is turned down in a ribbed fold under the chin, the apron\'s strap going up under it.']],
   ['13.62.5', ['Portraits: the Third\'s sergeant wears a scarf wound round the neck; Yorin\'s hair is loose in the wind where it stood up in one slab; Ammet\'s leather apron lies over his turtleneck; Ressa is slighter in the shoulder. Looks only.']],
   ['13.62.4', ['Portraits: the fourteen later recruits are broader in the shoulder and carry their shoulders higher. Ammet has his turtleneck back as it was. Looks only.']],

@@ -161,7 +161,7 @@ POR.pruss = function(ctx){ const F = {cy:-74, w:13.4, h:19.8, jaw:.92, chin:5.4,
   F.under = (ctx, F) => { PR.dots(ctx, F, 40, 'rgba(60,44,30,.24)', .4, [5, 18]); };
   PR.face(ctx, F);
   const u = F.h/20; PR.stroke(ctx, 'rgba(120,70,50,.6)', .9, () => { ctx.moveTo(-F.w*.5, F.cy - 7.4*u); ctx.lineTo(-F.w*.3, F.cy - 3.6*u); }); // the scar through the brow
-  BP.hair(ctx, F, {c:['#5a4634', '#3a2a1c', '#1a120a'], v:.6, wx:.95, hl:6, ey:-3.4, n:46, sw:.36, seed:181, sh:'#c8b090', shA:.12});
+  BP.hair(ctx, F, {c:['#5a4634', '#3a2a1c', '#1a120a'], v:.6, wx:.95, hl:6, ey:.6, n:46, sw:.36, seed:181, sh:'#c8b090', shA:.12});
   return F; };
 /* Tirren: twenty-one, a farrier's daughter; sun-browned, freckled; hair tied up under a dust scarf; a leather farrier's apron over a quilted
    shirt; a rasp on a thong at the throat; the farrier's hammer's head up by the right shoulder, held */

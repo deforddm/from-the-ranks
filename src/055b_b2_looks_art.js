@@ -101,14 +101,26 @@ POR.sgt_dg = (ctx) => { const F = {cy:-74, w:13.2, h:20, jaw:.82, chin:5, skin:'
     ell(ctx, 6.6, -45.6, 3.2, 2.5, PR.rad(ctx, 5.6, -46.4, .4, 3.6, [[0, '#c8a066'], [.6, '#7a5a30'], [1, '#2e1e0e']])); PR.stroke(ctx, 'rgba(30,18,8,.55)', .5, () => { ctx.moveTo(4.4, -46.6); ctx.quadraticCurveTo(6.6, -44.6, 9, -46.4); }); } // the knot
   PR.face(ctx, F);
   // the head-wrap: over the crown, a band at the brow, round the jaw on the far side, tucked in
-  ctx.beginPath(); ctx.moveTo(-F.w - 2.6, cy + 2); ctx.bezierCurveTo(-F.w - 3.4, top - 4, F.w + 3.4, top - 4, F.w + 2.6, cy + 2); ctx.bezierCurveTo(F.w + 3, cy + 10, F.w + 1, cy + 16, F.w*.5, cy + 20); ctx.lineTo(F.w*.62, cy + 12); ctx.bezierCurveTo(F.w + .4, cy + 6, F.w + .6, cy - 4, F.w - .4, cy - 8);
-  ctx.bezierCurveTo(F.w*.4, cy - 15.2, -F.w*.4, cy - 15.2, -F.w + .4, cy - 8); ctx.bezierCurveTo(-F.w - .6, cy - 4, -F.w - .6, cy + 2, -F.w - .8, cy + 6); ctx.closePath();
-  ctx.fillStyle = PR.lin(ctx, -F.w - 3, 0, F.w + 3, 0, [[0,'#cc9058'], [.35,'#a8703c'], [.75,'#50301a'], [1,'#180c06']]); ctx.fill();
-  ctx.save(); ctx.clip(); PR.stroke(ctx, 'rgba(70,46,20,.5)', .8, () => { for (let i=0;i<5;i++){ ctx.moveTo(-F.w - 2, cy - 4 - i*3.4); ctx.quadraticCurveTo(0, top - 3 + i*2.6, F.w + 2, cy - 2 - i*3.6); } });
-  PR.stroke(ctx, 'rgba(255,240,210,.22)', .7, () => { for (let i=0;i<3;i++){ ctx.moveTo(-F.w - 1, cy - 6 - i*4); ctx.quadraticCurveTo(-F.w*.5, top + i*3, -2, top - 1 + i*3.4); } });
-  ctx.fillStyle = PR.lin(ctx, -F.w, 0, F.w, 0, [[0,'#f4c878'], [.6,'#c8963e'], [1,'#3a2808']]); ctx.beginPath(); ctx.moveTo(-F.w - 2, cy - 8.6); ctx.quadraticCurveTo(0, cy - 17.6, F.w + 2, cy - 8.6); ctx.lineTo(F.w + 2, cy - 6.8); ctx.quadraticCurveTo(0, cy - 15.6, -F.w - 2, cy - 6.8); ctx.fill(); ctx.restore(); // the gold stripe at the brow
-  PR.stroke(ctx, 'rgba(10,6,4,.6)', .7, () => { ctx.moveTo(-F.w + .4, cy - 8); ctx.bezierCurveTo(-F.w*.4, cy - 15.2, F.w*.4, cy - 15.2, F.w - .4, cy - 8); });
-  ctx.fillStyle = '#1a120c'; [[-F.w + 1.2, cy - 7.4], [F.w - 2.2, cy - 7.6]].forEach(([x, y]) => { PR.path(ctx, [[x, y], [x + 1.2, y - .6], [x + 1, y + 3.2], [x + .1, y + 2.6]]); ctx.fill(); }); // cropped dark hair under it, at the temples
+  /* v13.62.7 (David, Nov 20, 2026, 9:19 PM PST: "a bit more headcover on top, i think I see their bald head sticking through. make it look more like a proper desert style headwrap"):
+     the cloth is wound high over the whole skull and stands clear of it, comes low on the brow as a twisted roll, and falls past both ears to the scarf; no scalp or hair shows */
+  { const hw = F.w, open = () => { ctx.lineTo(hw*.76, cy + 14); ctx.bezierCurveTo(hw + .3, cy + 7, hw + .3, cy - 2, hw - .6, cy - 6); ctx.bezierCurveTo(hw*.45, cy - 11.6, -hw*.45, cy - 11.6, -hw + .6, cy - 6); ctx.bezierCurveTo(-hw - .3, cy - 2, -hw - .3, cy + 7, -hw*.76, cy + 14); };
+    const wrap = () => { ctx.beginPath(); ctx.moveTo(-hw - 3, cy + 15); ctx.bezierCurveTo(-hw - 4.8, cy + 4, -hw - 5.6, cy - 8, -hw - 3.8, cy - 15); ctx.bezierCurveTo(-hw*.72, top - 9.6, hw*.72, top - 9.6, hw + 3.8, cy - 15); ctx.bezierCurveTo(hw + 5.6, cy - 8, hw + 4.8, cy + 4, hw + 3, cy + 15); open(); ctx.closePath(); };
+    wrap(); ctx.fillStyle = PR.lin(ctx, -hw - 5, 0, hw + 5, 0, [[0,'#d0965c'], [.32,'#aa733e'], [.72,'#56341c'], [1,'#1a0e07']]); ctx.fill();
+    ctx.save(); wrap(); ctx.clip();
+      /* the windings: each turn crosses the one under it, rising from the near temple over the crown, and the last comes down across the front to the far brow */
+      for (let i = 0; i < 6; i++){ const y0 = cy - 8 - i*3.2, y1 = cy - 13 - i*2.5; PR.stroke(ctx, 'rgba(58,36,14,.55)', .85, () => { ctx.moveTo(-hw - 5, y0); ctx.bezierCurveTo(-hw*.5, y0 - 7 - i*.5, hw*.4, y1 - 6, hw + 5, y1 + 3); }); PR.stroke(ctx, 'rgba(255,236,200,.2)', .5, () => { ctx.moveTo(-hw - 5, y0 + .9); ctx.bezierCurveTo(-hw*.5, y0 - 6.1 - i*.5, -1, y1 - 4.4, 2, y1 - 3.6); }); }
+      ctx.beginPath(); ctx.moveTo(-hw*.3, top - 8); ctx.bezierCurveTo(hw*.2, top - 2, hw*.7, cy - 14, hw + 5, cy - 9); ctx.lineTo(hw + 5, cy - 3); ctx.bezierCurveTo(hw*.6, cy - 10, hw*.05, top + 3, -hw*.75, top - 6); ctx.closePath(); ctx.fillStyle = PR.lin(ctx, -hw, 0, hw + 5, 0, [[0,'#c88e54'], [.5,'#8e5e30'], [1,'#2a180c']]); ctx.fill(); // the last turn, laid over the rest
+      PR.stroke(ctx, 'rgba(30,18,8,.6)', .7, () => { ctx.moveTo(-hw*.75, top - 6); ctx.bezierCurveTo(hw*.05, top + 3, hw*.6, cy - 10, hw + 5, cy - 3); }); PR.stroke(ctx, 'rgba(255,236,200,.24)', .5, () => { ctx.moveTo(-hw*.3, top - 7.4); ctx.bezierCurveTo(hw*.2, top - 1.4, hw*.6, cy - 13, hw*.9, cy - 11); });
+      /* the falls past the ears */
+      PR.stroke(ctx, 'rgba(58,36,14,.5)', .7, () => { [-1, 1].forEach(sd => { for (let k = 0; k < 2; k++){ ctx.moveTo(sd*(hw + 1.6 + k*1.7), cy - 5); ctx.quadraticCurveTo(sd*(hw + 2.6 + k*1.5), cy + 5, sd*(hw + .8 + k*1.4), cy + 15); } }); });
+      /* the roll at the brow, twisted */
+      const roll = (a, b) => { ctx.beginPath(); ctx.moveTo(-hw - 5, cy - 6 - a); ctx.bezierCurveTo(-hw*.5, cy - 12.6 - a, hw*.5, cy - 12.6 - a, hw + 5, cy - 6 - a); ctx.lineTo(hw + 5, cy - 6 - b); ctx.bezierCurveTo(hw*.5, cy - 12.6 - b, -hw*.5, cy - 12.6 - b, -hw - 5, cy - 6 - b); ctx.closePath(); };
+      ctx.save(); ctx.translate(0, .9); roll(-.4, 3.6); ctx.fillStyle = 'rgba(16,8,4,.4)'; ctx.fill(); ctx.restore();
+      roll(-.4, 3.6); ctx.fillStyle = PR.lin(ctx, -hw - 5, 0, hw + 5, 0, [[0,'#dca468'], [.4,'#b27a42'], [.78,'#5a381e'], [1,'#1e1008']]); ctx.fill(); ctx.save(); roll(-.4, 3.6); ctx.clip();
+        PR.stroke(ctx, 'rgba(58,36,14,.6)', .6, () => { for (let x = -hw - 4; x < hw + 5; x += 2.6){ const k = x/(hw + 5), y = cy - 6 - (1 - k*k)*5; ctx.moveTo(x - 1, y - 4.4); ctx.lineTo(x + 1.3, y + 1.2); } }); // the twist
+        ctx.fillStyle = PR.lin(ctx, -hw, 0, hw, 0, [[0,'#f4c878'], [.6,'#c8963e'], [1,'#3a2808']]); roll(1.3, 2.1); ctx.fill(); ctx.restore(); // the gold stripe woven in
+      PR.soft(ctx, hw + 2, cy - 8, 8, 20, '#000000', .42); PR.soft(ctx, -hw*.5, top - 3, 8, 4, '#ffe6c0', .16); ctx.restore();
+    PR.stroke(ctx, 'rgba(10,6,4,.65)', .7, () => { ctx.moveTo(hw*.76, cy + 14); ctx.bezierCurveTo(hw + .3, cy + 7, hw + .3, cy - 2, hw - .6, cy - 6); ctx.bezierCurveTo(hw*.45, cy - 11.6, -hw*.45, cy - 11.6, -hw + .6, cy - 6); ctx.bezierCurveTo(-hw - .3, cy - 2, -hw - .3, cy + 7, -hw*.76, cy + 14); }); }
   // Ressan's token, on its cord over the scarf: brass, worn smooth, a water-jar stamped in it
   PR.stroke(ctx, '#2a1a0e', .7, () => { ctx.moveTo(-6, -46); ctx.quadraticCurveTo(-4, -34, -1, -28); ctx.moveTo(6, -46); ctx.quadraticCurveTo(4, -34, 1, -28); });
   ell(ctx, 0, -25, 4.2, 4.2, PR.rad(ctx, -1.2, -26.4, .5, 4.6, [[0,'#fff0c0'], [.35,'#e2b85a'], [1,'#4a3008']])); PR.stroke(ctx, 'rgba(70,40,8,.6)', .5, () => { ctx.moveTo(-1.2, -27); ctx.quadraticCurveTo(-2, -24, 0, -22.6); ctx.quadraticCurveTo(2, -24, 1.2, -27); ctx.closePath(); });
