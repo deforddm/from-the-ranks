@@ -61,25 +61,39 @@ ${inner('insignia/hoc', 0)}${inner('insignia/mt', 310)}
    shoulders, every prop held, slung or belted). Lantern low left, a rim of the soldier's own colour on the right. ---------------- */
 /* Brask: thirty-five, a heavy, broad and square; a heavy's scale doubled at the shoulders; a helm with the cheek-guards bent back; the
    heavy sword's grip over the right shoulder, slung */
-POR.brask = function(ctx){ const F = {cy:-74, w:13.6, h:20, jaw:.94, chin:5.6, skin:'#b08a6a', iris:'#3a3028', lip:'#8a5a46', browCol:'#3a2e24', browW:2, arch:.2, browL:.15, browR:.1, rim:'#8a8270', rimA:.22, nose:1.5, look:.05, smileL:-.1, smileR:-.2, mouthW:4.2, age:.4, bags:.4, open:.8};
-  PR.stroke(ctx, '#14100c', 5, () => { ctx.moveTo(20, -36); ctx.lineTo(28, -100); }); PR.stroke(ctx, '#4a3a2a', 3.4, () => { ctx.moveTo(20, -36); ctx.lineTo(28, -100); }); // the sword's grip
-  ctx.save(); ctx.translate(28.6, -102); ctx.rotate(.12); ctx.fillStyle = '#6a6458'; ctx.fillRect(-6, -1.6, 12, 3.2); ell(ctx, 0, -5, 2.4, 2.4, '#5a544a'); ctx.restore();
-  PR.neck(ctx, F, 10);
-  const B = BP.body(ctx, F, {wide:44, drop:2, trap:7, nx:12, ny:F.cy + 15.2, cb:F.cy + 20.8, c1:'#7e786a', c2:'#22201c'});
-  ctx.save(); B.path(); ctx.clip(); BP.scales(ctx, -48, 48, -60, 4, 5.6, '#787264', 91); PR.soft(ctx, 22, -16, 18, 20, '#000000', .45); PR.soft(ctx, -20, -34, 12, 7, '#ffe0c0', .08); ctx.restore();
-  BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#4c483e', '#141210', 'rgba(0,0,0,.5)', {style:'wrap', sw:18, sy:-47});
-  BP.sling(ctx, 22, -34, -20, -2, '#3a2a1c', 3.2);
-  F.under = (ctx, F) => { PR.dots(ctx, F, 70, 'rgba(60,44,30,.28)', .4, [5, 20]); };
+/* v13.62.8 (David, Nov 20, 2026, 10:23 PM PST: "redo Brask"): repainted to the first five books' standard. A big square head in a riveted round helm that sits on the brow,
+   its cheek-guards hinged at the temples and bent out and back; a padded collar bound in leather; heavy scale, doubled at the shoulders in three lames;
+   a baldric; the heavy sword held upright at the right shoulder in a gauntleted fist, where it used to stand behind him with no hand on it */
+POR.brask = function(ctx){ const F = {cy:-74, w:14.6, h:20.2, jaw:.98, chin:6.4, skin:'#b08a6a', iris:'#3a3028', lip:'#8a5a46', browCol:'#3a2e24', browW:2.1, arch:.2, browL:.15, browR:.1, rim:'#8a8270', rimA:.2, nose:1.5, look:.05, smileL:-.1, smileR:-.2, mouthW:4.4, age:.45, bags:.45, open:.8, earS:1.08};
+  const u = F.h/20; PR.neck(ctx, F, 11.6);
+  const B = BP.body(ctx, F, {wide:52, trap:8, ny:F.cy + 15.8, cb:F.cy + 21, c1:'#7e786a', c2:'#22201c'});
+  ctx.save(); B.path(); ctx.clip(); BP.scales(ctx, -58, 58, -64, 4, 5.8, '#7c7668', 91); // the heavy's scale
+    PR.soft(ctx, -22, -36, 16, 8, '#fff0d8', .13); PR.soft(ctx, 26, -16, 22, 24, '#000000', .45);
+    BP.sling(ctx, -30, -44, 26, 2, '#4a3420', 4.2); ell(ctx, -6, -24.6, 2.2, 2.2, PR.rad(ctx, -6.6, -25.2, .3, 2.4, [[0, '#e8dcc0'], [.5, '#8a7a52'], [1, '#2a2210']])); // the baldric and its buckle
+    ctx.fillStyle = PR.lit(ctx, '#4a3622', '#120a04', -40, 40); ctx.fillRect(-58, -6.4, 116, 5); ctx.fillStyle = '#8a8474'; ctx.fillRect(-3, -6.8, 6, 5.8); ctx.restore(); // the belt
+  BP.light(ctx, F, B);
+  BP.spaulder(ctx, {wide:52, n:3, rise:5.6, c:['#aaa494', '#6e685a', '#24221c'], style:'scale', sw:3.6, trim:'rgba(26,22,16,.9)', rivet:'#d8d0bc'}); // the shoulders, doubled
+  PR.stroke(ctx, '#3a2c1e', 3, B.top); PR.stroke(ctx, 'rgba(226,196,150,.3)', .5, () => { ctx.save(); ctx.translate(0, -.9); B.top(); ctx.restore(); }); // the padded collar under the scale, bound in leather
+  F.under = (ctx, F) => { PR.dots(ctx, F, 200, 'rgba(46,32,22,.38)', .5, [5, 19.4, (x, y) => (Math.abs(x) < 4.6 && y > 10.4 && y < 14.2)]); // a heavy's stubble
+    PR.stroke(ctx, 'rgba(232,196,176,.5)', .7, () => { ctx.moveTo(-F.w*.66, F.cy + 3*u); ctx.lineTo(-F.w*.4, F.cy + 7.4*u); }); PR.stroke(ctx, 'rgba(70,30,20,.35)', .4, () => { ctx.moveTo(-F.w*.66 + .5, F.cy + 3*u); ctx.lineTo(-F.w*.4 + .5, F.cy + 7.4*u); }); // an old cut along the cheek
+    PR.soft(ctx, 0, F.cy - 6*u, F.w*.9, 3, '#120806', .32); }; // the helm's shadow on the brow
   PR.face(ctx, F);
-  // the helm, cheek-guards bent back
-  const u = F.h/20, top = F.cy - 21*u;
-  /* v13.62.7 (David, Nov 20, 2026: "check all models for heads sticking through their hair, hats, helms"): the helm sat on the crown like a lid, the bare skull under it. It comes down to the brow now, with a rim, and the cheek-guards hang from the rim */
-  const hy = F.cy - 8.6*u; ctx.save(); ctx.beginPath(); ctx.ellipse(0, hy, F.w + 2.6, 14.8*u, 0, Math.PI, 0); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#8a8476', '#1e1c18', -F.w - 2, F.w + 2); ctx.fill(); ctx.restore();
-  [-1, 1].forEach(sd => { ctx.save(); ctx.translate(sd * (F.w + 1.4), hy + 1.6); ctx.rotate(sd * .42); ctx.fillStyle = sd < 0 ? '#7a7466' : '#2a2822'; ctx.fillRect(-2.2, 0, 4.4, 10); ctx.restore(); });
-  ctx.fillStyle = PR.lit(ctx, '#6a6458', '#1a1814', -F.w - 3, F.w + 3); ctx.fillRect(-F.w - 3, hy - .4, (F.w + 3) * 2, 2.6); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { ctx.moveTo(-F.w - 3, hy + 2.2); ctx.lineTo(F.w + 3, hy + 2.2); });
-  PR.soft(ctx, 0, hy + 4, F.w, 2.4, '#000000', .35); // the rim's shadow on the brow
-  PR.stroke(ctx, 'rgba(255,240,215,.35)', .8, () => { ctx.moveTo(-F.w - .6, hy - 4*u); ctx.quadraticCurveTo(-F.w*.5, hy - 13*u, 0, hy - 14*u); });
+  PR.strands(ctx, 22, ['#3a2e24', '#1a120c', '#5a4a3a'], .65, 191, (i, r) => { const sd = i % 2 ? 1 : -1, x = sd*(F.w - 1.4 + r()*1.4), y = F.cy - 7.6; return [x, y, x + sd*.5, y + 3, x + sd*(.3 + r()), y + 5.4 + r()*3]; }); // cropped hair at the temples
+  /* the cheek-guards first (they hang behind the rim), hinged at the temples and bent out and back so he can hear */
+  { const yr = F.cy - 6.8*u; [-1, 1].forEach(sd => { const X = sd*(F.w + 1.2), pl = () => { ctx.beginPath(); ctx.moveTo(X, yr - .4); ctx.lineTo(X + sd*5.6, yr + .8); ctx.quadraticCurveTo(X + sd*7.6, yr + 5.4, X + sd*5.8, yr + 10.6); ctx.quadraticCurveTo(X + sd*4, yr + 12.6, X + sd*2.6, yr + 10.4); ctx.quadraticCurveTo(X + sd*1.8, yr + 5, X, yr + 3.4); ctx.closePath(); };
+      ctx.save(); ctx.translate(sd*.6, 1); pl(); ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fill(); ctx.restore();
+      pl(); ctx.fillStyle = sd < 0 ? PR.lin(ctx, X - 8, yr, X, yr + 10, [[0, '#c4c0b4'], [.5, '#86827a'], [1, '#3e3c36']]) : PR.lin(ctx, X, 0, X + 8, 0, [[0, '#3a3832'], [1, '#0e0d0b']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.lineWidth = .55; pl(); ctx.stroke();
+      PR.stroke(ctx, sd < 0 ? 'rgba(255,244,222,.45)' : 'rgba(255,244,222,.1)', .5, () => { ctx.moveTo(X + sd*5.2, yr + 1.4); ctx.quadraticCurveTo(X + sd*6.8, yr + 5.4, X + sd*5.4, yr + 9.8); }); // the plate's turned edge
+      ell(ctx, X + sd*1.3, yr + 1.5, .75, .75, sd < 0 ? '#e8e0cc' : '#4a4640'); ell(ctx, X + sd*3.6, yr + 2, .6, .6, sd < 0 ? '#d8d0bc' : '#3a3630'); }); } // the hinge pins
+  B4P.helm(ctx, F, {c:['#c4c0b4', '#827e74', '#2a2824'], b:['#9a927e', '#463e30'], r:2.6, y:6.8, h:15.8, n:11, ridge:1});
+  /* the heavy infantry sword, held upright at the right shoulder like a carter's pole */
+  ctx.save(); ctx.translate(35, -4); ctx.rotate(.06);
+    ctx.save(); ctx.filter = 'blur(1.4px)'; ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(-1.4, -112, 6.6, 104); ctx.restore(); // its shadow on the shoulder
+    ctx.beginPath(); ctx.moveTo(-3, -9); ctx.lineTo(-2.7, -116); ctx.lineTo(2.7, -116); ctx.lineTo(3, -9); ctx.closePath(); ctx.fillStyle = PR.lin(ctx, -3, 0, 3, 0, [[0, '#e4e2da'], [.42, '#a4a29a'], [.5, '#5e5c56'], [.6, '#8c8a82'], [1, '#34322e']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .5; ctx.stroke(); // the blade, fullered
+    PR.stroke(ctx, 'rgba(30,26,20,.4)', .5, () => { for (let i = 0; i < 5; i++){ const y = -22 - i*17; ctx.moveTo(-2.9, y); ctx.lineTo(-1.8, y + 1.4); } }); // nicks in the edge
+    ctx.fillStyle = PR.lin(ctx, 0, -11, 0, -7.4, [[0, '#a8a08c'], [.5, '#6a6252'], [1, '#2a261e']]); ctx.beginPath(); ctx.roundRect(-8.4, -11, 16.8, 3.6, 1.2); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .5; ctx.stroke(); // the guard
+    ctx.fillStyle = PR.lin(ctx, -2, 0, 2, 0, [[0, '#6a4e32'], [.5, '#3e2c1a'], [1, '#140c06']]); ctx.fillRect(-2, -7.4, 4, 14); PR.stroke(ctx, 'rgba(0,0,0,.45)', .4, () => { for (let y = -6.4; y < 6; y += 1.5){ ctx.moveTo(-2, y); ctx.lineTo(2, y + .8); } }); // the grip, bound in cord
+    BP.fist(ctx, 0, -1.4, 0, {k:'gaunt', c:['#b6b2a6', '#6e6a60', '#22201c']}, 17); ctx.restore();
   return F; };
 /* Tegra: twenty-nine, a Barghast woman; white paint in two bars under the eyes; dark hair in a long braid over the left shoulder; painted
    hide over a quilted shirt; a string of small bones at the throat; a throwing-axe's haft in the belt, its head up by the right shoulder */
