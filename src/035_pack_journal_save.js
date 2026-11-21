@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.6', ['Ammet\'s turtleneck is a turtleneck: the knit stands round his neck from the shoulders to the jaw and is turned down in a ribbed fold under the chin, the apron\'s strap going up under it.']],
   ['13.62.5', ['Portraits: the Third\'s sergeant wears a scarf wound round the neck; Yorin\'s hair is loose in the wind where it stood up in one slab; Ammet\'s leather apron lies over his turtleneck; Ressa is slighter in the shoulder. Looks only.']],
   ['13.62.4', ['Portraits: the fourteen later recruits are broader in the shoulder and carry their shoulders higher. Ammet has his turtleneck back as it was. Looks only.']],
   ['13.62.3', ['Portraits: the later recruits have necks. Their coats climbed to the jaw in one piece with a ribbed tube set over the top; now each coat opens at the throat and the neck shows in it, with a neckcloth or a shirt\'s edge underneath where the soldier wears one. Looks only.']],

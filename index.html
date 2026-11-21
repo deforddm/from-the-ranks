@@ -697,7 +697,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.62.5';
+const VERSION = '13.62.6';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -10164,6 +10164,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.6', ['Ammet\'s turtleneck is a turtleneck: the knit stands round his neck from the shoulders to the jaw and is turned down in a ribbed fold under the chin, the apron\'s strap going up under it.']],
   ['13.62.5', ['Portraits: the Third\'s sergeant wears a scarf wound round the neck; Yorin\'s hair is loose in the wind where it stood up in one slab; Ammet\'s leather apron lies over his turtleneck; Ressa is slighter in the shoulder. Looks only.']],
   ['13.62.4', ['Portraits: the fourteen later recruits are broader in the shoulder and carry their shoulders higher. Ammet has his turtleneck back as it was. Looks only.']],
   ['13.62.3', ['Portraits: the later recruits have necks. Their coats climbed to the jaw in one piece with a ribbed tube set over the top; now each coat opens at the throat and the neck shows in it, with a neckcloth or a shirt\'s edge underneath where the soldier wears one. Looks only.']],
@@ -65611,13 +65612,27 @@ Object.assign(POR, {
     PR.torsoPath(ctx, 42, 2); ctx.fillStyle = PR.lit(ctx, '#6e7e6c', '#141a14', -42, 30); ctx.fill(); ctx.save(); PR.torsoPath(ctx, 42, 2); ctx.clip(); // the quilted coat
       for (let x = -40; x < 42; x += 5.2) { const k = (x + 40)/82; PR.soft(ctx, x + 2.6, -20, 2, 28, '#e8f0e0', .1*(1 - k)); } PR.stitch(ctx, 'rgba(10,16,10,.55)', .45, () => { for (let x = -40; x < 42; x += 5.2){ ctx.moveTo(x, -46); ctx.lineTo(x + 1, 4); } });
       /* v13.62.5 (David, Nov 20, 2026, 8:35 PM PST: "let the leather apron show on top"): the turtleneck is painted here, over the coat and before the apron, so the bib and its strap lie on it */
-      ctx.restore(); PR.neck(ctx, F, 9.6); B5P.collar(ctx, F, '#76866e', '#141a14', 'rgba(10,16,10,.38)', {sw:32, neck:false, over:false}); ctx.save(); PR.torsoPath(ctx, 42, 2); ctx.clip();
+      /* v13.62.6 (David, Nov 20, 2026, 8:53 PM PST: "an actual turtleneck... the sweater goes all the way up and is then folded back down under the chin"): no cone from the chest.
+         The knit stands round the neck as a tube from the shoulders to the jaw, and its top is turned down over itself in a ribbed fold; the apron's strap goes under the fold. */
+      const tn = fold => { const top = -64, sx = 12.7, bx = 13.7, ey = -50.2, ec = -45.6, by = -47.6, bc = -42.6; if (!fold){
+          ctx.beginPath(); ctx.moveTo(-sx, top); ctx.lineTo(-bx, by - 1); ctx.lineTo(-19, -45.6); ctx.lineTo(-14, -37); ctx.lineTo(14, -37); ctx.lineTo(19, -45.6); ctx.lineTo(bx, by - 1); ctx.lineTo(sx, top); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#6e7e6c', '#141a14', -42, 30); ctx.fill(); // the sweater's chest and the tube, one knit
+          PR.stroke(ctx, 'rgba(6,10,6,.5)', .6, () => { ctx.moveTo(-bx - .6, by); ctx.quadraticCurveTo(0, bc + (bc - by)*.9, bx + .6, by); }); PR.soft(ctx, 0, bc - 1.4, 13, 2.6, '#000000', .3); // where the tube leaves the shoulders
+          PR.stroke(ctx, 'rgba(6,10,6,.35)', .4, () => { for (let x = -11.5; x <= 11.6; x += 2.3){ ctx.moveTo(x, ey); ctx.lineTo(x*1.04, bc - 1 + x*x/36); } }); return; }
+        const edge = () => { ctx.quadraticCurveTo(-bx - .9, ey - .5, -bx + 1.2, ey); ctx.quadraticCurveTo(0, ec + (ec - ey)*.9, bx - 1.2, ey); ctx.quadraticCurveTo(bx + .9, ey - .5, bx + .9, ey - 2.5); };
+        const fp = () => { ctx.beginPath(); ctx.moveTo(-sx - .3, top); ctx.lineTo(-bx - .9, ey - 2.5); edge(); ctx.lineTo(sx + .3, top); ctx.closePath(); };
+        ctx.save(); ctx.translate(0, 1.3); fp(); ctx.fillStyle = 'rgba(4,8,4,.55)'; ctx.fill(); ctx.restore(); // the fold's shadow on the knit below it
+        fp(); ctx.fillStyle = PR.lit(ctx, '#80907a', '#181e18', -bx - 3, bx + 5); ctx.fill(); ctx.save(); fp(); ctx.clip();
+          for (let x = -13.6; x <= 13.7; x += 2.1){ PR.stroke(ctx, 'rgba(10,16,10,.5)', .5, () => { ctx.moveTo(x*.95, top); ctx.lineTo(x*1.04, ec + 2); }); if (x < 3) PR.stroke(ctx, 'rgba(226,240,214,.16)', .35, () => { ctx.moveTo(x*.95 - .7, top); ctx.lineTo(x*1.04 - .7, ec + 2); }); } // the ribs
+          ctx.save(); ctx.translate(0, -1); PR.stroke(ctx, 'rgba(226,240,214,.24)', .7, () => { ctx.moveTo(-bx + 1.2, ey); ctx.quadraticCurveTo(-4, ec + (ec - ey)*.5, 2, ec + .3); }); ctx.restore(); // the roll of the turned edge, lit
+          PR.soft(ctx, 1, -58, 15, 5, '#000000', .6); PR.soft(ctx, 10, -52, 6, 7, '#000000', .35); ctx.restore(); // the jaw's shadow
+        PR.stroke(ctx, 'rgba(4,8,4,.7)', .5, () => { ctx.moveTo(-bx - .9, ey - 2.5); edge(); }); };
+      ctx.restore(); PR.neck(ctx, F, 9.6); tn(false); ctx.save(); PR.torsoPath(ctx, 42, 2); ctx.clip();
       const ap = () => { ctx.beginPath(); ctx.moveTo(-13, -40); ctx.lineTo(13, -40); ctx.quadraticCurveTo(15, -30, 23, -24); ctx.lineTo(27, 6); ctx.lineTo(-27, 6); ctx.lineTo(-23, -24); ctx.quadraticCurveTo(-15, -30, -13, -40); ctx.closePath(); };
       ap(); ctx.fillStyle = PR.lit(ctx, '#9a6c40', '#24160a', -26, 24); ctx.fill(); ctx.save(); ap(); ctx.clip(); const r = PR.rng(43); for (let i = 0; i < 8; i++) PR.soft(ctx, -20 + r()*36, -34 + r()*36, 2 + r()*4, 1.4 + r()*3, i < 3 ? '#3a0e08' : '#1a0e06', .45, r()*3); // stains, old and older
         PR.soft(ctx, -14, -30, 10, 12, '#ffe8c8', .14); ctx.restore(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .6; ap(); ctx.stroke(); PR.stitch(ctx, 'rgba(230,190,130,.5)', .35, () => { ctx.moveTo(-12, -38.6); ctx.lineTo(12, -38.6); ctx.moveTo(-21.6, -23); ctx.lineTo(-25.4, 5); });
       ctx.fillStyle = PR.lit(ctx, '#5a3e22', '#1a0e06', -14, 14); PR.path(ctx, [[-10, -12], [10, -12], [10, 0], [-10, 0]]); ctx.fill(); PR.stitch(ctx, 'rgba(230,190,130,.45)', .3, () => { ctx.moveTo(-9.4, -11.4); ctx.lineTo(9.4, -11.4); }); // the pocket
       PR.soft(ctx, 30, -18, 22, 24, '#000000', .5); ctx.restore();
-    PR.stroke(ctx, '#3a2412', 1.8, () => { ctx.moveTo(-12.6, -40); ctx.quadraticCurveTo(-13, -50, -11.6, -58); ctx.moveTo(12.6, -40); ctx.quadraticCurveTo(13, -50, 11.6, -58); }); // the apron's neck strap
+    PR.stroke(ctx, '#3a2412', 1.8, () => { ctx.moveTo(-12.6, -40); ctx.quadraticCurveTo(-13.3, -45, -12.9, -51); ctx.moveTo(12.6, -40); ctx.quadraticCurveTo(13.3, -45, 12.9, -51); }); tn(true); // the apron's neck strap, going up under the turned-down fold
     ctx.save(); ctx.translate(-15, -20); ctx.rotate(-.12); ctx.fillStyle = PR.lit(ctx, '#7a5634', '#24160a', -11, 11); ctx.fillRect(-11, -4.6, 22, 9.2); // the roll of instruments, half untied
       for (let i = 0; i < 7; i++){ const x = -8.6 + i*2.8, h2 = 5 + (i%3)*1.4; ctx.fillStyle = PR.lin(ctx, x - .6, 0, x + .6, 0, [[0, '#f4f2ec'], [.5, '#a8a8a4'], [1, '#3a3a38']]); ctx.fillRect(x - .55, -4.6 - h2, 1.1, h2 + 2); if (i%2) ell(ctx, x, -4.6 - h2, .9, .5, '#d8d8d0'); }
       PR.stitch(ctx, 'rgba(230,190,130,.5)', .3, () => { ctx.moveTo(-10.4, -3.6); ctx.lineTo(10.4, -3.6); }); PR.stroke(ctx, '#2a1808', .8, () => { ctx.moveTo(4, -4.6); ctx.lineTo(5, 4.6); ctx.moveTo(5, 4.6); ctx.quadraticCurveTo(7, 9, 4, 11); }); ctx.restore();
