@@ -633,7 +633,7 @@ ${NAME(sp)} is staring at him. "You lit a fuse," ${b77He(sp)} says, "with a fuse
 
 "Hedge," says the small man.
 
-"Coming." The sapper takes something out of the bag, round and clay and heavy, a sharper, and ${sp ? `tucks it into ${NAME(sp)}'s satchel` : 'puts it into your hand'}. "You're short," he says. "Everyone's short." Then, because the name is out: "Hedge. Just got in."
+"Coming." The sapper takes something out of the bag, a small cone of fired clay, a sharper, and ${sp ? `tucks it into ${NAME(sp)}'s satchel` : 'puts it into your hand'}. "You're short," he says. "Everyone's short." Then, because the name is out: "Hedge. Just got in."
 
 "Don't," says the small man, to nobody, and lifts his head a little, as if he were listening for something too high to hear. "North," he says. "By the palace. He's up on a roof, the idiot."
 

@@ -42,7 +42,7 @@ function artView(what){
 /* an item, full screen: its picture large, and everything the game knows about it.
    Gear (item/*), munitions (munitions/*) and each squadmate's keepsakes (munitions/keep_*), tapped wherever they are drawn. */
 const MUNI = {
-  sharper:['Sharper', 'Moranth munition · thrown', 'A clay egg the size of a fist that breaks into a hundred knives. Kettle counts them the way priests count prayers.'],
+  sharper:['Sharper', 'Moranth munition · thrown', 'A small cone of fired clay packed with iron, light enough to throw. It breaks into a hundred knives, and anyone who throws it too close goes home with bleeding ears. Kettle counts them the way priests count prayers.'],
   burner:['Burner', 'Moranth munition · thrown', 'Liquid fire in a waxed clay jar, and the ground goes on burning after. Strapped down whenever there is otataral about, and nobody stands downwind.'],
   cusser:['Cusser', 'Moranth munition · the crossbow cradle', () => 'The big one. Fired from the cradle under Kettle\'s crossbow, never thrown by anyone who wants to keep the arm. ' + (S && S.f && S.f.c5_cusserUsed ? 'Chub\'s was called Maud. Kettle spent her at the barrow.' : S && S.f && S.f.c7_debt === 'paid' ? 'Chub\'s was called Maud. Kettle handed her back to the Moranth.' : 'Chub\'s is called Maud, and Kettle keeps her out of ordinary fights.')],
   smoker:['Smoker', 'Moranth munition · from Hedge\'s cellar', 'A grey jar that blooms into a wall. Nothing shoots into the smoke, out of it, or through it.'],
