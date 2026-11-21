@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.15', ['Sorvan\'s moustache sits lower, on the upper lip.']],
   ['13.62.14', ['Portraits: Sorvan\'s and Edrem\'s straps run out of the frame instead of stopping on the chest; Mehet holds his keys in an upright fist; the hands lying on Vasso\'s and Pruss\'s chests are gone.']],
   ['13.62.13', ['Sorvan\'s moustache is one trimmed shape, not loose strokes; Tirren\'s plait comes from under her scarf, lies against her neck and falls over the shoulder.']],
   ['13.62.12', ['Brannoc\'s boarding axes lean outward behind his shoulders and sit lower.']],
