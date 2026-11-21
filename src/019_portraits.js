@@ -238,7 +238,34 @@ const BP = {
     ctx.restore(); },
   /* the garment rising from the shoulders to meet the jaw (trapezius under cloth, a high collar), so the head sits in the clothes, not on a post:
      its top edge runs up to the jaw's corner at the sides (o.drop lowers it) and dips under the chin; a lit edge, a dark edge, the jaw's cast shadow on it */
-  collar(ctx, F, c1, c2, lines, o = {}){ const u = F.h/20, x = F.x || 0, jw = F.w*(F.jaw ?? .8), jy = F.cy + 13*u + (o.drop || 0), cb = F.cy + 19*u + 1 + (o.drop || 0)*.5, sw = o.sw ?? 28, sy = o.sy ?? -38;
+  /* v13.62.3 (David, Nov 20, 2026: the collars "look really bad"). The trouble was under the collar: these busts have no neck, the coat climbing to the jaw as one cone,
+     and a ribbed tube was set over it. Now the coat opens at the throat and a neck stands in the opening: dark inside the collar either side of it, the chin's shadow on it,
+     and at the bottom of the opening what is worn underneath, in the old collar's colours (a wound neckcloth, a shirt's round neck, or bare throat and a lace for an open coat).
+     The coat's own sides stand up beside the neck as its collar. o.neck:false gives the old tube. */
+  neckOpen(ctx, F, c1, c2, lines, o = {}){ const u = F.h/20, x = F.x || 0, jw = F.w*(F.jaw ?? .8), jy = F.cy + 13*u, cb = F.cy + 19*u + 1, st = o.style || 'rib', skin = F.skin || '#b08a6a';
+    const low = cb + (o.low ?? (st === 'fold' ? 18 : 14)), tw = jw + 1.9, nw = Math.min(jw*.74, 8.4), vee = st === 'fold';
+    const open = () => { ctx.beginPath(); ctx.moveTo(x - tw, jy - 1); if (vee) { ctx.quadraticCurveTo(x - tw*.78, cb + 3, x, low); ctx.quadraticCurveTo(x + tw*.78, cb + 3, x + tw, jy - 1); } else { ctx.bezierCurveTo(x - tw*1.04, low - 2, x - tw*.5, low, x, low); ctx.bezierCurveTo(x + tw*.5, low, x + tw*1.04, low - 2, x + tw, jy - 1); } ctx.closePath(); };
+    ctx.save(); open(); ctx.fillStyle = PR.lin(ctx, x - tw, 0, x + tw, 0, [[0, '#3a2a1e'], [.45, '#1c130d'], [1, '#0a0705']]); ctx.fill(); ctx.clip(); // the dark inside the collar
+    /* the neck */
+    ctx.beginPath(); ctx.moveTo(x - nw, jy - 3); ctx.quadraticCurveTo(x - nw*.92, cb + 4, x - nw*1.18, low + 3); ctx.lineTo(x + nw*1.18, low + 3); ctx.quadraticCurveTo(x + nw*.92, cb + 4, x + nw, jy - 3); ctx.closePath();
+    ctx.fillStyle = PR.lin(ctx, x - nw, 0, x + nw*1.1, 0, [[0, shade(skin, .04)], [.45, shade(skin, -.1)], [.8, shade(skin, -.36)], [1, shade(skin, -.62)]]); ctx.fill();
+    PR.soft(ctx, x + .8, cb + .6, jw*1.05, 4, '#120804', .62); // under the chin
+    PR.stroke(ctx, 'rgba(30,14,8,.3)', .6, () => { ctx.moveTo(x - nw*.5, cb + 3.5); ctx.quadraticCurveTo(x - nw*.2, low - 3, x - .6, low - .5); ctx.moveTo(x + nw*.5, cb + 3.5); ctx.quadraticCurveTo(x + nw*.2, low - 3, x + .6, low - .5); }); // the cords of the neck, meeting at the hollow
+    PR.soft(ctx, x, low - 1.6, 2, 1.5, '#1a0c06', .45);
+    /* what is worn under the coat */
+    if (!vee) { const h = st === 'wrap' ? 6 : 3.6, ty = low - h; ctx.beginPath(); ctx.moveTo(x - tw - 2, ty - 1.6); ctx.quadraticCurveTo(x, ty + 2.6, x + tw + 2, ty - 1.6); ctx.lineTo(x + tw + 2, low + 4); ctx.lineTo(x - tw - 2, low + 4); ctx.closePath(); ctx.save(); ctx.clip();
+        ctx.fillStyle = PR.lit(ctx, c1, c2, x - tw*1.5, x + tw*1.5); ctx.fillRect(x - tw - 3, ty - 3, tw*2 + 6, h + 9);
+        if (lines && st === 'wrap') PR.stroke(ctx, lines, .6, () => { for (let i = 0; i < 3; i++) { ctx.moveTo(x - tw, ty + 1.2 + i*2.2); ctx.quadraticCurveTo(x, ty + 4 + i*2.2, x + tw, ty + .4 + i*2.2); } });
+        if (lines && st === 'rib') PR.stroke(ctx, lines, .45, () => { for (let i = -3; i <= 3; i++) { ctx.moveTo(x + i*nw*.42, ty + .6 - Math.abs(i)*.25 + 1.4); ctx.lineTo(x + i*nw*.46, low + 2); } });
+        ctx.restore(); PR.stroke(ctx, 'rgba(0,0,0,.6)', .7, () => { ctx.moveTo(x - tw - 2, ty - 1.6); ctx.quadraticCurveTo(x, ty + 2.6, x + tw + 2, ty - 1.6); }); PR.stroke(ctx, 'rgba(255,236,204,.2)', .45, () => { ctx.moveTo(x - tw, ty - .4); ctx.quadraticCurveTo(x - tw*.4, ty + 2.6, x, ty + 3.2); });
+        PR.soft(ctx, x + 1, ty - 1, nw*1.2, 2.2, '#120804', .4); }
+    else if (o.lace !== false) { PR.stroke(ctx, lines || 'rgba(20,14,8,.5)', .55, () => { for (let i = 0; i < 2; i++) { const yy = low - 2.2 - i*3, hw = (low - yy)*tw*.78/(low - cb - 3)*.55 + .8; ctx.moveTo(x - hw, yy - .8); ctx.lineTo(x + hw, yy + .8); } }); }
+    ctx.restore();
+    /* the coat's edge round the opening: dark, with the light catching the near side; and its shadow just inside */
+    ctx.save(); open(); ctx.clip(); ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 2.6; ctx.lineWidth = 1.6; ctx.strokeStyle = 'rgba(6,4,2,.55)'; open(); ctx.stroke(); ctx.restore();
+    ctx.lineJoin = 'round'; ctx.lineWidth = .8; ctx.strokeStyle = 'rgba(8,5,3,.75)'; open(); ctx.stroke();
+    ctx.save(); ctx.beginPath(); ctx.rect(x - tw - 4, jy + 1, tw + 3, low - jy + 6); ctx.clip(); ctx.translate(-.7, .2); ctx.lineWidth = .55; ctx.strokeStyle = 'rgba(255,236,204,.3)'; open(); ctx.stroke(); ctx.restore(); },
+  collar(ctx, F, c1, c2, lines, o = {}){ if (o.neck !== false && !(typeof window !== 'undefined' && window.FTR_OLDCOLLAR)) return BP.neckOpen(ctx, F, c1, c2, lines, o); const u = F.h/20, x = F.x || 0, jw = F.w*(F.jaw ?? .8), jy = F.cy + 13*u + (o.drop || 0), cb = F.cy + 19*u + 1 + (o.drop || 0)*.5, sw = o.sw ?? 28, sy = o.sy ?? -38;
     const top = () => { ctx.moveTo(x - jw - 1.4, jy); ctx.quadraticCurveTo(x - jw*.5, cb - .6, x, cb); ctx.quadraticCurveTo(x + jw*.5, cb - .6, x + jw + 1.4, jy); };
     /* v13.5.3 (David, Nov 14: the collar's corners stuck out past the shoulders as two points): the outer edge now rounds down into
        the shoulder (a curve through a corner pulled in and dropped), so the collar sits on the body instead of winging out of it */
