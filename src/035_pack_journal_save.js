@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.11', ['The last four recruit portraits repainted. Vasso: the Guild\'s quilted jack and close collar, the knotted cord, a hand at his knife-strap. Edrem: old grey scale under the pilgrim\'s cloak, the mace in a gauntlet. Pruss: scale patched at one shoulder, his fist on the trace-strap, his sergeant\'s helm behind. Tirren: her dust scarf and plait, the farrier\'s apron, the hammer in her hand.']],
   ['13.62.10', ['Portraits repainted for five more recruits. Doss: a patched jerkin laced over homespun, the flail in his fist. Wenna: sealskin over her smock, the cord of shells, the gaff held. Ilsa: the clerk\'s coat buttoned to a stand collar, her ledger in an inked hand. Sorvan: blue scale under a turned-up collar, the short lance upright. Mehet: his scarf loose at an open throat, the keys hanging from his hand.']],
   ['13.62.9', ['Portraits repainted for Book Nine\'s other three recruits. Tegra: painted hide with fur at the shoulders, her plait, the string of bones, a throwing-axe in her hand. Brennet: a studded apron over an open shirt, a sweat-rag, the wagon-pin held. Kaedra: her hood down in folds, dry grass at the shoulders, arrows behind, the horn bow in her fist.']],
   ['13.62.8', ['Brask\'s portrait repainted: a riveted helm on the brow with its cheek-guards bent back, heavy scale doubled at the shoulders, and the heavy sword held upright in a gauntleted fist.']],

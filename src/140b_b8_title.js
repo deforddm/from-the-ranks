@@ -127,45 +127,60 @@ ${[[84, 1], [116, -1]].map(([x, d]) => `<g transform="translate(${x} 104)"><path
    shoulders, every prop held, slung or belted). Lantern low left, a rim of the soldier's own colour on the right. ---------------- */
 /* Vasso: twenty-three, Gadrobi, lean; cropped dark hair; the Guild's dark quilted jack with its high close collar; a knife's hilt at the back of
    the neck, its sheath on a strap across the chest (slung); the knotted cord that is a map round his neck */
+/* v13.62.11 (David, Nov 21, 2026, 2:23 AM PST: "the word"): the last four of the later recruits repainted to the first five books' standard: a neck, their own neckline by kit, a body at its own width (no BODY_FILL), a hand on something */
 POR.vasso = function(ctx){ const F = {cy:-76, w:12, h:19.6, jaw:.74, chin:4.2, skin:'#b88a68', iris:'#2a2018', lip:'#8a5444', browCol:'#1a120c', browW:1.4, arch:.6, browL:.25, rim:'#8a7aa0', rimA:.24, nose:1.1, look:-.25, smileL:.15, smileR:-.05, mouthW:3.6, age:0, open:.84};
-  // the knife's hilt over the right shoulder, behind the head: the sheath sits down the back under the jack
-  PR.stroke(ctx, '#0e0c10', 4.2, () => { ctx.moveTo(12, -44); ctx.lineTo(17, -74); }); PR.stroke(ctx, '#3a3240', 2.6, () => { ctx.moveTo(12, -44); ctx.lineTo(17, -74); }); // the grip, over the shoulder
-  ctx.save(); ctx.translate(17.4, -75); ctx.rotate(.16); ctx.fillStyle = '#5a5060'; ctx.fillRect(-4, -1.4, 8, 2.8); ell(ctx, 0, -4, 1.8, 1.8, '#4a4250'); ctx.restore(); // the guard and pommel
-  PR.stroke(ctx, 'rgba(220,214,230,.4)', .6, () => { ctx.moveTo(12.4, -48); ctx.lineTo(16, -71); });
-  PR.neck(ctx, F, 7.6);
-  const B = BP.body(ctx, F, {wide:34, drop:6, trap:3, nx:10.6, ny:F.cy + 14.4, cb:F.cy + 19.6, c1:'#3e3848', c2:'#121016'});
-  ctx.save(); B.path(); ctx.clip(); BP.quilt(ctx, -40, 40, -50, 4, 6, 'rgba(10,8,14,.55)');
-    PR.soft(ctx, 20, -16, 16, 16, '#000000', .45); PR.soft(ctx, -18, -34, 12, 7, '#ffe0c0', .08); ctx.restore();
+  const u = F.h/20;
+  /* the Guild knife's hilt behind the far shoulder: the sheath lies down his back under the jack */
+  ctx.save(); ctx.translate(15, -50); ctx.rotate(.17); ctx.lineCap = 'butt'; PR.stroke(ctx, '#0a080c', 4, () => { ctx.moveTo(0, 6); ctx.lineTo(0, -20); }); PR.stroke(ctx, PR.lin(ctx, -1.6, 0, 1.6, 0, [[0, '#5a5064'], [1, '#18141c']]), 2.8, () => { ctx.moveTo(0, 6); ctx.lineTo(0, -20); });
+    PR.stroke(ctx, 'rgba(10,8,12,.7)', .5, () => { for (let k = 0; k < 9; k++){ ctx.moveTo(-1.4, -1 - k*2.1); ctx.lineTo(1.4, -1.9 - k*2.1); } }); // the grip, bound in black cord
+    ctx.fillStyle = PR.lin(ctx, -4.6, 0, 4.6, 0, [[0, '#b0aab8'], [.5, '#5e5866'], [1, '#1a181e']]); ctx.beginPath(); ctx.roundRect(-4.6, -1, 9.2, 2.6, 1); ctx.fill(); ell(ctx, 0, -22, 2.3, 2.3, PR.rad(ctx, -.7, -22.7, .2, 2.6, [[0, '#d8d2e0'], [.5, '#6a6474'], [1, '#18161c']])); ctx.restore(); // the guard and pommel
+  PR.neck(ctx, F, 7.8);
+  const B = BP.body(ctx, F, {wide:36, drop:3, trap:2.5, nx:9.8, ny:F.cy + 15.8, cb:-51.6, c1:'#423c4e', c2:'#100e14'}); // the Guild's dark quilted jack
+  ctx.save(); B.path(); ctx.clip(); BP.quilt(ctx, -44, 44, -58, 4, 6, 'rgba(8,6,12,.6)');
+    PR.stroke(ctx, 'rgba(0,0,0,.6)', .9, () => { ctx.moveTo(-3, -51); ctx.quadraticCurveTo(-9, -30, -8, 6); }); PR.stitch(ctx, 'rgba(170,160,190,.3)', .35, () => { ctx.moveTo(-4.4, -51); ctx.quadraticCurveTo(-10.4, -30, -9.4, 6); }); // the jack closes off-centre, the Guild's way
+    [-44, -34, -24, -14].forEach(y => { const x = -4.4 - (y + 51)*.12; ell(ctx, x, y, 1, 1, PR.rad(ctx, x - .3, y - .3, .1, 1.1, [[0, '#8a849a'], [1, '#18161e']])); }); // dull bone toggles, blackened
+    BP.sling(ctx, -30, -4, 22, -49, '#2c2018', 3.6); ell(ctx, -3.4, -27.4, 1.9, 1.9, PR.rad(ctx, -4, -28, .2, 2.2, [[0, '#b8b2c0'], [.5, '#5a5462'], [1, '#141218']])); // the sheath-strap across the chest, its buckle
+    PR.soft(ctx, -20, -40, 13, 7, '#e8dcf0', .1); PR.soft(ctx, 24, -16, 17, 22, '#000000', .45); ctx.restore();
   BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#2e2a36', '#0c0a10', 'rgba(0,0,0,.5)', {style:'rib', sw:16, sy:-47});
-  BP.sling(ctx, -26, -6, 16, -46, '#2a2018', 3); // the sheath-strap across the chest, to the hilt behind the shoulder
-  PR.stroke(ctx, '#6a5a44', .9, () => { ctx.moveTo(-6, -50); ctx.quadraticCurveTo(0, -38, 6, -50); }); [-4, -1.5, 1.5, 4].forEach((x, i) => ell(ctx, x, -45 + Math.abs(x) * .6, .9, .9, '#8a7a5a')); // the knotted cord
-  F.under = (ctx, F) => { PR.soft(ctx, 0, F.cy + 11, 7, 3, '#2a1a14', .12); };
+  const roll = (o0, o1, c, c2) => { BP.band(ctx, B, o0, o1); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 2.2; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, c, c2, -B.nx - 4, B.nx + 4); ctx.fill(); ctx.restore(); }; roll(-2.2, 2.4, '#4c4658', '#0e0c12'); // the high close collar, standing
+  PR.stitch(ctx, 'rgba(170,160,190,.3)', .3, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1 + i/10, 1.6); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); { const [cx, c0] = B.pt(-.18, -2.2), [, c1] = B.pt(-.18, 2.4); PR.stroke(ctx, 'rgba(0,0,0,.75)', .6, () => { ctx.moveTo(cx, c0); ctx.lineTo(cx - .4, c1); }); }
+  /* the knotted cord that is a map, worn round the neck over the jack: each knot a turning, each bead a door */
+  PR.stroke(ctx, '#7a6a4e', .8, () => { ctx.moveTo(-B.nx - .4, B.ny + 4); ctx.quadraticCurveTo(-1, -27, B.nx + .4, B.ny + 4); });
+  [.14, .26, .37, .5, .6, .72, .86].forEach((t, i) => { const x = lerp(-B.nx - .4, B.nx + .4, t), y = B.ny + 4 + Math.sin(t*Math.PI)*12.2 + .4; if (i % 3 === 1) ell(ctx, x, y, 1.1, 1.1, PR.rad(ctx, x - .3, y - .3, .1, 1.2, [[0, '#d8c8a0'], [1, '#5a4a2a']])); else { ell(ctx, x, y, 1.25, .95, x > 4 ? '#4a4030' : '#9a8a66'); PR.stroke(ctx, 'rgba(40,30,16,.6)', .3, () => { ctx.moveTo(x - .9, y - .4); ctx.lineTo(x + .9, y + .4); }); } });
+  F.under = (ctx, F) => { PR.soft(ctx, 0, F.cy + 11, 7, 3, '#2a1a14', .12); PR.stroke(ctx, 'rgba(236,206,184,.45)', .5, () => { ctx.moveTo(F.w*.2, F.cy + 10.6*u); ctx.lineTo(F.w*.36, F.cy + 12.4*u); }); }; // a nick on the chin, from learning
   PR.face(ctx, F);
-  BP.hair(ctx, F, {c:['#2a2018', '#160e08', '#060402'], v:1.6, wx:.9, hl:13.2, ey:-3, n:70, sw:.45, seed:812, sh:'#8a7a90', shA:.14});
+  BP.hair(ctx, F, {c:['#2a2018', '#160e08', '#060402'], v:2, wx:1.05, hl:12.4, ey:-.6, n:74, sw:.45, seed:812, sh:'#8a7a90', shA:.16}); // cropped dark hair
+  /* the near hand up at the sheath-strap, thumb hooked under it: a journeyman's habit, a hand never far from the knife */
+  ctx.save(); ctx.translate(-22, -11); BP.fist(ctx, 0, 0, .5, {k:'glove', c:['#4a4452', '#26222c', '#0a080c']}, 13); ctx.restore();
   return F; };
 /* Edrem: forty-one, weathered, grey stubble and short grey hair; old grey scale with the Seer's marks filed off; a pilgrim's brown cloak over
    the left shoulder, pinned; the mace's haft slung on a strap behind the right shoulder; a bit of coral on a cord at the throat */
-POR.edrem = function(ctx){ const F = {cy:-75, w:13.4, h:20, jaw:.9, chin:5.6, skin:'#a8826a', iris:'#4a4a48', lip:'#7a5246', browCol:'#5a5450', browW:1.9, arch:.25, browL:.2, browR:.1, rim:'#8e9496', rimA:.2, nose:1.4, look:.1, smileL:-.3, smileR:-.25, mouthW:4, age:.6, bags:.6, open:.82};
-  // the mace's haft behind the right shoulder, slung, its iron head above
-  PR.stroke(ctx, '#1a140e', 5, () => { ctx.moveTo(22, -30); ctx.lineTo(30, -104); }); PR.stroke(ctx, '#5a4632', 3.4, () => { ctx.moveTo(22, -30); ctx.lineTo(30, -104); });
-  ell(ctx, 30.6, -108, 6.4, 6.8, '#3a3a3e'); ell(ctx, 29, -110, 2.6, 2.4, 'rgba(220,224,230,.4)'); [[-5, -4], [5, -3], [0, 6]].forEach(([dx, dy]) => ell(ctx, 30.6 + dx, -108 + dy, 1.4, 1.4, '#5a5a60'));
-  PR.neck(ctx, F, 9.4);
-  const B = BP.body(ctx, F, {wide:42, drop:2, trap:6, nx:11.8, ny:F.cy + 15.2, cb:F.cy + 20.6, c1:'#8a8e92', c2:'#26282c'});
-  ctx.save(); B.path(); ctx.clip(); BP.scales(ctx, -46, 46, -60, 4, 5.4, '#7e8288', 81);
-    for (let i = 0; i < 3; i++) PR.soft(ctx, -12 + i * 12, -24 + (i % 2) * 6, 3, 2, '#3a3c40', .6); // where the marks were filed off
-    PR.soft(ctx, 22, -16, 18, 20, '#000000', .45); ctx.restore();
+/* v13.62.11 (David, Nov 21, 2026, 2:23 AM PST: "the word"): the last four of the later recruits repainted to the first five books' standard: a neck, their own neckline by kit, a body at its own width (no BODY_FILL), a hand on something */
+POR.edrem = function(ctx){ const F = {cy:-75, w:13.6, h:20.2, jaw:.92, chin:5.8, skin:'#a8826a', iris:'#4a4a48', lip:'#7a5246', browCol:'#5a5450', browW:1.9, arch:.25, browL:.2, browR:.1, rim:'#8e9496', rimA:.2, nose:1.4, look:.1, smileL:-.3, smileR:-.25, mouthW:4, age:.6, bags:.6, open:.82};
+  const u = F.h/20; PR.neck(ctx, F, 10); BP.throat(ctx, F, -48.4, 10);
+  const B = BP.body(ctx, F, {wide:45, drop:2, trap:6, nx:11.8, ny:F.cy + 15.8, cb:-46, c1:'#8a8e92', c2:'#24262a'});
+  ctx.save(); B.path(); ctx.clip(); BP.scales(ctx, -50, 50, -64, 4, 5.6, '#80848a', 81); // old grey scale
+    [[-4, -30, 5, 3.4], [10, -22, 4, 3], [-2, -14, 4.6, 3]].forEach(([x, y, w, h]) => { PR.soft(ctx, x, y, w, h, '#2e3034', .6); PR.stroke(ctx, 'rgba(210,214,220,.3)', .3, () => { for (let k = -2; k <= 2; k++){ ctx.moveTo(x - w*.7, y + k*.8); ctx.lineTo(x + w*.7, y + k*.8 - .6); } }); }); // where the Seer's marks were filed off, the file's scratches still bright
+    BP.sling(ctx, 30, -47, -8, -6, '#3a2a1c', 3.6); // the mace's carrying strap
+    PR.soft(ctx, 26, -16, 20, 22, '#000000', .45); ctx.restore();
   BP.light(ctx, F, B, false);
-  // the pilgrim's cloak over the left shoulder (ours), falling down the chest, pinned at the collarbone with a plain iron ring
-  ctx.save(); ctx.beginPath(); ctx.moveTo(-46, 4); ctx.lineTo(-44, -30); ctx.bezierCurveTo(-42, -44, -24, -48, -12, -46); ctx.quadraticCurveTo(-8, -30, -16, 4); ctx.closePath();
-  ctx.fillStyle = PR.lit(ctx, '#7a6a4e', '#2a2216', -46, -8); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 4; ctx.fill(); ctx.restore();
-  PR.stroke(ctx, 'rgba(20,14,8,.5)', .8, () => { ctx.moveTo(-34, -40); ctx.quadraticCurveTo(-30, -20, -34, 2); ctx.moveTo(-24, -44); ctx.quadraticCurveTo(-20, -24, -24, 2); });
-  ctx.strokeStyle = '#5a5a5e'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(-14, -42, 2.6, 0, 7); ctx.stroke();
-  BP.collar(ctx, F, '#4a4e52', '#141618', 'rgba(0,0,0,.5)', {style:'wrap', sw:17, sy:-47});
-  BP.sling(ctx, 24, -30, -18, -2, '#3a2a1c', 3); // the mace's strap, across the chest
-  PR.stroke(ctx, '#2a2018', .7, () => { ctx.moveTo(-5, -50); ctx.quadraticCurveTo(0, -41, 5, -50); }); ell(ctx, .6, -41.6, 1.6, 2.2, '#d87a6a'); ell(ctx, .1, -42.4, .6, .8, '#f4c0b0'); // the coral token
-  F.under = (ctx, F) => { const u = F.h/20; PR.dots(ctx, F, 80, 'rgba(200,196,190,.32)', .4, [4, 21]); PR.dots(ctx, F, 50, 'rgba(40,34,30,.3)', .4, [6, 20]);
-    PR.stroke(ctx, 'rgba(120,70,50,.3)', .6, () => { ctx.moveTo(-F.w*.55, F.cy - 4*u); ctx.lineTo(-F.w*.35, F.cy + 4*u); }); }; // grey stubble; an old cut by the eye
+  const roll = (o0, o1, c, c2) => { BP.band(ctx, B, o0, o1); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 2.2; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, c, c2, -B.nx - 4, B.nx + 4); ctx.fill(); ctx.restore(); }; roll(-2, 2.6, '#5a5348', '#16130f'); PR.stitch(ctx, 'rgba(220,200,160,.35)', .3, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1 + i/10, 1.8); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); // the padded arming collar under the scale
+  /* the pilgrim's brown cloak over the near shoulder, falling down the chest in folds, pinned at the collarbone with a plain iron ring */
+  const ck = () => { ctx.beginPath(); ctx.moveTo(-50, 6); ctx.lineTo(-47, -30); ctx.bezierCurveTo(-45, -47, -27, -53.6, -B.nx - 1, B.ny + 3.4); ctx.quadraticCurveTo(-11, -47, -12.4, -43); ctx.bezierCurveTo(-8, -28, -15, -12, -13, 6); ctx.closePath(); };
+  ctx.save(); ck(); ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 4; ctx.shadowOffsetX = 1.6; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, '#84704e', '#261c10', -50, -6); ctx.fill(); ctx.restore(); ctx.save(); ck(); ctx.clip();
+    PR.strands(ctx, 70, ['rgba(40,28,14,.3)', 'rgba(200,176,130,.14)'], .4, 825, (i, r) => { const x = -50 + r()*40, y = -50 + r()*54; return [x, y, x + .6, y + 3, x + 1, y + 6 + r()*3]; }); // the wool's weave
+    PR.stroke(ctx, 'rgba(20,14,8,.55)', .9, () => { ctx.moveTo(-38, -44); ctx.quadraticCurveTo(-33, -22, -38, 4); ctx.moveTo(-28, -49); ctx.quadraticCurveTo(-22, -26, -27, 4); ctx.moveTo(-19, -50); ctx.quadraticCurveTo(-14, -30, -19, 4); }); PR.stroke(ctx, 'rgba(236,210,160,.2)', .6, () => { ctx.moveTo(-40, -44); ctx.quadraticCurveTo(-35, -22, -40, 4); ctx.moveTo(-30, -49); ctx.quadraticCurveTo(-24, -26, -29, 4); }); // its folds
+    for (let i = 0; i < 6; i++) { const r = PR.rng(i + 827); PR.soft(ctx, -46 + r()*30, -14 + r()*18, 2 + r()*4, 1.4 + r()*2, '#c8b490', .13); } ctx.restore(); // road dust at the hem
+  ctx.strokeStyle = '#0e0e10'; ctx.lineWidth = 2.6; ctx.beginPath(); ctx.arc(-13.4, -43.4, 2.8, 0, 7); ctx.stroke(); ctx.strokeStyle = PR.lin(ctx, -16, 0, -10, 0, [[0, '#8e9096'], [1, '#2a2c30']]); ctx.lineWidth = 1.3; ctx.beginPath(); ctx.arc(-13.4, -43.4, 2.8, 0, 7); ctx.stroke(); PR.stroke(ctx, '#5e6066', .8, () => { ctx.moveTo(-16.6, -45.6); ctx.lineTo(-10.2, -41.2); }); // the ring and its pin
+  { const [bx, by] = B.pt(.1, 7.4); PR.stroke(ctx, '#2a2018', .55, () => { ctx.moveTo(-4, by - 6.6); ctx.quadraticCurveTo(bx - .4, by + 1.4, 6, by - 6.6); }); ctx.save(); ctx.translate(bx, by); ctx.rotate(.2); ell(ctx, .3, .4, 1.5, 2.5, 'rgba(0,0,0,.45)'); ell(ctx, 0, 0, 1.4, 2.4, PR.rad(ctx, -.5, -.9, .2, 2.6, [[0, '#ffd0c0'], [.5, '#d87a6a'], [1, '#6a2a22']])); ctx.restore(); } // the bit of coral on its cord
+  F.under = (ctx, F) => { PR.dots(ctx, F, 150, 'rgba(206,202,196,.4)', .42, [5.4, 19.6, (x, y) => (Math.abs(x) < 4.6 && y > 10.4 && y < 14.2)]); PR.dots(ctx, F, 70, 'rgba(40,34,30,.3)', .4, [6, 19.6, (x, y) => (Math.abs(x) < 4.6 && y > 10.4 && y < 14.2)]);
+    PR.stroke(ctx, 'rgba(236,206,188,.45)', .7, () => { ctx.moveTo(-F.w*.56, F.cy - 4.4*u); ctx.lineTo(-F.w*.36, F.cy + 4.4*u); }); PR.stroke(ctx, 'rgba(90,44,30,.3)', .4, () => { ctx.moveTo(-F.w*.56 + .5, F.cy - 4.4*u); ctx.lineTo(-F.w*.36 + .5, F.cy + 4.4*u); }); }; // grey stubble; an old cut down past the eye
   PR.face(ctx, F);
-  BP.hair(ctx, F, {c:['#a8a49e', '#6a6660', '#2a2826'], v:1.2, wx:.8, hl:13.6, ey:-3.4, n:60, sw:.42, seed:823, sh:'#e0dcd4', shA:.18});
+  BP.hair(ctx, F, {c:['#a8a49e', '#6a6660', '#2a2826'], v:1.6, wx:1, hl:12.6, ey:-.8, n:66, sw:.42, seed:823, sh:'#e0dcd4', shA:.18}); // short grey hair
+  /* the mace, held upright at the far shoulder: an ash haft banded in iron, a flanged head */
+  BP.grip(ctx, 33, -6, .05, -2, 3.2, ['#a08a60', '#685232', '#1c140a'], {k:'gaunt', c:['#b0b2b6', '#686a70', '#202226']}, null, 0, -76);
+  ctx.save(); ctx.translate(33, -6); ctx.rotate(.05); ctx.fillStyle = PR.lin(ctx, -2.2, 0, 2.2, 0, [[0, '#a8aab0'], [1, '#26282c']]); [-40, -58, -74].forEach(y => ctx.fillRect(-2.1, y, 4.2, 2)); // the iron bands
+    ell(ctx, .8, -84.2, 6.6, 7.6, 'rgba(0,0,0,.45)'); ell(ctx, 0, -85, 6.4, 7.4, PR.lin(ctx, -6.4, 0, 6.4, 0, [[0, '#c4c6cc'], [.45, '#7a7c82'], [1, '#1a1b1e']])); PR.stroke(ctx, 'rgba(0,0,0,.65)', .5, () => { ctx.ellipse(0, -85, 6.4, 7.4, 0, 0, 7); }); // the head
+    [-4.2, -1.5, 1.5, 4.2].forEach(x => { const h = 7.4*Math.sqrt(1 - x*x/41) + 1.2; ctx.beginPath(); ctx.moveTo(x - .9, -85 - h + 1.6); ctx.lineTo(x + .9, -85 - h + 1.6); ctx.lineTo(x + 1.3, -85); ctx.lineTo(x + .9, -85 + h - 1.6); ctx.lineTo(x - .9, -85 + h - 1.6); ctx.lineTo(x - 1.3, -85); ctx.closePath(); ctx.fillStyle = x < 0 ? PR.lin(ctx, x - 1.3, 0, x + 1.3, 0, [[0, '#eceef2'], [1, '#8a8c92']]) : PR.lin(ctx, x - 1.3, 0, x + 1.3, 0, [[0, '#6a6c72'], [1, '#141518']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = .4; ctx.stroke(); }); // its flanges
+    ell(ctx, 0, -93.6, 1.6, 1.6, PR.rad(ctx, -.5, -94.1, .2, 1.8, [[0, '#e8eaee'], [1, '#3a3c40']])); ctx.restore(); // the cap stud
   return F; };
