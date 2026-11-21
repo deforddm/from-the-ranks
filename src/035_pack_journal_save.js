@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.9', ['Portraits repainted for Book Nine\'s other three recruits. Tegra: painted hide with fur at the shoulders, her plait, the string of bones, a throwing-axe in her hand. Brennet: a studded apron over an open shirt, a sweat-rag, the wagon-pin held. Kaedra: her hood down in folds, dry grass at the shoulders, arrows behind, the horn bow in her fist.']],
   ['13.62.8', ['Brask\'s portrait repainted: a riveted helm on the brow with its cheek-guards bent back, heavy scale doubled at the shoulders, and the heavy sword held upright in a gauntleted fist.']],
   ['13.62.7', ['Portraits: Ammet\'s turtleneck slumps in soft rolls from under the chin down onto the shoulders, with no turned-down fold; the Third\'s sergeant wears a proper desert head-wrap, wound high over the whole head with a twisted roll at the brow; and after a check of every portrait for a head showing through its cover, Brask\'s helm and Brennet\'s cap come down to the brow, Ressa\'s hairline is lower and Pruss\'s hair reaches his ears.']],
   ['13.62.6', ['Ammet\'s turtleneck is a turtleneck: the knit stands round his neck from the shoulders to the jaw and is turned down in a ribbed fold under the chin, the apron\'s strap going up under it.']],
