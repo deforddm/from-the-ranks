@@ -436,29 +436,6 @@ function b4DeedsExtra(mine){
 const ROUTE_B4 = [ // chapter -> where (a sketch: Aren on the coast, Raraku inland to the north-east)
   {x:.16, y:.86, t:'Aren', a:'l'}, {x:.2, y:.82, t:'Aren · the muster'}, {x:.26, y:.7, t:'Coltaine\'s Fall', a:'l'}, {x:.36, y:.58, t:'The Vathar'},
   {x:.48, y:.5, t:'The hills', a:'l'}, {x:.6, y:.38, t:'The Whirlwind Wall'}, {x:.7, y:.27, t:'Pan\'arak', a:'l'}, {x:.78, y:.2, t:'Raraku'}];
-function drawB4Route(cv, s, t){
-  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
-  if (cv.width !== Math.round(W*dpr)) { cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#2e2618'); bg.addColorStop(1, '#1c170e'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 33)*W, hash(i, 34)*H, 1 + hash(i, 35)*2, 1);
-  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.moveTo(0, H*.7); ctx.quadraticCurveTo(W*.12, H*.84, W*.22, H); ctx.lineTo(0, H); ctx.fill(); // Aren Bay
-  ctx.fillStyle = 'rgba(106,168,255,.25)'; ctx.font = `italic ${Math.round(Math.max(9, H*.05))}px 'IM Fell English', serif`; ctx.textAlign = 'left'; ctx.fillText('Aren Bay', W*.02, H*.97);
-  ctx.strokeStyle = 'rgba(106,168,255,.4)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W*.24, H*.5); ctx.quadraticCurveTo(W*.36, H*.6, W*.5, H*.66); ctx.stroke(); // the Vathar
-  for (let i = 0; i < 14; i++) { ctx.fillStyle = 'rgba(210,180,120,.10)'; ctx.fillRect(W*(.4 + hash(i, 36)*.5), H*(.1 + hash(i, 37)*.5), 12, 1); } // dunes
-  const done = bookDone(s), ch = s.chapter || 0, ww = (Math.sin(t/900) + 1)/2;
-  ctx.strokeStyle = `rgba(214,184,122,${.14 + ww*.06})`; ctx.lineWidth = 10; ctx.beginPath(); ctx.arc(W*.8, H*.18, Math.min(W, H)*.16, 0, 7); ctx.stroke(); // the Whirlwind's wall round Raraku
-  if (done) { ctx.fillStyle = 'rgba(80,130,180,.35)'; ctx.beginPath(); ctx.ellipse(W*.8, H*.18, Math.min(W, H)*.1, Math.min(W, H)*.07, 0, 0, 7); ctx.fill(); } // a sea where the desert was
-  const pts = ROUTE_B4.filter((r, n) => n <= ch).map(r => ({x:r.x*W, y:r.y*H}));
-  ctx.strokeStyle = 'rgba(232,192,115,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
-  ROUTE_B4.forEach((r, n) => { if (n === 1) return; const x = r.x*W, y = r.y*H, on = n === 0 || n <= ch, here = (n === 0 ? ch <= 1 : n === ch) && !done && ch > 0;
-    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
-    if (here) glow(ctx, x, y, 18, '#e8c073', .35 + Math.sin(t/300)*.15);
-    ctx.fillStyle = here ? '#f6dca0' : '#c9a35a'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
-    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : 'left';
-    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : 8), y - 6); });
-}
-{ const _drawRoute = drawRoute; drawRoute = function(cv, s, t){ return bookOf(s) === 'hoc' ? drawB4Route(cv, s, t) : _drawRoute(cv, s, t); }; }
 
 /* ---- backdrops for Book Four's reading places and marches (the chapters add their own and may replace these; until then each reuses a
    Book Two or Three drawing of a like place) ---- */

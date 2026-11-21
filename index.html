@@ -677,6 +677,10 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .bootline span{font-size:.9rem;color:#8a7c68;animation:bootpulse 1.6s ease-in-out infinite}
 @keyframes bootpulse{50%{opacity:.45}}
 @media (prefers-reduced-motion:reduce){.bootline span{animation:none}}
+
+/* v13.62.0: the hold switch under a healing trick on the sheet */
+.abl .holdbtn{display:block;margin-top:8px;font-size:.82rem;padding:6px 10px}
+.abl .holdbtn[aria-pressed="true"]{border-color:var(--brass);color:var(--brass2)}
 </style>
 <style>[hidden]{display:none!important}body{margin:0}</style>
 </head><body>
@@ -693,7 +697,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.61.2';
+const VERSION = '13.62.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -2913,7 +2917,16 @@ function fig1Man(ctx, t, s){
   M('artanthos', (t, o) => ({top:['#6a6a66', '#26262a'], w:6.4, mail:true, long:true, trim:'#8d8a86', sk:'#b89a80', hair:['short', '#5a4a3a'], fr:{pose:'low'}, bk:{pose:'fwd'}, leg:'#2a2a2e', belt:'#2a2018', extra:(c, k) => { const wv = o.still ? 0 : Math.sin(t / 700 + (o.phase || 0)) * .8; k.line([[-10.2, 13], [-10.2, -23]], '#6b5236', 1.4, 'butt'); poly(c, [[-10.2, -23], [-17.4, -21.6 + wv], [-16.6, -15.6 - wv], [-10.2, -15]], '#2e2e36'); c.fillStyle = '#8d8a86'; c.fillRect(-15.6, -20, 3.6, 2.6); ell(c, -10.2, -23.6, 1, 1, '#c9a44a'); }})); // Onearm's standard
   /* Book Five's two plainest fighters */
   M('b5_c1_cutpurse', {top:['#3e4656', '#14181e'], w:5.8, sk:'#c8a88c', hair:['cap', '#2a3040'], scarf:null, fr:{pose:'fwd', item:'knife'}, bk:{pose:'hip', item:'coin'}, leg:'#22262e', belt:'#141414', hip:['bag', '#4a3a2a', '#e8c073'], cloak:'#2a303c'});
-  M('b5_c3_riverman', {top:['#3a4a44', '#141c18'], w:6.4, sk:'#b8926e', hair:['cap', '#1e2420'], beard:'#2a2018', beardLen:4, fr:{pose:'fwd', item:'knife', bare:true}, bk:{pose:'low', bare:true}, leg:'#2a2a26', boot:'#3a3024', belt:'#3a2a1a', sash:'#5a4a30', open:'#6a6a5a'}); }
+  M('b5_c3_riverman', {top:['#3a4a44', '#141c18'], w:6.4, sk:'#b8926e', hair:['cap', '#1e2420'], beard:'#2a2018', beardLen:4, fr:{pose:'fwd', item:'knife', bare:true}, bk:{pose:'low', bare:true}, leg:'#2a2a26', boot:'#3a3024', belt:'#3a2a1a', sash:'#5a4a30', open:'#6a6a5a'});
+  /* ---- v13.62.0 (the art audit's four open figures; David, Nov 20, 2026: "proceed with what you can do now"). Sources are thin, and each says so:
+     Skathandi: light cavalry and raiders who take slaves on the Lamatath Plain (W *Skathandi*); the kit is Claude's call. Bolkando deserters, the Patriotists'
+     street men and Letheras's collectors' muscle: no source describes their dress (open); drawn as Claude's call from each book's own palette. ---- */
+  M('b8_skath', {top:['#8a6a3e', '#33261a'], w:6.2, long:true, sk:'#a8805c', scarf:'#7a2e24', hairB:'#1a120c', hairLen:-2, hair:['long', '#1a120c'], fr:{pose:'fwd', item:['sword', '#b0aca0'], glove:'#3a2a1a'}, bk:{pose:'chest', item:['round', '#6a4a2a', '#b89a5a']}, leg:'#4a3a28', boot:'#2a1c10', belt:'#2a1c10', buckle:'#b89a5a', sash:'#7a2e24', hip:['bag', '#3a2a1a', '#b89a5a'], extra:(c, k) => { k.line([[-4.6, 3], [-7.4, 9], [-5.6, 12]], '#5a4630', 1.1); }}); // a slaver's rope at the belt
+  M('b10_bolk', {top:['#b08a3a', '#4a3614'], w:6.4, mail:true, long:true, trim:'#5a2a20', sk:'#b8926e', helm:['kettle', '#8a8474'], beard:'#3a2a1a', fr:{pose:'fwd', item:['sword', '#a8a498']}, bk:{pose:'low', item:['round', '#5a2a20', '#b08a3a']}, leg:'#3a3026', boot:'#2a2018', belt:'#2a1c10', patch:'#6a5a3a', hemTrim:'#5a2a20'});
+  M('b10_bolkbow', {top:['#a8843a', '#42300f'], w:5.8, long:true, trim:'#5a2a20', sk:'#b8926e', hair:['cap', '#5a2a20'], fr:{pose:'fwd', item:['bow', '#4a3a22']}, bk:{pose:'chest'}, leg:'#3a3026', boot:'#2a2018', belt:'#2a1c10', patch:'#6a5a3a', slung:['bag', '#4a3a22', '#b08a3a']});
+  M('b10_bolkchief', {sc:[1.08, 1.08], top:['#b8923e', '#4a3614'], w:6.8, mail:true, long:true, trim:'#6a2a20', sk:'#b08a66', helm:['cheek', '#a89a6a'], beard:'#2a2018', beardLen:4.2, fr:{pose:'up', item:['sword', '#c0bcae']}, bk:{pose:'low', item:['round', '#6a2a20', '#c8a44a']}, leg:'#3a3026', boot:'#2a2018', belt:'#2a1c10', buckle:'#c8a44a', cloak:'#5a2a20', hemTrim:'#6a2a20'});
+  M('b7_patriot', {top:['#3e4048', '#14151a'], w:6.8, long:true, trim:'#7a7468', sk:'#c0a088', hair:['cap', '#1e1f24'], fr:{pose:'up', item:['club', '#3a3026']}, bk:{pose:'hip'}, leg:'#22232a', boot:'#141418', belt:'#141418', buckle:'#b8b0a0', front:'#2a2b32', hr:4.6, extra:(c, k) => { c.fillStyle = '#b8b0a0'; c.fillRect(-3.4, -3.2, 2, 2.4); }}); // the Invigilator's badge on the breast
+  M('b5_lbully', {top:['#5a6470', '#1e242a'], w:7, sk:'#c0a088', hair:['short', '#3a2c20'], beard:'#3a2c20', fr:{pose:'up', item:['club', '#5a4630'], bare:true}, bk:{pose:'low', bare:true}, leg:'#2e3238', boot:'#2a2018', belt:'#3a2a1a', buckle:'#c8a44a', apron:'#4a3a2a', hr:4.7}); }
 
 
 /* ============ portraits ============ */
@@ -8933,7 +8946,8 @@ function drawBattle(t){
     ctx.strokeRect(x0*T + 1.5, y0*T + 1.5, (x1-x0+1)*T - 3, (y1-y0+1)*T - 3); ctx.setLineDash([]); ctx.lineDashOffset = 0;
     // small range tag on the border
     ctx.fillStyle = 'rgba(13,11,9,.85)'; ctx.font = `bold ${Math.round(T*.26)}px sans-serif`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const tag = `range ${r}`, tw = ctx.measureText(tag).width + 8; ctx.fillRect(x0*T + 3, y0*T + 3, tw, T*.34); ctx.fillStyle = '#f08a7c'; ctx.fillText(tag, x0*T + 7, y0*T + 5); ctx.textBaseline = 'alphabetic';
+    /* v13.62.0: a halberd or spear's box says "reach", a bow's "range" (David, Nov 19: reach is hard to teach) */
+    const tag = `${u.reachMelee ? 'reach' : 'range'} ${r}`, tw = ctx.measureText(tag).width + 8; ctx.fillRect(x0*T + 3, y0*T + 3, tw, T*.34); ctx.fillStyle = '#f08a7c'; ctx.fillText(tag, x0*T + 7, y0*T + 5); ctx.textBaseline = 'alphabetic';
   }
   if (B.reach) B.reach.forEach(n => { if (n.d === 0) return; const bad = B.hl && B.hl.aoo && B.hl.aoo.has(K(n.x,n.y));
     ctx.fillStyle = bad ? 'rgba(201,120,63,.16)' : 'rgba(201,151,63,.14)'; ctx.fillRect(n.x*T+1, n.y*T+1, T-2, T-2);
@@ -10107,6 +10121,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.0', ['Hold a healing trick for your word. The nine tricks that mend or ward a squadmate answer by themselves the first time anyone drops below half. On the bearer\'s sheet each now has a switch: held, it is a button in the fight again, used when you say (and it costs what it used to); let go, it answers by itself as before. Your choice is saved.', 'A spear\'s or halberd\'s box on the battle map now says "reach" where it said "range".', 'New figures for the plains raiders of Book Eight, the Bolkando deserters of Book Ten, the Patriotists\' street men of Book Seven and the collectors\' muscle of Book Five. Looks only.']],
   ['13.61.2', ['The Title button in the middle of a conversation no longer leaves the conversation lying over the title screen. Your place is saved, and Continue opens it again where you were.']],
   ['13.61.1', ['Sound: the small clicks at the start of sounds are fixed. A phone plays sound a moment behind the clock the game reads, so a sound started "now" had already missed its own fade-in and began at full level. Every sound is now set a twentieth of a second ahead, more on a phone with a bigger sound buffer.']],
   ['13.61.0', ['The towns of the later books have buildings now, drawn as roofs and street fronts the way Darujhistan is: Hissar and Y\'Ghatan in flat clay roofs with jars and rugs on them, Aren in pale limestone, Letheras in slate, tile and green copper over the canals, and Black Coral in black slate with very few lights. Doors, lattices and lit windows face the street.', 'The rest of the figures are redrawn to the new standard: the wight, Tool, Mammot, Garrow, the street child and the Fete\'s masked revellers in Book One; the faces the Deck shows in Books Two and Three (Lostara, Felisin, Heboric, Baudin, Minala, Icarium, Leoman, Toblakai, Sha\'ik, Brood, Korlat, Silverfox, Artanthos); and Book Five\'s cutpurse and river thief. Looks only: nothing plays differently.']],
@@ -11886,31 +11901,7 @@ const ROUTE = [ // chapter -> where on the map (0..1), what to call it, where it
   {x:.36, y:.12, t:'Pale', a:'l'}, {x:.4, y:.18, t:'The camp at Pale', a:'l', dy:8}, {x:.6, y:.34, t:'The Rhivi Plain'},
   {x:.5, y:.78, t:'Darujhistan', a:'l', via:[[.76, .36], [.82, .46], [.76, .58], [.64, .68]]}, {x:.44, y:.9, t:'The Daru roofs', a:'l', dy:8},
   {x:.76, y:.58, t:'Gadrobi Hills', a:'l', via:[[.64, .68]]}, {x:.54, y:.88, t:'The Fete', dy:10, via:[[.64, .68]]}, {x:.7, y:.63, t:'The quorl hill', dy:16, via:[[.64, .68]]}];
-function drawRoute(cv, s, t){
-  const {ctx, W, H} = (() => { const dpr = Math.min(2, window.devicePixelRatio || 1), w = cv.clientWidth, h = cv.clientHeight; if (cv.width !== Math.round(w*dpr)) { cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr); } const c = cv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); return {ctx:c, W:w, H:h}; })();
-  if (!W) return;
-  // parchment, the lake, the hills, the plain (the same lie of the land as the Genabackis map: the lake south of Pale, the city on its south-east shore)
-  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#2a2218'); bg.addColorStop(1, '#1c1610'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 3)*W, hash(i, 4)*H, 1 + hash(i, 5)*2, 1);
-  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.ellipse(W*.36, H*.58, W*.2, H*.18, 0, 0, 7); ctx.fill(); // Lake Azur
-  ctx.fillStyle = 'rgba(106,168,255,.22)'; ctx.font = `italic ${Math.round(Math.max(10, H*.06))}px 'IM Fell English', serif`; ctx.textAlign = 'center'; ctx.fillText('Lake Azur', W*.32, H*.6);
-  for (let i = 0; i < 6; i++) { const hx = W*(.47 + i*.035), hy = H*(.2 + (i % 2)*.04); poly(ctx, [[hx - 7, hy + 5], [hx, hy - 6], [hx + 7, hy + 5]], 'rgba(90,70,48,.5)'); } // the Tahlyn Mountains
-  for (let i = 0; i < 9; i++) { const hx = W*(.7 + hash(i, 7)*.18), hy = H*(.5 + hash(i, 8)*.24); poly(ctx, [[hx - 10, hy + 5], [hx, hy - 6], [hx + 10, hy + 5]], 'rgba(90,70,48,.45)'); } // the Gadrobi Hills
-  for (let i = 0; i < 14; i++) ctx.fillStyle = 'rgba(140,130,90,.12)', ctx.fillRect(W*(.15 + hash(i, 9)*.6), H*(.05 + hash(i, 10)*.3), 10, 1); // the plain's grass
-  ctx.fillStyle = 'rgba(40,30,22,.9)'; ctx.fillRect(W*.36 - 7, H*.12 - 6, 14, 12); // the ruins of Pale
-  const ch = s.chapter || 0, reached = [0, 1, 2, 3, 4, 5, 6, 7].filter(n => n <= ch), pts = [];
-  reached.forEach(n => { (n ? ROUTE[n].via || [] : []).forEach(([x, y]) => pts.push({x:x*W, y:y*H})); pts.push({x:ROUTE[n].x*W, y:ROUTE[n].y*H}); });
-  // the Moon's Spawn: it left Pale three days before the prologue; over the lake from chapter 3 until it moves off west after the Fete
-  if (ch >= 3 && ch <= 6) { const spawn = {x:W*.4, y:H*.5}; ell(ctx, spawn.x, spawn.y, W*.05, H*.035, '#07070a'); glow(ctx, spawn.x, spawn.y, W*.08, '#9a86e0', .08); }
-  // the road
-  ctx.strokeStyle = 'rgba(232,192,115,.75)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
-  ROUTE.forEach((r, n) => { const x = r.x*W, y = r.y*H, on = n <= ch, here = n === ch && !(s.chapters && s.chapters[7] != null);
-    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
-    if (here) glow(ctx, x, y, 18, '#e8c073', .35 + Math.sin(t/300)*.15);
-    ctx.fillStyle = here ? '#e8c073' : '#c9973f'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
-    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : r.a === 'c' ? 'center' : 'left';
-    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : r.a === 'c' ? 0 : 8), y - (r.a === 'c' ? 10 : 6) + (r.dy || 0)); });
-}
+function drawRoute(cv, s, t){} // the road maps are the atlas now (989c_atlas.js: drawRoute = atlasRoute); the first drawing was removed in v13.62.0
 let routeAnim = null;
 
 /* ---- the Deeds page: the road's endings found on this device, the tables, this sergeant's count, and replays ---- */
@@ -12063,29 +12054,6 @@ function timelineHTML(open){
 const ROUTE_DG = [ // chapter -> where, what to call it, label side (as ROUTE in 38)
   {x:.82, y:.12, t:'Hissar', a:'l'}, {x:.74, y:.22, t:"Bat'rol"}, {x:.64, y:.34, t:'Dryj Spring · the Sekala'}, {x:.56, y:.45, t:'Gelor Ridge', a:'l'},
   {x:.5, y:.55, t:'The Vathar'}, {x:.42, y:.64, t:'The Nenoth', a:'l'}, {x:.34, y:.74, t:'Sanimon · the Geleen'}, {x:.2, y:.88, t:'Aren', a:'l'}];
-function drawChainRoute(cv, s, t){
-  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
-  if (cv.width !== Math.round(W*dpr)) { cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
-  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#2e2416'); bg.addColorStop(1, '#1e170e'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 13)*W, hash(i, 14)*H, 1 + hash(i, 15)*2, 1);
-  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.moveTo(W*.9, 0); ctx.lineTo(W, 0); ctx.lineTo(W, H*.4); ctx.quadraticCurveTo(W*.93, H*.22, W*.9, 0); ctx.fill(); // the sea off Hissar
-  ctx.beginPath(); ctx.moveTo(0, H*.8); ctx.quadraticCurveTo(W*.14, H*.92, W*.3, H); ctx.lineTo(0, H); ctx.fill(); // Aren Bay
-  ctx.fillStyle = 'rgba(106,168,255,.25)'; ctx.font = `italic ${Math.round(Math.max(9, H*.05))}px 'IM Fell English', serif`; ctx.textAlign = 'left'; ctx.fillText('Aren Bay', W*.02, H*.97);
-  ctx.strokeStyle = 'rgba(106,168,255,.45)'; ctx.lineWidth = 2; // the Sekala and the Vathar, crossing the road
-  [[.56, .26, .74, .44], [.4, .48, .62, .6]].forEach(([x1, y1, x2, y2]) => { ctx.beginPath(); ctx.moveTo(W*x1, H*y1); ctx.quadraticCurveTo(W*(x1 + x2)/2 + 10, H*(y1 + y2)/2 - 6, W*x2, H*y2); ctx.stroke(); });
-  for (let i = 0; i < 16; i++) { ctx.fillStyle = 'rgba(200,170,110,.10)'; ctx.fillRect(W*(.2 + hash(i, 16)*.6), H*(.15 + hash(i, 17)*.6), 12, 1); } // the Odhan
-  ctx.fillStyle = 'rgba(70,60,40,.35)'; for (let i = 0; i < 7; i++) { const tx = W*(.38 + i*.03), ty = H*(.56 + (i % 2)*.03); ctx.beginPath(); ctx.arc(tx, ty, 4, 0, 7); ctx.fill(); } // Vathar Forest
-  const ch = s.chapter || 0, pts = ROUTE_DG.filter((r, n) => n <= ch).map(r => ({x:r.x*W, y:r.y*H}));
-  ctx.strokeStyle = 'rgba(232,140,90,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
-  ROUTE_DG.forEach((r, n) => { const x = r.x*W, y = r.y*H, on = n <= ch, here = n === ch && !bookDone(s);
-    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
-    if (here) glow(ctx, x, y, 18, '#e89a6a', .35 + Math.sin(t/300)*.15);
-    ctx.fillStyle = here ? '#f0b080' : '#c9773f'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
-    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : 'left';
-    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : 8), y - 6); });
-}
-{ const _drawRoute = drawRoute; drawRoute = function(cv, s, t){ return bookOf(s) === 'dg' ? drawChainRoute(cv, s, t) : _drawRoute(cv, s, t); }; }
 
 /* ---- what a finished Book One carries into Book Two: the road, said when it's picked, kept in the journal, heard twice on the Chain ---- */
 const ROAD_WORDS = {empire:'took the empire road: home by sea from Genabaris', outlaw:'flew north with the Host', city:'stayed in Darujhistan', disband:'was stood down on a hill outside Darujhistan'};
@@ -39231,29 +39199,6 @@ function b3DeedsExtra(mine){
 const ROUTE_B3 = [ // chapter -> where (the map is Genabackis from Pale south-east to the coast)
   {x:.14, y:.14, t:'Pale', a:'l'}, {x:.18, y:.17, t:'Pale · the parley'}, {x:.34, y:.3, t:'The Rhivi Plain'}, {x:.52, y:.44, t:'Capustan', a:'l'},
   {x:.56, y:.5, t:'Capustan · the prisoners'}, {x:.62, y:.6, t:'The Catlin', a:'l'}, {x:.72, y:.72, t:'The Maurik'}, {x:.84, y:.86, t:'Coral', a:'l'}];
-function drawB3Route(cv, s, t){
-  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
-  if (cv.width !== Math.round(W*dpr)) { cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#22261c'); bg.addColorStop(1, '#151810'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 23)*W, hash(i, 24)*H, 1 + hash(i, 25)*2, 1);
-  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.moveTo(W*.7, H); ctx.quadraticCurveTo(W*.86, H*.78, W, H*.7); ctx.lineTo(W, H); ctx.fill(); // the coast by Coral
-  ctx.fillStyle = 'rgba(106,168,255,.25)'; ctx.font = `italic ${Math.round(Math.max(9, H*.05))}px 'IM Fell English', serif`; ctx.textAlign = 'right'; ctx.fillText('Rust Ocean', W*.98, H*.97);
-  ctx.strokeStyle = 'rgba(106,168,255,.45)'; ctx.lineWidth = 2; // the Catlin and the Maurik
-  [[.4, .5, .8, .58], [.6, .66, .86, .76]].forEach(([x1, y1, x2, y2]) => { ctx.beginPath(); ctx.moveTo(W*x1, H*y1); ctx.quadraticCurveTo(W*(x1 + x2)/2, H*(y1 + y2)/2 + 10, W*x2, H*y2); ctx.stroke(); });
-  for (let i = 0; i < 18; i++) { ctx.fillStyle = 'rgba(170,190,120,.10)'; ctx.fillRect(W*(.18 + hash(i, 26)*.3), H*(.18 + hash(i, 27)*.2), 12, 1); } // the plain
-  ctx.fillStyle = 'rgba(180,200,220,.10)'; for (let i = 0; i < 6; i++) { const mx = W*(.7 + i*.05), my = H*(.62 + (i % 2)*.05); ctx.beginPath(); ctx.moveTo(mx - 10, my + 8); ctx.lineTo(mx, my - 8); ctx.lineTo(mx + 10, my + 8); ctx.fill(); } // the cold hills by Coral
-  const ch = s.chapter || 0, pts = ROUTE_B3.filter((r, n) => n <= ch).map(r => ({x:r.x*W, y:r.y*H}));
-  ctx.strokeStyle = 'rgba(190,210,230,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
-  ROUTE_B3.forEach((r, n) => { if (n === 1 || n === 4) return; // the parley and the prisoners are the same places again: one dot each
-    const x = r.x*W, y = r.y*H, last = n === 0 ? (ch <= 1) : n === 3 ? (ch === 3 || ch === 4) : n === ch, on = n === 0 ? true : n === 3 ? ch >= 3 : n <= ch, here = last && !bookDone(s) && ch > 0;
-    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
-    if (here) glow(ctx, x, y, 18, '#bcd4ee', .35 + Math.sin(t/300)*.15);
-    ctx.fillStyle = here ? '#dceaf8' : '#8fa8c0'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
-    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : 'left';
-    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : 8), y - 6); });
-}
-{ const _drawRoute = drawRoute; drawRoute = function(cv, s, t){ return bookOf(s) === 'moi' ? drawB3Route(cv, s, t) : _drawRoute(cv, s, t); }; }
 
 /* ---- backdrops for Book Three's first halts (the chapters add their own; these reuse Book One's camp drawing) ---- */
 Object.assign(SCENES, {
@@ -53376,29 +53321,6 @@ function b4DeedsExtra(mine){
 const ROUTE_B4 = [ // chapter -> where (a sketch: Aren on the coast, Raraku inland to the north-east)
   {x:.16, y:.86, t:'Aren', a:'l'}, {x:.2, y:.82, t:'Aren · the muster'}, {x:.26, y:.7, t:'Coltaine\'s Fall', a:'l'}, {x:.36, y:.58, t:'The Vathar'},
   {x:.48, y:.5, t:'The hills', a:'l'}, {x:.6, y:.38, t:'The Whirlwind Wall'}, {x:.7, y:.27, t:'Pan\'arak', a:'l'}, {x:.78, y:.2, t:'Raraku'}];
-function drawB4Route(cv, s, t){
-  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
-  if (cv.width !== Math.round(W*dpr)) { cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#2e2618'); bg.addColorStop(1, '#1c170e'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 33)*W, hash(i, 34)*H, 1 + hash(i, 35)*2, 1);
-  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.moveTo(0, H*.7); ctx.quadraticCurveTo(W*.12, H*.84, W*.22, H); ctx.lineTo(0, H); ctx.fill(); // Aren Bay
-  ctx.fillStyle = 'rgba(106,168,255,.25)'; ctx.font = `italic ${Math.round(Math.max(9, H*.05))}px 'IM Fell English', serif`; ctx.textAlign = 'left'; ctx.fillText('Aren Bay', W*.02, H*.97);
-  ctx.strokeStyle = 'rgba(106,168,255,.4)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W*.24, H*.5); ctx.quadraticCurveTo(W*.36, H*.6, W*.5, H*.66); ctx.stroke(); // the Vathar
-  for (let i = 0; i < 14; i++) { ctx.fillStyle = 'rgba(210,180,120,.10)'; ctx.fillRect(W*(.4 + hash(i, 36)*.5), H*(.1 + hash(i, 37)*.5), 12, 1); } // dunes
-  const done = bookDone(s), ch = s.chapter || 0, ww = (Math.sin(t/900) + 1)/2;
-  ctx.strokeStyle = `rgba(214,184,122,${.14 + ww*.06})`; ctx.lineWidth = 10; ctx.beginPath(); ctx.arc(W*.8, H*.18, Math.min(W, H)*.16, 0, 7); ctx.stroke(); // the Whirlwind's wall round Raraku
-  if (done) { ctx.fillStyle = 'rgba(80,130,180,.35)'; ctx.beginPath(); ctx.ellipse(W*.8, H*.18, Math.min(W, H)*.1, Math.min(W, H)*.07, 0, 0, 7); ctx.fill(); } // a sea where the desert was
-  const pts = ROUTE_B4.filter((r, n) => n <= ch).map(r => ({x:r.x*W, y:r.y*H}));
-  ctx.strokeStyle = 'rgba(232,192,115,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
-  ROUTE_B4.forEach((r, n) => { if (n === 1) return; const x = r.x*W, y = r.y*H, on = n === 0 || n <= ch, here = (n === 0 ? ch <= 1 : n === ch) && !done && ch > 0;
-    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
-    if (here) glow(ctx, x, y, 18, '#e8c073', .35 + Math.sin(t/300)*.15);
-    ctx.fillStyle = here ? '#f6dca0' : '#c9a35a'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
-    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : 'left';
-    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : 8), y - 6); });
-}
-{ const _drawRoute = drawRoute; drawRoute = function(cv, s, t){ return bookOf(s) === 'hoc' ? drawB4Route(cv, s, t) : _drawRoute(cv, s, t); }; }
 
 /* ---- backdrops for Book Four's reading places and marches (the chapters add their own and may replace these; until then each reuses a
    Book Two or Three drawing of a like place) ---- */
@@ -64810,7 +64732,7 @@ Object.assign(FOES, {
   b5_demon:{name:'Bound demon', kind:'b5_demon', sig:'D', hp:44, ac:16, atk:6, dmg:[2,6,3], rng:1, mv:4, init:1, boss:true, dr:2, sk:['shove', 'reach'], verb:'brings a great armoured fist down on'},
   b5_deserter:{name:'Letherii deserter', kind:'b5_letherii', sig:'d', hp:12, ac:13, atk:4, dmg:[1,8,0], rng:1, mv:4, init:1, verb:'cuts at'},
   b5_deserterbow:{name:'Deserter bowman', kind:'b5_letherii_bow', sig:'a', hp:9, ac:12, atk:3, dmg:[1,8,0], rng:5, mv:4, init:2, sk:['pin'], verb:'looses at'},
-  b5_bully:{name:'Collector\'s bully', kind:'bruiser', sig:'b', hp:14, ac:12, atk:4, dmg:[1,6,2], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a cudgel at'},
+  b5_bully:{name:'Collector\'s bully', kind:'bruiser', fig:'b5_lbully', sig:'b', hp:14, ac:12, atk:4, dmg:[1,6,2], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a cudgel at'},
   b5_collector:{name:'The collector\'s man', kind:'thug', sig:'C', hp:24, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
   b5_pressman:{name:'Press-gang soldier', kind:'b5_letherii', sig:'p', hp:13, ac:13, atk:4, dmg:[1,6,1], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a cudgel at'},
   b5_presssgt:{name:'Press-gang sergeant', kind:'b5_letherii', sig:'P', hp:22, ac:14, atk:5, dmg:[1,8,2], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
@@ -64935,30 +64857,6 @@ function b5DeedsExtra(mine){
 const ROUTE_B5 = [ // chapter -> where
   {x:.56, y:.86, t:'Letheras', a:'l'}, {x:.52, y:.82, t:'Letheras · the barracks'}, {x:.3, y:.16, t:'Trate', a:'l'}, {x:.44, y:.12, t:'Kraig\'s Landing'},
   {x:.6, y:.2, t:'High Fort'}, {x:.58, y:.5, t:'The road south', a:'l'}, {x:.4, y:.7, t:'Brans Keep', a:'l'}, {x:.58, y:.88, t:'Letheras'}];
-function drawB5Route(cv, s, t){
-  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
-  if (cv.width !== Math.round(W*dpr)) { cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#1e2620'); bg.addColorStop(1, '#141a16'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 53)*W, hash(i, 54)*H, 1 + hash(i, 55)*2, 1);
-  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(W*.5, 0); ctx.quadraticCurveTo(W*.36, H*.1, W*.22, H*.12); ctx.quadraticCurveTo(W*.1, H*.2, 0, H*.4); ctx.fill(); // the northern sea off Trate
-  ctx.fillStyle = 'rgba(106,168,255,.25)'; ctx.font = `italic ${Math.round(Math.max(9, H*.05))}px 'IM Fell English', serif`; ctx.textAlign = 'left'; ctx.fillText('The Reach', W*.03, H*.08);
-  ctx.strokeStyle = 'rgba(106,168,255,.4)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W*.32, H*.15); ctx.quadraticCurveTo(W*.4, H*.13, W*.5, H*.06); ctx.stroke(); // the river up to the Landing
-  ctx.beginPath(); ctx.moveTo(W*.8, H*.3); ctx.quadraticCurveTo(W*.62, H*.6, W*.58, H*.9); ctx.lineTo(W*.5, H); ctx.stroke(); // the Lether River down to the capital
-  ctx.fillStyle = 'rgba(120,150,110,.12)'; for (let i = 0; i < 16; i++) ell(ctx, W*(.62 + hash(i, 56)*.3), H*(.04 + hash(i, 57)*.16), 8, 4, 'rgba(120,150,110,.14)'); // the forest north of High Fort, and Edur country beyond
-  const done = bookDone(s), ch = s.chapter || 0;
-  if (ch >= 5) { ctx.fillStyle = 'rgba(30,20,14,.35)'; ctx.beginPath(); ctx.ellipse(W*.52, H*.58, W*.16, H*.12, .3, 0, 7); ctx.fill(); } // the burned country on the road south
-  const pts = ROUTE_B5.filter((r, n) => n <= ch).map(r => ({x:r.x*W, y:r.y*H}));
-  ctx.strokeStyle = 'rgba(232,192,115,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
-  ROUTE_B5.forEach((r, n) => { if (n === 1) return; const x = r.x*W, y = r.y*H, on = n === 0 || n <= ch, here = (n === 0 ? ch <= 1 : n === ch) && !done && ch > 0;
-    if (n === 7 && ch < 7) return; // Letheras is already on the map
-    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
-    if (here) glow(ctx, x, y, 18, '#e8c073', .35 + Math.sin(t/300)*.15);
-    ctx.fillStyle = here ? '#f6dca0' : '#c9a35a'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
-    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : 'left';
-    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : 8), y - 6); });
-}
-{ const _drawRoute = drawRoute; drawRoute = function(cv, s, t){ return bookOf(s) === 'mt' ? drawB5Route(cv, s, t) : _drawRoute(cv, s, t); }; }
 
 /* ---- backdrops for Book Five's reading places and marches (the chapters add their own and may replace these; until then each borrows an
    earlier book's drawing of a like place) ---- */
@@ -65989,7 +65887,7 @@ const B5CH1 = {
   foes:{
     /* the festival's cutpurses, quick and thin, and the big man who minds them and their takings */
     b5_c1_cutpurse:{name:'Festival cutpurse', sig:'c', kind:'b5_c1_cutpurse', hp:9, ac:12, atk:3, dmg:[1,6,0], rng:1, mv:5, init:3, sk:['hitrun'], verb:'flicks a thin knife at'},
-    b5_c1_minder:{name:'The cutpurses\' minder', sig:'M', kind:'bruiser', hp:18, ac:12, atk:4, dmg:[1,8,0], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a weighted sap at'},
+    b5_c1_minder:{name:'The cutpurses\' minder', sig:'M', kind:'bruiser', fig:'b5_lbully', hp:18, ac:12, atk:4, dmg:[1,8,0], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a weighted sap at'},
     /* a pit-town drunk the size of a door */
     b5_c1_drunk:{name:'A big drunk', sig:'d', kind:'b5_c1_drunk', hp:20, ac:10, atk:3, dmg:[1,8,1], rng:1, mv:3, init:0, sk:['shove'], verb:'swings a bench-leg at'},
     /* the bookmaker who laid against a Rising */
@@ -86501,7 +86399,7 @@ Object.assign(FOES, {
   b7_factorman:{name:'Factor\'s guard', kind:'thug', sig:'g', hp:28, ac:14, atk:10, dmg:[1,8,3], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a cudgel at'},
   /* the Letherii's enemies: Patriotist agents and their bullies, the mob, Edur who do not trust them, and in Chapter 6 the Adjunct's soldiers */
   b7_agent:{name:'Patriotist agent', kind:'b5_letherii', sig:'a', hp:15, ac:13, atk:5, dmg:[1,6,2], rng:1, mv:5, init:3, sk:['bleed'], verb:'slips a knife at'},
-  b7_enforcer:{name:'Patriotist enforcer', kind:'bruiser', sig:'b', hp:20, ac:13, atk:5, dmg:[1,8,2], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a weighted club at'},
+  b7_enforcer:{name:'Patriotist enforcer', kind:'bruiser', fig:'b7_patriot', sig:'b', hp:20, ac:13, atk:5, dmg:[1,8,2], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a weighted club at'},
   b7_agentchief:{name:'Patriotist captain', kind:'thug', fig:'b7_agent', sig:'P', hp:36, ac:14, atk:6, dmg:[1,8,3], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
   b7_rioter:{name:'Rioter', kind:'bruiser', sig:'r', hp:13, ac:11, atk:4, dmg:[1,6,1], rng:1, mv:4, init:1, verb:'swings a stave at'},
   b7_edurl:{name:'Tiste Edur warrior', kind:'b5_edur', sig:'E', hp:22, ac:14, atk:6, dmg:[1,10,2], rng:1, mv:4, init:2, sk:['parry'], verb:'cuts, grey and quick, at'},
@@ -95968,7 +95866,7 @@ Object.assign(FOES, {
   b8_pilgrim:{name:'Kelyk-mad pilgrim', kind:'b4_c2_pilgrim', fig:'b8_pilgrim', sig:'p', hp:20, ac:11, atk:9, dmg:[1,6,3], rng:1, mv:5, init:3, verb:'claws at'},
   b8_bravo:{name:'Daru bravo', kind:'thug', sig:'b', hp:34, ac:15, atk:12, dmg:[1,8,4], rng:1, mv:5, init:3, sk:['parry'], verb:'lunges with a rapier at'},
   b8_bravocaptain:{name:'Bravo with a name', kind:'houseguard', fig:'b8_bravocaptain', sig:'B', hp:62, ac:16, atk:13, dmg:[1,10,5], rng:1, mv:5, init:4, boss:true, sk:['parry', 'rally'], verb:'duels'},
-  b8_raider:{name:'Plains raider', kind:'tenescowri', sig:'r', hp:32, ac:14, atk:11, dmg:[1,8,3], rng:1, mv:5, init:2, sk:['hitrun'], verb:'cuts at'},
+  b8_raider:{name:'Plains raider', kind:'tenescowri', fig:'b8_skath', sig:'r', hp:32, ac:14, atk:11, dmg:[1,8,3], rng:1, mv:5, init:2, sk:['hitrun'], verb:'cuts at'},
   b8_hound:{name:'A Hound of Shadow', kind:'hound', sig:'H', hp:999, ac:22, atk:14, dmg:[2,8,6], rng:1, mv:8, init:9, boss:true, immortal:true, b8hound:true, stay:2, verb:'goes through'},
 });
 const FOE_SORC_B8 = ['b8_kelykpriest']; FOE_SORC_B8.forEach(k => FOE_SORC.add(k)); // the priest's kelyk is sorcery: it goes past soak
@@ -114240,9 +114138,9 @@ Object.assign(FOES, {
   b10_shriven:{name:'Shriven', kind:'b2soldier', sig:'S', hp:70, ac:19, atk:19, dmg:[1,12,9], rng:1, mv:4, init:2, dr:2, sk:['parry'], verb:'brings a blade down on'},
   b10_assail:{name:'Assail', kind:'b3_barghast', sig:'A', hp:190, ac:20, atk:21, dmg:[2,10,10], rng:1, mv:5, init:3, dr:3, boss:true, sk:['reach', 'daze'], verb:'strikes at'},
   /* the Letherii's (16-20) */
-  b10_lbolkando:{name:'Bolkando deserter', kind:'b6_bandit', sig:'b', hp:30, ac:14, atk:12, dmg:[1,8,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'cuts at'},
-  b10_lbolkandobow:{name:'Deserter bowman', kind:'b6_bandit', sig:'w', hp:24, ac:13, atk:12, dmg:[1,8,5], rng:6, mv:5, init:3, verb:'looses an arrow at'},
-  b10_lbolkandochief:{name:'Deserters\' captain', kind:'b6_bandit', sig:'B', hp:58, ac:16, atk:13, dmg:[1,10,6], rng:1, mv:5, init:3, boss:true, sk:['rally'], verb:'cuts at'},
+  b10_lbolkando:{name:'Bolkando deserter', kind:'b6_bandit', fig:'b10_bolk', sig:'b', hp:30, ac:14, atk:12, dmg:[1,8,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'cuts at'},
+  b10_lbolkandobow:{name:'Deserter bowman', kind:'b6_bandit', fig:'b10_bolkbow', sig:'w', hp:24, ac:13, atk:12, dmg:[1,8,5], rng:6, mv:5, init:3, verb:'looses an arrow at'},
+  b10_lbolkandochief:{name:'Deserters\' captain', kind:'b6_bandit', fig:'b10_bolkchief', sig:'B', hp:58, ac:16, atk:13, dmg:[1,10,6], rng:1, mv:5, init:3, boss:true, sk:['rally'], verb:'cuts at'},
   b10_ldog:{name:'Half-wild dog', kind:'b5_c7_greatwolf', fig:'b9_dog', sig:'d', hp:22, ac:13, atk:11, dmg:[1,6,4], rng:1, mv:7, init:4, verb:'bites'},
   b10_lforager:{name:'Starving forager', kind:'b6_bandit', sig:'g', hp:28, ac:13, atk:11, dmg:[1,6,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'swings a hook at'},
   b10_lforagerchief:{name:'Foragers\' headman', kind:'b6_bandit', sig:'G', hp:56, ac:15, atk:12, dmg:[1,10,6], rng:1, mv:5, init:2, boss:true, sk:['rally'], verb:'swings a hook at'},
@@ -123520,6 +123418,7 @@ const ANS_OWN = {
   b4_c5_seabed:() => 'Every fight: the bearer reads the ground for the squad. For the first two rounds every squadmate ignores the dust\'s range penalty and moves +1. Not sorcery: it never sputters.'};
 if (ansOn()) Object.entries(ANS).forEach(([fam, ks]) => ks.forEach(k => { const t = TRICKS[k], a = t && t.ab && AB[t.ab]; if (!a) return; ANS_FAM[k] = fam; a.passive = true; a.answer = fam;
   const d = Object.getOwnPropertyDescriptor(t, 'fx'); const base = d && d.get ? d.get : (() => d ? d.value : '');
+  t._fxBase = () => String(base.call(t) || '');
   Object.defineProperty(t, 'fx', {configurable:true, enumerable:true, get(){ let s = ANS_OWN[k] ? ANS_OWN[k]() : fam === 'coin' ? `${trickTimes(k)} a chapter: a failed check is rolled again, and in a fight the bearer's first miss is struck again. It wants paying for: the squad's next check is −2. Not sorcery.` : String(base.call(t) || '');
     s = s.replace(/ It does not use the action \(one free trick a turn\)\./, '').replace(/, and it does not use the bearer's action/, '').replace(/ It uses the action, and leaves no ward\./, ' It leaves no ward.').replace(/ It takes the bearer's action\./, '').replace(/They are slowed, and −2/, 'They are −2');
     return `Works by itself, ${ANS_WHEN[fam]}. Nothing to press. ${s}`; }}); }));
@@ -123594,6 +123493,29 @@ if (ansOn()) { const _attack = attack;
   if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') { const mo = new MutationObserver(() => { const b = document.getElementById('dPull'); if (!b || b.dataset.ans) return; b.dataset.ans = 1;
       const el = b.closest('.t-near'); if (el) return; setTimeout(() => { if (b.isConnected) b.click(); }, 650); });
     const go = () => mo.observe(document.body, {childList:true, subtree:true}); if (document.body) go(); else document.addEventListener('DOMContentLoaded', go); } }
+
+/* ---- v13.62.0 (plan §0g, open item a; David, Nov 20, 2026: "proceed with what you can do now"): hold a healing trick for the sergeant's word.
+   The nine tricks that mend or ward a squadmate fire the first time anyone drops below half, which is not always the moment the player would pick.
+   On the bearer's sheet each has a switch. Held, it is the button it was before v13.56.0, words, cost and all; let go, it answers by itself again.
+   The choice is kept in the save (S.trickHold). Nothing else may be held: the other answers either have no better moment or no longer do what their button did. ---- */
+const HOLD_FAMS = ['heal', 'halfward', 'halfadj'];
+const holdable = k => !!ANS_FAM[k] && HOLD_FAMS.includes(ANS_FAM[k]);
+const ansHeld = k => { try { return !!(S && S.trickHold && S.trickHold[k]) && holdable(k); } catch (e) { return false; } };
+if (ansOn()) { Object.keys(ANS_FAM).filter(holdable).forEach(k => { const t = TRICKS[k], a = AB[t.ab];
+    Object.defineProperty(a, 'passive', {configurable:true, enumerable:true, get(){ return !ansHeld(k); }, set(){}});
+    const d = Object.getOwnPropertyDescriptor(t, 'fx'), auto = d.get;
+    Object.defineProperty(t, 'fx', {configurable:true, enumerable:true, get(){ return ansHeld(k) ? 'Held for your word: a button in a fight, used when you say. ' + t._fxBase() : auto.call(t); }}); });
+  const _bearer = ansBearer; ansBearer = function(k){ return ansHeld(k) ? null : _bearer(k); }; }
+function holdSet(k, on){ if (!S || !holdable(k)) return; S.trickHold = S.trickHold || {}; if (on) S.trickHold[k] = 1; else delete S.trickHold[k]; try { save(); } catch (e) {}
+  /* mid-fight: the bearer's bar gains or loses the button at once */
+  try { if (B && !B.over) { const t = TRICKS[k], id = trickBy(k), u = B.units.find(q => q.id === id && q.side === 'p'); if (u && u.ab) { const i = u.ab.indexOf(t.ab); if (on && i < 0) u.ab.splice(Math.max(0, u.ab.length - 1), 0, t.ab); if (!on && i >= 0) u.ab.splice(i, 1); updBattleUI(); } } } catch (e) {} }
+/* the sheet: a switch under each holdable trick */
+{ const _open = openChars; openChars = function(i, tab){ const r = _open.apply(this, arguments);
+    try { if (ansOn() && S && !S._preview) { const SQ = SQUAD(), id = SQ[charIdx], ks = tricksOf(id), rows = document.querySelectorAll('#chars .trks .abl > div');
+        ks.forEach((k, n) => { const row = rows[n]; if (!row || !holdable(k)) return; const held = ansHeld(k), b = document.createElement('button'); b.className = 'btn holdbtn'; b.dataset.hold = k; b.setAttribute('aria-pressed', held ? 'true' : 'false');
+          b.textContent = held ? 'Held for your word · let it answer by itself' : 'Hold it for my word';
+          b.onclick = () => { AUDIO.play('click'); holdSet(k, !ansHeld(k)); openChars(charIdx); const nb = document.querySelector(`#chars [data-hold="${k}"]`); if (nb) nb.focus({preventScroll:true}); };
+          row.appendChild(b); }); } } catch (e) { console.warn('hold', e); } return r; }; }
 
 /* v13.50.0 (David, Nov 18, 2026).
    (1) Two figures of their own. Book Seven's mill-woman was drawn as Book Eight's Old Benna and Book Ten's Malazan clerk as the

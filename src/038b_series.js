@@ -68,29 +68,6 @@ function timelineHTML(open){
 const ROUTE_DG = [ // chapter -> where, what to call it, label side (as ROUTE in 38)
   {x:.82, y:.12, t:'Hissar', a:'l'}, {x:.74, y:.22, t:"Bat'rol"}, {x:.64, y:.34, t:'Dryj Spring · the Sekala'}, {x:.56, y:.45, t:'Gelor Ridge', a:'l'},
   {x:.5, y:.55, t:'The Vathar'}, {x:.42, y:.64, t:'The Nenoth', a:'l'}, {x:.34, y:.74, t:'Sanimon · the Geleen'}, {x:.2, y:.88, t:'Aren', a:'l'}];
-function drawChainRoute(cv, s, t){
-  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
-  if (cv.width !== Math.round(W*dpr)) { cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
-  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#2e2416'); bg.addColorStop(1, '#1e170e'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 13)*W, hash(i, 14)*H, 1 + hash(i, 15)*2, 1);
-  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.moveTo(W*.9, 0); ctx.lineTo(W, 0); ctx.lineTo(W, H*.4); ctx.quadraticCurveTo(W*.93, H*.22, W*.9, 0); ctx.fill(); // the sea off Hissar
-  ctx.beginPath(); ctx.moveTo(0, H*.8); ctx.quadraticCurveTo(W*.14, H*.92, W*.3, H); ctx.lineTo(0, H); ctx.fill(); // Aren Bay
-  ctx.fillStyle = 'rgba(106,168,255,.25)'; ctx.font = `italic ${Math.round(Math.max(9, H*.05))}px 'IM Fell English', serif`; ctx.textAlign = 'left'; ctx.fillText('Aren Bay', W*.02, H*.97);
-  ctx.strokeStyle = 'rgba(106,168,255,.45)'; ctx.lineWidth = 2; // the Sekala and the Vathar, crossing the road
-  [[.56, .26, .74, .44], [.4, .48, .62, .6]].forEach(([x1, y1, x2, y2]) => { ctx.beginPath(); ctx.moveTo(W*x1, H*y1); ctx.quadraticCurveTo(W*(x1 + x2)/2 + 10, H*(y1 + y2)/2 - 6, W*x2, H*y2); ctx.stroke(); });
-  for (let i = 0; i < 16; i++) { ctx.fillStyle = 'rgba(200,170,110,.10)'; ctx.fillRect(W*(.2 + hash(i, 16)*.6), H*(.15 + hash(i, 17)*.6), 12, 1); } // the Odhan
-  ctx.fillStyle = 'rgba(70,60,40,.35)'; for (let i = 0; i < 7; i++) { const tx = W*(.38 + i*.03), ty = H*(.56 + (i % 2)*.03); ctx.beginPath(); ctx.arc(tx, ty, 4, 0, 7); ctx.fill(); } // Vathar Forest
-  const ch = s.chapter || 0, pts = ROUTE_DG.filter((r, n) => n <= ch).map(r => ({x:r.x*W, y:r.y*H}));
-  ctx.strokeStyle = 'rgba(232,140,90,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
-  ROUTE_DG.forEach((r, n) => { const x = r.x*W, y = r.y*H, on = n <= ch, here = n === ch && !bookDone(s);
-    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
-    if (here) glow(ctx, x, y, 18, '#e89a6a', .35 + Math.sin(t/300)*.15);
-    ctx.fillStyle = here ? '#f0b080' : '#c9773f'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
-    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : 'left';
-    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : 8), y - 6); });
-}
-{ const _drawRoute = drawRoute; drawRoute = function(cv, s, t){ return bookOf(s) === 'dg' ? drawChainRoute(cv, s, t) : _drawRoute(cv, s, t); }; }
 
 /* ---- what a finished Book One carries into Book Two: the road, said when it's picked, kept in the journal, heard twice on the Chain ---- */
 const ROAD_WORDS = {empire:'took the empire road: home by sea from Genabaris', outlaw:'flew north with the Host', city:'stayed in Darujhistan', disband:'was stood down on a hill outside Darujhistan'};

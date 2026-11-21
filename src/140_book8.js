@@ -299,7 +299,7 @@ Object.assign(FOES, {
   b8_pilgrim:{name:'Kelyk-mad pilgrim', kind:'b4_c2_pilgrim', fig:'b8_pilgrim', sig:'p', hp:20, ac:11, atk:9, dmg:[1,6,3], rng:1, mv:5, init:3, verb:'claws at'},
   b8_bravo:{name:'Daru bravo', kind:'thug', sig:'b', hp:34, ac:15, atk:12, dmg:[1,8,4], rng:1, mv:5, init:3, sk:['parry'], verb:'lunges with a rapier at'},
   b8_bravocaptain:{name:'Bravo with a name', kind:'houseguard', fig:'b8_bravocaptain', sig:'B', hp:62, ac:16, atk:13, dmg:[1,10,5], rng:1, mv:5, init:4, boss:true, sk:['parry', 'rally'], verb:'duels'},
-  b8_raider:{name:'Plains raider', kind:'tenescowri', sig:'r', hp:32, ac:14, atk:11, dmg:[1,8,3], rng:1, mv:5, init:2, sk:['hitrun'], verb:'cuts at'},
+  b8_raider:{name:'Plains raider', kind:'tenescowri', fig:'b8_skath', sig:'r', hp:32, ac:14, atk:11, dmg:[1,8,3], rng:1, mv:5, init:2, sk:['hitrun'], verb:'cuts at'},
   b8_hound:{name:'A Hound of Shadow', kind:'hound', sig:'H', hp:999, ac:22, atk:14, dmg:[2,8,6], rng:1, mv:8, init:9, boss:true, immortal:true, b8hound:true, stay:2, verb:'goes through'},
 });
 const FOE_SORC_B8 = ['b8_kelykpriest']; FOE_SORC_B8.forEach(k => FOE_SORC.add(k)); // the priest's kelyk is sorcery: it goes past soak

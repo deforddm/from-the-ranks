@@ -35,6 +35,7 @@ const ANS_OWN = {
   b4_c5_seabed:() => 'Every fight: the bearer reads the ground for the squad. For the first two rounds every squadmate ignores the dust\'s range penalty and moves +1. Not sorcery: it never sputters.'};
 if (ansOn()) Object.entries(ANS).forEach(([fam, ks]) => ks.forEach(k => { const t = TRICKS[k], a = t && t.ab && AB[t.ab]; if (!a) return; ANS_FAM[k] = fam; a.passive = true; a.answer = fam;
   const d = Object.getOwnPropertyDescriptor(t, 'fx'); const base = d && d.get ? d.get : (() => d ? d.value : '');
+  t._fxBase = () => String(base.call(t) || '');
   Object.defineProperty(t, 'fx', {configurable:true, enumerable:true, get(){ let s = ANS_OWN[k] ? ANS_OWN[k]() : fam === 'coin' ? `${trickTimes(k)} a chapter: a failed check is rolled again, and in a fight the bearer's first miss is struck again. It wants paying for: the squad's next check is −2. Not sorcery.` : String(base.call(t) || '');
     s = s.replace(/ It does not use the action \(one free trick a turn\)\./, '').replace(/, and it does not use the bearer's action/, '').replace(/ It uses the action, and leaves no ward\./, ' It leaves no ward.').replace(/ It takes the bearer's action\./, '').replace(/They are slowed, and −2/, 'They are −2');
     return `Works by itself, ${ANS_WHEN[fam]}. Nothing to press. ${s}`; }}); }));
@@ -109,3 +110,26 @@ if (ansOn()) { const _attack = attack;
   if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') { const mo = new MutationObserver(() => { const b = document.getElementById('dPull'); if (!b || b.dataset.ans) return; b.dataset.ans = 1;
       const el = b.closest('.t-near'); if (el) return; setTimeout(() => { if (b.isConnected) b.click(); }, 650); });
     const go = () => mo.observe(document.body, {childList:true, subtree:true}); if (document.body) go(); else document.addEventListener('DOMContentLoaded', go); } }
+
+/* ---- v13.62.0 (plan §0g, open item a; David, Nov 20, 2026: "proceed with what you can do now"): hold a healing trick for the sergeant's word.
+   The nine tricks that mend or ward a squadmate fire the first time anyone drops below half, which is not always the moment the player would pick.
+   On the bearer's sheet each has a switch. Held, it is the button it was before v13.56.0, words, cost and all; let go, it answers by itself again.
+   The choice is kept in the save (S.trickHold). Nothing else may be held: the other answers either have no better moment or no longer do what their button did. ---- */
+const HOLD_FAMS = ['heal', 'halfward', 'halfadj'];
+const holdable = k => !!ANS_FAM[k] && HOLD_FAMS.includes(ANS_FAM[k]);
+const ansHeld = k => { try { return !!(S && S.trickHold && S.trickHold[k]) && holdable(k); } catch (e) { return false; } };
+if (ansOn()) { Object.keys(ANS_FAM).filter(holdable).forEach(k => { const t = TRICKS[k], a = AB[t.ab];
+    Object.defineProperty(a, 'passive', {configurable:true, enumerable:true, get(){ return !ansHeld(k); }, set(){}});
+    const d = Object.getOwnPropertyDescriptor(t, 'fx'), auto = d.get;
+    Object.defineProperty(t, 'fx', {configurable:true, enumerable:true, get(){ return ansHeld(k) ? 'Held for your word: a button in a fight, used when you say. ' + t._fxBase() : auto.call(t); }}); });
+  const _bearer = ansBearer; ansBearer = function(k){ return ansHeld(k) ? null : _bearer(k); }; }
+function holdSet(k, on){ if (!S || !holdable(k)) return; S.trickHold = S.trickHold || {}; if (on) S.trickHold[k] = 1; else delete S.trickHold[k]; try { save(); } catch (e) {}
+  /* mid-fight: the bearer's bar gains or loses the button at once */
+  try { if (B && !B.over) { const t = TRICKS[k], id = trickBy(k), u = B.units.find(q => q.id === id && q.side === 'p'); if (u && u.ab) { const i = u.ab.indexOf(t.ab); if (on && i < 0) u.ab.splice(Math.max(0, u.ab.length - 1), 0, t.ab); if (!on && i >= 0) u.ab.splice(i, 1); updBattleUI(); } } } catch (e) {} }
+/* the sheet: a switch under each holdable trick */
+{ const _open = openChars; openChars = function(i, tab){ const r = _open.apply(this, arguments);
+    try { if (ansOn() && S && !S._preview) { const SQ = SQUAD(), id = SQ[charIdx], ks = tricksOf(id), rows = document.querySelectorAll('#chars .trks .abl > div');
+        ks.forEach((k, n) => { const row = rows[n]; if (!row || !holdable(k)) return; const held = ansHeld(k), b = document.createElement('button'); b.className = 'btn holdbtn'; b.dataset.hold = k; b.setAttribute('aria-pressed', held ? 'true' : 'false');
+          b.textContent = held ? 'Held for your word · let it answer by itself' : 'Hold it for my word';
+          b.onclick = () => { AUDIO.play('click'); holdSet(k, !ansHeld(k)); openChars(charIdx); const nb = document.querySelector(`#chars [data-hold="${k}"]`); if (nb) nb.focus({preventScroll:true}); };
+          row.appendChild(b); }); } } catch (e) { console.warn('hold', e); } return r; }; }

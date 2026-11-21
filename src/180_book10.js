@@ -347,9 +347,9 @@ Object.assign(FOES, {
   b10_shriven:{name:'Shriven', kind:'b2soldier', sig:'S', hp:70, ac:19, atk:19, dmg:[1,12,9], rng:1, mv:4, init:2, dr:2, sk:['parry'], verb:'brings a blade down on'},
   b10_assail:{name:'Assail', kind:'b3_barghast', sig:'A', hp:190, ac:20, atk:21, dmg:[2,10,10], rng:1, mv:5, init:3, dr:3, boss:true, sk:['reach', 'daze'], verb:'strikes at'},
   /* the Letherii's (16-20) */
-  b10_lbolkando:{name:'Bolkando deserter', kind:'b6_bandit', sig:'b', hp:30, ac:14, atk:12, dmg:[1,8,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'cuts at'},
-  b10_lbolkandobow:{name:'Deserter bowman', kind:'b6_bandit', sig:'w', hp:24, ac:13, atk:12, dmg:[1,8,5], rng:6, mv:5, init:3, verb:'looses an arrow at'},
-  b10_lbolkandochief:{name:'Deserters\' captain', kind:'b6_bandit', sig:'B', hp:58, ac:16, atk:13, dmg:[1,10,6], rng:1, mv:5, init:3, boss:true, sk:['rally'], verb:'cuts at'},
+  b10_lbolkando:{name:'Bolkando deserter', kind:'b6_bandit', fig:'b10_bolk', sig:'b', hp:30, ac:14, atk:12, dmg:[1,8,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'cuts at'},
+  b10_lbolkandobow:{name:'Deserter bowman', kind:'b6_bandit', fig:'b10_bolkbow', sig:'w', hp:24, ac:13, atk:12, dmg:[1,8,5], rng:6, mv:5, init:3, verb:'looses an arrow at'},
+  b10_lbolkandochief:{name:'Deserters\' captain', kind:'b6_bandit', fig:'b10_bolkchief', sig:'B', hp:58, ac:16, atk:13, dmg:[1,10,6], rng:1, mv:5, init:3, boss:true, sk:['rally'], verb:'cuts at'},
   b10_ldog:{name:'Half-wild dog', kind:'b5_c7_greatwolf', fig:'b9_dog', sig:'d', hp:22, ac:13, atk:11, dmg:[1,6,4], rng:1, mv:7, init:4, verb:'bites'},
   b10_lforager:{name:'Starving forager', kind:'b6_bandit', sig:'g', hp:28, ac:13, atk:11, dmg:[1,6,5], rng:1, mv:5, init:3, sk:['hitrun'], verb:'swings a hook at'},
   b10_lforagerchief:{name:'Foragers\' headman', kind:'b6_bandit', sig:'G', hp:56, ac:15, atk:12, dmg:[1,10,6], rng:1, mv:5, init:2, boss:true, sk:['rally'], verb:'swings a hook at'},

@@ -657,3 +657,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 .bootline span{font-size:.9rem;color:#8a7c68;animation:bootpulse 1.6s ease-in-out infinite}
 @keyframes bootpulse{50%{opacity:.45}}
 @media (prefers-reduced-motion:reduce){.bootline span{animation:none}}
+
+/* v13.62.0: the hold switch under a healing trick on the sheet */
+.abl .holdbtn{display:block;margin-top:8px;font-size:.82rem;padding:6px 10px}
+.abl .holdbtn[aria-pressed="true"]{border-color:var(--brass);color:var(--brass2)}

@@ -15,7 +15,7 @@ const r = await page.evaluate(async () => {
   out.imported = S.imported && S.imported.road;
   out.notes = journalNotes()[0]; out.head = journalHead();
   openModal('journal'); out.heading = document.querySelector('#modal h2').textContent; out.meet = !!document.querySelector('.meet .worldmap');
-  out.mapBook = typeof drawChainRoute === 'function';
+  out.mapBook = typeof atlasRoute === 'function' && drawRoute === atlasRoute; // the road maps are the atlas (v13.54.0); the old per-book drawings were removed in v13.62.0
   openModal('deeds'); out.deedsBooks = [...document.querySelectorAll('.bookdeeds summary')].map(s => s.textContent.replace(/\s+/g, ' ').trim());
   const roadOne = document.querySelectorAll('.bookdeeds')[0].querySelector('.deeds-road li b').textContent; out.roadOne = roadOne;
   $('#modal').hidden = true;

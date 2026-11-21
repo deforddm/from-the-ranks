@@ -400,29 +400,6 @@ function b3DeedsExtra(mine){
 const ROUTE_B3 = [ // chapter -> where (the map is Genabackis from Pale south-east to the coast)
   {x:.14, y:.14, t:'Pale', a:'l'}, {x:.18, y:.17, t:'Pale · the parley'}, {x:.34, y:.3, t:'The Rhivi Plain'}, {x:.52, y:.44, t:'Capustan', a:'l'},
   {x:.56, y:.5, t:'Capustan · the prisoners'}, {x:.62, y:.6, t:'The Catlin', a:'l'}, {x:.72, y:.72, t:'The Maurik'}, {x:.84, y:.86, t:'Coral', a:'l'}];
-function drawB3Route(cv, s, t){
-  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
-  if (cv.width !== Math.round(W*dpr)) { cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#22261c'); bg.addColorStop(1, '#151810'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 23)*W, hash(i, 24)*H, 1 + hash(i, 25)*2, 1);
-  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.moveTo(W*.7, H); ctx.quadraticCurveTo(W*.86, H*.78, W, H*.7); ctx.lineTo(W, H); ctx.fill(); // the coast by Coral
-  ctx.fillStyle = 'rgba(106,168,255,.25)'; ctx.font = `italic ${Math.round(Math.max(9, H*.05))}px 'IM Fell English', serif`; ctx.textAlign = 'right'; ctx.fillText('Rust Ocean', W*.98, H*.97);
-  ctx.strokeStyle = 'rgba(106,168,255,.45)'; ctx.lineWidth = 2; // the Catlin and the Maurik
-  [[.4, .5, .8, .58], [.6, .66, .86, .76]].forEach(([x1, y1, x2, y2]) => { ctx.beginPath(); ctx.moveTo(W*x1, H*y1); ctx.quadraticCurveTo(W*(x1 + x2)/2, H*(y1 + y2)/2 + 10, W*x2, H*y2); ctx.stroke(); });
-  for (let i = 0; i < 18; i++) { ctx.fillStyle = 'rgba(170,190,120,.10)'; ctx.fillRect(W*(.18 + hash(i, 26)*.3), H*(.18 + hash(i, 27)*.2), 12, 1); } // the plain
-  ctx.fillStyle = 'rgba(180,200,220,.10)'; for (let i = 0; i < 6; i++) { const mx = W*(.7 + i*.05), my = H*(.62 + (i % 2)*.05); ctx.beginPath(); ctx.moveTo(mx - 10, my + 8); ctx.lineTo(mx, my - 8); ctx.lineTo(mx + 10, my + 8); ctx.fill(); } // the cold hills by Coral
-  const ch = s.chapter || 0, pts = ROUTE_B3.filter((r, n) => n <= ch).map(r => ({x:r.x*W, y:r.y*H}));
-  ctx.strokeStyle = 'rgba(190,210,230,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
-  ROUTE_B3.forEach((r, n) => { if (n === 1 || n === 4) return; // the parley and the prisoners are the same places again: one dot each
-    const x = r.x*W, y = r.y*H, last = n === 0 ? (ch <= 1) : n === 3 ? (ch === 3 || ch === 4) : n === ch, on = n === 0 ? true : n === 3 ? ch >= 3 : n <= ch, here = last && !bookDone(s) && ch > 0;
-    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
-    if (here) glow(ctx, x, y, 18, '#bcd4ee', .35 + Math.sin(t/300)*.15);
-    ctx.fillStyle = here ? '#dceaf8' : '#8fa8c0'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
-    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : 'left';
-    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : 8), y - 6); });
-}
-{ const _drawRoute = drawRoute; drawRoute = function(cv, s, t){ return bookOf(s) === 'moi' ? drawB3Route(cv, s, t) : _drawRoute(cv, s, t); }; }
 
 /* ---- backdrops for Book Three's first halts (the chapters add their own; these reuse Book One's camp drawing) ---- */
 Object.assign(SCENES, {

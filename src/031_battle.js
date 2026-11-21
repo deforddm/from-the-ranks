@@ -895,7 +895,8 @@ function drawBattle(t){
     ctx.strokeRect(x0*T + 1.5, y0*T + 1.5, (x1-x0+1)*T - 3, (y1-y0+1)*T - 3); ctx.setLineDash([]); ctx.lineDashOffset = 0;
     // small range tag on the border
     ctx.fillStyle = 'rgba(13,11,9,.85)'; ctx.font = `bold ${Math.round(T*.26)}px sans-serif`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const tag = `range ${r}`, tw = ctx.measureText(tag).width + 8; ctx.fillRect(x0*T + 3, y0*T + 3, tw, T*.34); ctx.fillStyle = '#f08a7c'; ctx.fillText(tag, x0*T + 7, y0*T + 5); ctx.textBaseline = 'alphabetic';
+    /* v13.62.0: a halberd or spear's box says "reach", a bow's "range" (David, Nov 19: reach is hard to teach) */
+    const tag = `${u.reachMelee ? 'reach' : 'range'} ${r}`, tw = ctx.measureText(tag).width + 8; ctx.fillRect(x0*T + 3, y0*T + 3, tw, T*.34); ctx.fillStyle = '#f08a7c'; ctx.fillText(tag, x0*T + 7, y0*T + 5); ctx.textBaseline = 'alphabetic';
   }
   if (B.reach) B.reach.forEach(n => { if (n.d === 0) return; const bad = B.hl && B.hl.aoo && B.hl.aoo.has(K(n.x,n.y));
     ctx.fillStyle = bad ? 'rgba(201,120,63,.16)' : 'rgba(201,151,63,.14)'; ctx.fillRect(n.x*T+1, n.y*T+1, T-2, T-2);

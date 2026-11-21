@@ -37,7 +37,8 @@ const { page, errors: pageErrors } = await openGame(browser, srv.url, {});
 const res = await page.evaluate(({ flags, flagVals, spriteKinds, portraitSrc, objFlags }) => {
   const E = [], W = [];
   const err = (m) => E.push(m), warn = (m) => W.push(m);
-  if (typeof FIGX !== 'undefined') spriteKinds = spriteKinds.concat(Object.keys(FIGX)); // later books' figures, however 47b registers them
+  if (typeof FIGX !== 'undefined') spriteKinds = spriteKinds.concat(Object.keys(FIGX));
+  if (typeof FIG1 !== 'undefined') spriteKinds = spriteKinds.concat(Object.keys(FIG1)); // v13.59.0's redrawn figures (018b), asked before FIGX // later books' figures, however 47b registers them
   let seed = 1; const rng = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
   const STATS = ['might', 'wits', 'guile'];
   const ALLIDS = Object.keys(TPL);

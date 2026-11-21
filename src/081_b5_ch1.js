@@ -236,7 +236,7 @@ const B5CH1 = {
   foes:{
     /* the festival's cutpurses, quick and thin, and the big man who minds them and their takings */
     b5_c1_cutpurse:{name:'Festival cutpurse', sig:'c', kind:'b5_c1_cutpurse', hp:9, ac:12, atk:3, dmg:[1,6,0], rng:1, mv:5, init:3, sk:['hitrun'], verb:'flicks a thin knife at'},
-    b5_c1_minder:{name:'The cutpurses\' minder', sig:'M', kind:'bruiser', hp:18, ac:12, atk:4, dmg:[1,8,0], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a weighted sap at'},
+    b5_c1_minder:{name:'The cutpurses\' minder', sig:'M', kind:'bruiser', fig:'b5_lbully', hp:18, ac:12, atk:4, dmg:[1,8,0], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a weighted sap at'},
     /* a pit-town drunk the size of a door */
     b5_c1_drunk:{name:'A big drunk', sig:'d', kind:'b5_c1_drunk', hp:20, ac:10, atk:3, dmg:[1,8,1], rng:1, mv:3, init:0, sk:['shove'], verb:'swings a bench-leg at'},
     /* the bookmaker who laid against a Rising */

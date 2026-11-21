@@ -352,7 +352,7 @@ Object.assign(FOES, {
   b5_demon:{name:'Bound demon', kind:'b5_demon', sig:'D', hp:44, ac:16, atk:6, dmg:[2,6,3], rng:1, mv:4, init:1, boss:true, dr:2, sk:['shove', 'reach'], verb:'brings a great armoured fist down on'},
   b5_deserter:{name:'Letherii deserter', kind:'b5_letherii', sig:'d', hp:12, ac:13, atk:4, dmg:[1,8,0], rng:1, mv:4, init:1, verb:'cuts at'},
   b5_deserterbow:{name:'Deserter bowman', kind:'b5_letherii_bow', sig:'a', hp:9, ac:12, atk:3, dmg:[1,8,0], rng:5, mv:4, init:2, sk:['pin'], verb:'looses at'},
-  b5_bully:{name:'Collector\'s bully', kind:'bruiser', sig:'b', hp:14, ac:12, atk:4, dmg:[1,6,2], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a cudgel at'},
+  b5_bully:{name:'Collector\'s bully', kind:'bruiser', fig:'b5_lbully', sig:'b', hp:14, ac:12, atk:4, dmg:[1,6,2], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a cudgel at'},
   b5_collector:{name:'The collector\'s man', kind:'thug', sig:'C', hp:24, ac:13, atk:4, dmg:[1,8,1], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
   b5_pressman:{name:'Press-gang soldier', kind:'b5_letherii', sig:'p', hp:13, ac:13, atk:4, dmg:[1,6,1], rng:1, mv:4, init:1, sk:['shove'], verb:'swings a cudgel at'},
   b5_presssgt:{name:'Press-gang sergeant', kind:'b5_letherii', sig:'P', hp:22, ac:14, atk:5, dmg:[1,8,2], rng:1, mv:4, init:2, boss:true, sk:['rally'], verb:'cuts at'},
@@ -477,30 +477,6 @@ function b5DeedsExtra(mine){
 const ROUTE_B5 = [ // chapter -> where
   {x:.56, y:.86, t:'Letheras', a:'l'}, {x:.52, y:.82, t:'Letheras · the barracks'}, {x:.3, y:.16, t:'Trate', a:'l'}, {x:.44, y:.12, t:'Kraig\'s Landing'},
   {x:.6, y:.2, t:'High Fort'}, {x:.58, y:.5, t:'The road south', a:'l'}, {x:.4, y:.7, t:'Brans Keep', a:'l'}, {x:.58, y:.88, t:'Letheras'}];
-function drawB5Route(cv, s, t){
-  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
-  if (cv.width !== Math.round(W*dpr)) { cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); }
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#1e2620'); bg.addColorStop(1, '#141a16'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 60; i++) ctx.fillRect(hash(i, 53)*W, hash(i, 54)*H, 1 + hash(i, 55)*2, 1);
-  ctx.fillStyle = '#16304a'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(W*.5, 0); ctx.quadraticCurveTo(W*.36, H*.1, W*.22, H*.12); ctx.quadraticCurveTo(W*.1, H*.2, 0, H*.4); ctx.fill(); // the northern sea off Trate
-  ctx.fillStyle = 'rgba(106,168,255,.25)'; ctx.font = `italic ${Math.round(Math.max(9, H*.05))}px 'IM Fell English', serif`; ctx.textAlign = 'left'; ctx.fillText('The Reach', W*.03, H*.08);
-  ctx.strokeStyle = 'rgba(106,168,255,.4)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W*.32, H*.15); ctx.quadraticCurveTo(W*.4, H*.13, W*.5, H*.06); ctx.stroke(); // the river up to the Landing
-  ctx.beginPath(); ctx.moveTo(W*.8, H*.3); ctx.quadraticCurveTo(W*.62, H*.6, W*.58, H*.9); ctx.lineTo(W*.5, H); ctx.stroke(); // the Lether River down to the capital
-  ctx.fillStyle = 'rgba(120,150,110,.12)'; for (let i = 0; i < 16; i++) ell(ctx, W*(.62 + hash(i, 56)*.3), H*(.04 + hash(i, 57)*.16), 8, 4, 'rgba(120,150,110,.14)'); // the forest north of High Fort, and Edur country beyond
-  const done = bookDone(s), ch = s.chapter || 0;
-  if (ch >= 5) { ctx.fillStyle = 'rgba(30,20,14,.35)'; ctx.beginPath(); ctx.ellipse(W*.52, H*.58, W*.16, H*.12, .3, 0, 7); ctx.fill(); } // the burned country on the road south
-  const pts = ROUTE_B5.filter((r, n) => n <= ch).map(r => ({x:r.x*W, y:r.y*H}));
-  ctx.strokeStyle = 'rgba(232,192,115,.8)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); ctx.setLineDash([]);
-  ROUTE_B5.forEach((r, n) => { if (n === 1) return; const x = r.x*W, y = r.y*H, on = n === 0 || n <= ch, here = (n === 0 ? ch <= 1 : n === ch) && !done && ch > 0;
-    if (n === 7 && ch < 7) return; // Letheras is already on the map
-    if (!on) { ctx.fillStyle = 'rgba(200,190,170,.18)'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); return; }
-    if (here) glow(ctx, x, y, 18, '#e8c073', .35 + Math.sin(t/300)*.15);
-    ctx.fillStyle = here ? '#f6dca0' : '#c9a35a'; ctx.beginPath(); ctx.arc(x, y, here ? 5 : 3.5, 0, 7); ctx.fill();
-    ctx.fillStyle = here ? '#f2dca6' : 'rgba(230,218,194,.7)'; ctx.font = `600 ${Math.round(Math.max(9, Math.min(13, W*.028)))}px 'Alegreya Sans SC', sans-serif`; ctx.textAlign = r.a === 'l' ? 'right' : 'left';
-    ctx.fillText(r.t, x + (r.a === 'l' ? -8 : 8), y - 6); });
-}
-{ const _drawRoute = drawRoute; drawRoute = function(cv, s, t){ return bookOf(s) === 'mt' ? drawB5Route(cv, s, t) : _drawRoute(cv, s, t); }; }
 
 /* ---- backdrops for Book Five's reading places and marches (the chapters add their own and may replace these; until then each borrows an
    earlier book's drawing of a like place) ---- */
