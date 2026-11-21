@@ -48,8 +48,9 @@ if (FOES.b6_cultist) FOES.b6_cultist.kind = 'b6_cultist'; // the engine borrowed
 
 /* ---------------- Brannoc's portrait (019's bust units: about 120 tall, shoulders at y = 0, the lantern on the left) ---------------- */
 POR.brannoc = function(ctx){ const F = {cy:-75, w:14.8, h:20.8, jaw:.94, chin:6.4, skin:'#caa082', iris:'#5a7a8a', lip:'#a0604c', browCol:'#a0442a', browW:1.7, arch:.9, browL:.6, browR:.3, rim:'#e0a060', rimA:.22, nose:1.2, look:.2, open:1, smileL:.55, smileR:.75, mouthW:4.2, teeth:1, flush:'#d07a60', age:.2};
-  /* a Falari boarding axe slung behind each shoulder, the hafts leaning in (v13.51): ash hafts wrapped with red leather, a short bearded bit and a spike behind it for the other ship's planking */
-  const axe = sx => { ctx.save(); ctx.translate(41*sx, 6); ctx.scale(sx, 1); ctx.rotate(-.2); ctx.lineCap = 'butt';
+  /* a Falari boarding axe slung behind each shoulder, the hafts leaning out (v13.62.12; in, before): ash hafts wrapped with red leather, a short bearded bit and a spike behind it for the other ship's planking */
+  const axe = sx => { ctx.save(); ctx.translate(13*sx, 18); ctx.scale(sx, 1); ctx.rotate(.12); // v13.62.12 (David, Nov 21, 2026, 2:56 AM PST: "angle the other way and sit a bit lower"): the hafts lean out now, heads apart
+    ctx.lineCap = 'butt';
     ctx.strokeStyle = PR.lin(ctx, -2, 0, 2, 0, [[0, '#b8925e'], [.5, '#6a4c2c'], [1, '#1e140a']]); ctx.lineWidth = 3.8; ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(0, -106); ctx.stroke();
     ctx.fillStyle = PR.lin(ctx, -2.2, 0, 2.2, 0, [[0, '#c86a3a'], [.5, '#7a321a'], [1, '#2a0e06']]); ctx.fillRect(-2.2, -34, 4.4, 22); PR.stroke(ctx, 'rgba(0,0,0,.5)', .5, () => { for (let i = 0; i < 9; i++){ ctx.moveTo(-2.2, -33 + i*2.5); ctx.lineTo(2.2, -31.6 + i*2.5); } }); // the red grip-wrap
     ctx.fillStyle = PR.lin(ctx, -3, 0, 3, 0, [[0, '#f0b070'], [.5, '#b8642a'], [1, '#4a2008']]); ctx.fillRect(-2.6, -99, 5.2, 3); ctx.fillRect(-2.6, -86, 5.2, 2.2); // copper bands at the eye
