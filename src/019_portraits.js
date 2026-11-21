@@ -581,6 +581,7 @@ const POR = {
     return F; },
 };
 let BODY_FILL = null;
+const BODY_FILL_OWN = {ressa:{w:.9, up:2.5, trap:.5}}; // David, Nov 20, 8:35 PM PST: "Ressa looks good but shoulders are too thick": hers was already the widest body of the fourteen
 const POR_LIFT = {mehet:1, ressa:1, doss:1, ilsa:1, wenna:1, sorvan:1, vasso:1.15, edrem:1, brask:1, tegra:1, brennet:1, kaedra:1, pruss:1, tirren:1};
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
@@ -588,7 +589,7 @@ function paintPortrait(ctx, id, W, H, st){
   if (POR_LIFT[look]) ctx.scale(1.1, 1.1); // v13.50.1: the later recruits were drawn a size smaller in the frame than the rest; this brings them up to it (about the feet of the frame)
   /* v13.62.4 (David, Nov 20, 2026, 7:52 PM PST, of the fourteen later busts: "fill out and raise shoulders a bit"): while one of them is painted, the shared body is drawn
      broader and its shoulder line higher (BODY_FILL, read by BP.body). Nothing else in the bust moves, so heads, hands and weapons stay where they were. */
-  BODY_FILL = POR_LIFT[look] && !(typeof window !== 'undefined' && window.FTR_NOFILL) ? {w:1.15, up:4.5, trap:1.5} : null;
+  BODY_FILL = POR_LIFT[look] && !(typeof window !== 'undefined' && window.FTR_NOFILL) ? (BODY_FILL_OWN[look] || {w:1.15, up:4.5, trap:1.5}) : null;
   try { const F = (POR[look] || POR.sgt)(ctx, st); if (WEAR_NOW && F && F.cy != null) PR.wearAfter(ctx, F, WEAR_NOW); } finally { WEAR_NOW = null; BODY_FILL = null; }
   ctx.restore();
   /* v13.50 (the contact-sheet read, Nov 18): the later books' recruits were painted in darker cloth and read dimmer than the rest of the

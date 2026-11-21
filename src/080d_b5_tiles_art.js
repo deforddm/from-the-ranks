@@ -283,6 +283,8 @@ Object.assign(POR, {
   ammet(ctx){ const F = {cy:-73, w:13.6, h:19.6, jaw:.9, chin:5.6, skin:'#b88e6e', iris:'#4a3a26', lip:'#8a5846', browCol:'#7a726a', browW:1.7, arch:.45, rim:'#8fb39a', rimA:.2, nose:1.15, bags:.9, age:.85, look:-.15, open:.82, smileL:-.25, smileR:.05, mouthW:3.7};
     PR.torsoPath(ctx, 42, 2); ctx.fillStyle = PR.lit(ctx, '#6e7e6c', '#141a14', -42, 30); ctx.fill(); ctx.save(); PR.torsoPath(ctx, 42, 2); ctx.clip(); // the quilted coat
       for (let x = -40; x < 42; x += 5.2) { const k = (x + 40)/82; PR.soft(ctx, x + 2.6, -20, 2, 28, '#e8f0e0', .1*(1 - k)); } PR.stitch(ctx, 'rgba(10,16,10,.55)', .45, () => { for (let x = -40; x < 42; x += 5.2){ ctx.moveTo(x, -46); ctx.lineTo(x + 1, 4); } });
+      /* v13.62.5 (David, Nov 20, 2026, 8:35 PM PST: "let the leather apron show on top"): the turtleneck is painted here, over the coat and before the apron, so the bib and its strap lie on it */
+      ctx.restore(); PR.neck(ctx, F, 9.6); B5P.collar(ctx, F, '#76866e', '#141a14', 'rgba(10,16,10,.38)', {sw:32, neck:false, over:false}); ctx.save(); PR.torsoPath(ctx, 42, 2); ctx.clip();
       const ap = () => { ctx.beginPath(); ctx.moveTo(-13, -40); ctx.lineTo(13, -40); ctx.quadraticCurveTo(15, -30, 23, -24); ctx.lineTo(27, 6); ctx.lineTo(-27, 6); ctx.lineTo(-23, -24); ctx.quadraticCurveTo(-15, -30, -13, -40); ctx.closePath(); };
       ap(); ctx.fillStyle = PR.lit(ctx, '#9a6c40', '#24160a', -26, 24); ctx.fill(); ctx.save(); ap(); ctx.clip(); const r = PR.rng(43); for (let i = 0; i < 8; i++) PR.soft(ctx, -20 + r()*36, -34 + r()*36, 2 + r()*4, 1.4 + r()*3, i < 3 ? '#3a0e08' : '#1a0e06', .45, r()*3); // stains, old and older
         PR.soft(ctx, -14, -30, 10, 12, '#ffe8c8', .14); ctx.restore(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .6; ap(); ctx.stroke(); PR.stitch(ctx, 'rgba(230,190,130,.5)', .35, () => { ctx.moveTo(-12, -38.6); ctx.lineTo(12, -38.6); ctx.moveTo(-21.6, -23); ctx.lineTo(-25.4, 5); });
@@ -292,7 +294,7 @@ Object.assign(POR, {
     ctx.save(); ctx.translate(-15, -20); ctx.rotate(-.12); ctx.fillStyle = PR.lit(ctx, '#7a5634', '#24160a', -11, 11); ctx.fillRect(-11, -4.6, 22, 9.2); // the roll of instruments, half untied
       for (let i = 0; i < 7; i++){ const x = -8.6 + i*2.8, h2 = 5 + (i%3)*1.4; ctx.fillStyle = PR.lin(ctx, x - .6, 0, x + .6, 0, [[0, '#f4f2ec'], [.5, '#a8a8a4'], [1, '#3a3a38']]); ctx.fillRect(x - .55, -4.6 - h2, 1.1, h2 + 2); if (i%2) ell(ctx, x, -4.6 - h2, .9, .5, '#d8d8d0'); }
       PR.stitch(ctx, 'rgba(230,190,130,.5)', .3, () => { ctx.moveTo(-10.4, -3.6); ctx.lineTo(10.4, -3.6); }); PR.stroke(ctx, '#2a1808', .8, () => { ctx.moveTo(4, -4.6); ctx.lineTo(5, 4.6); ctx.moveTo(5, 4.6); ctx.quadraticCurveTo(7, 9, 4, 11); }); ctx.restore();
-    PR.neck(ctx, F, 9.6); B5P.collar(ctx, F, '#76866e', '#141a14', 'rgba(10,16,10,.38)', {sw:32, neck:false, over:false}); // Ammet's turtleneck as it was (David, Nov 20, 7:52 PM PST: "turn ammet's collar back into a proper turtleneck"); only he wears one
+    // (his neck and turtleneck are painted above, under the apron; only Ammet wears one: David's rule)
     F.under = (ctx, F) => { PR.soft(ctx, 0, F.cy - 14, F.w*.7, 1.6, '#2a120c', .25); PR.soft(ctx, -6.6, F.cy + 7, 3.4, 3, '#2a120c', .2); }; // a frown worn in; the cheek fallen a little
     PR.face(ctx, F);
     const hs = B5P.hair(ctx, F, {c:['#b8b2a8', '#7a746a', '#2a2622'], v:2, wx:1.2, hl:14.4, ey:-3, n:40, sw:.5, seed:47, sh:'#ffffff', shA:.2, wisp:0});

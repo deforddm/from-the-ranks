@@ -697,7 +697,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.62.4';
+const VERSION = '13.62.5';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -3512,6 +3512,7 @@ const POR = {
     return F; },
 };
 let BODY_FILL = null;
+const BODY_FILL_OWN = {ressa:{w:.9, up:2.5, trap:.5}}; // David, Nov 20, 8:35 PM PST: "Ressa looks good but shoulders are too thick": hers was already the widest body of the fourteen
 const POR_LIFT = {mehet:1, ressa:1, doss:1, ilsa:1, wenna:1, sorvan:1, vasso:1.15, edrem:1, brask:1, tegra:1, brennet:1, kaedra:1, pruss:1, tirren:1};
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
@@ -3519,7 +3520,7 @@ function paintPortrait(ctx, id, W, H, st){
   if (POR_LIFT[look]) ctx.scale(1.1, 1.1); // v13.50.1: the later recruits were drawn a size smaller in the frame than the rest; this brings them up to it (about the feet of the frame)
   /* v13.62.4 (David, Nov 20, 2026, 7:52 PM PST, of the fourteen later busts: "fill out and raise shoulders a bit"): while one of them is painted, the shared body is drawn
      broader and its shoulder line higher (BODY_FILL, read by BP.body). Nothing else in the bust moves, so heads, hands and weapons stay where they were. */
-  BODY_FILL = POR_LIFT[look] && !(typeof window !== 'undefined' && window.FTR_NOFILL) ? {w:1.15, up:4.5, trap:1.5} : null;
+  BODY_FILL = POR_LIFT[look] && !(typeof window !== 'undefined' && window.FTR_NOFILL) ? (BODY_FILL_OWN[look] || {w:1.15, up:4.5, trap:1.5}) : null;
   try { const F = (POR[look] || POR.sgt)(ctx, st); if (WEAR_NOW && F && F.cy != null) PR.wearAfter(ctx, F, WEAR_NOW); } finally { WEAR_NOW = null; BODY_FILL = null; }
   ctx.restore();
   /* v13.50 (the contact-sheet read, Nov 18): the later books' recruits were painted in darker cloth and read dimmer than the rest of the
@@ -10163,6 +10164,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.62.5', ['Portraits: the Third\'s sergeant wears a scarf wound round the neck; Yorin\'s hair is loose in the wind where it stood up in one slab; Ammet\'s leather apron lies over his turtleneck; Ressa is slighter in the shoulder. Looks only.']],
   ['13.62.4', ['Portraits: the fourteen later recruits are broader in the shoulder and carry their shoulders higher. Ammet has his turtleneck back as it was. Looks only.']],
   ['13.62.3', ['Portraits: the later recruits have necks. Their coats climbed to the jaw in one piece with a ribbed tube set over the top; now each coat opens at the throat and the neck shows in it, with a neckcloth or a shirt\'s edge underneath where the soldier wears one. Looks only.']],
   ['13.62.2', ['Portraits: a high collar now goes on under the coat. On eleven busts the collar sat on top of the outerwear like a yoke; the coat is laid back over it, so only what stands up out of the neck opening shows. Looks only.']],
@@ -37057,6 +37059,15 @@ POR.sgt_dg = (ctx) => { const F = {cy:-74, w:13.2, h:20, jaw:.82, chin:5, skin:'
     ctx.lineCap = 'round'; PR.stroke(ctx, 'rgba(40,16,8,.35)', .5, () => { [-1, 1].forEach(sd => { for (let i=0;i<3;i++){ ctx.moveTo(sd*F.w*.62, F.cy + (-1.4 + i*1.2)*u); ctx.lineTo(sd*(F.w*.86), F.cy + (-2.4 + i*1.6)*u); } }); }); // squint-lines from the glare
     PR.soft(ctx, -4, F.cy - 8*u, 6, 2, '#ffd8a8', .12); PR.stroke(ctx, 'rgba(230,190,160,.4)', .45, () => { ctx.moveTo(-3, F.cy + 11.6*u); ctx.lineTo(-1, F.cy + 11.9*u); }); // sun-cracked lips
     PR.soft(ctx, 3, F.cy + 3*u, 7, 3, '#3a1a0c', .2); PR.dots(ctx, F, 50, 'rgba(30,14,8,.22)', .45, [7, 18, (x, y) => Math.abs(x) > F.w*.8 || (Math.abs(x) < 4.6 && y > 10.4 && y < 14)]); }; // a few days' dust and stubble-shadow, not a beard
+  /* v13.62.5 (David, Nov 20, 2026, 8:35 PM PST: "needs a scarf wrapped around the neck"): the head-cloth's own stuff, wound twice and knotted at the off side, one end hanging */
+  { const sc = PR.lit(ctx, '#b89058', '#3e2a14', -17, 17); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 3; ctx.shadowOffsetY = 1;
+    ctx.beginPath(); ctx.moveTo(-14.6, -60); ctx.quadraticCurveTo(-18.4, -50, -12, -45); ctx.quadraticCurveTo(0, -40.4, 12, -45); ctx.quadraticCurveTo(18.4, -50, 14.6, -60); ctx.closePath(); ctx.fillStyle = sc; ctx.fill(); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.moveTo(-14.6, -60); ctx.quadraticCurveTo(-18.4, -50, -12, -45); ctx.quadraticCurveTo(0, -40.4, 12, -45); ctx.quadraticCurveTo(18.4, -50, 14.6, -60); ctx.closePath(); ctx.clip();
+    PR.stroke(ctx, 'rgba(40,24,10,.5)', .7, () => { ctx.moveTo(-17, -54); ctx.quadraticCurveTo(0, -46.5, 17, -55); ctx.moveTo(-16, -49.6); ctx.quadraticCurveTo(-2, -43, 15, -50.4); }); PR.stroke(ctx, 'rgba(255,232,190,.22)', .5, () => { ctx.moveTo(-16, -55.4); ctx.quadraticCurveTo(-6, -50.4, 0, -49.4); ctx.moveTo(-15, -51); ctx.quadraticCurveTo(-7, -46.6, -1, -45.6); });
+    PR.soft(ctx, 1, -58.6, 12, 4.4, '#0a0502', .6); PR.soft(ctx, 12, -50, 7, 8, '#000000', .35); ctx.restore();
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 2.5; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, '#a88248', '#34220f', 3, 15); ctx.beginPath(); ctx.moveTo(6.4, -46.4); ctx.quadraticCurveTo(11.6, -44.4, 12.2, -38); ctx.lineTo(13.4, -30.6); ctx.lineTo(9.6, -29.4); ctx.lineTo(7.4, -31); ctx.quadraticCurveTo(7.4, -40, 4.6, -44.6); ctx.closePath(); ctx.fill(); ctx.restore(); // the hanging end
+    PR.stroke(ctx, 'rgba(40,24,10,.5)', .5, () => { ctx.moveTo(8.4, -43); ctx.quadraticCurveTo(10, -37, 10.6, -30.4); }); PR.stroke(ctx, 'rgba(240,214,160,.5)', .35, () => { for (let i = 0; i < 4; i++) { ctx.moveTo(8 + i*1.5, -30.2 + i*-.3); ctx.lineTo(7.8 + i*1.6, -27.8 + i*-.3); } }); // its fringe
+    ell(ctx, 6.6, -45.6, 3.2, 2.5, PR.rad(ctx, 5.6, -46.4, .4, 3.6, [[0, '#c8a066'], [.6, '#7a5a30'], [1, '#2e1e0e']])); PR.stroke(ctx, 'rgba(30,18,8,.55)', .5, () => { ctx.moveTo(4.4, -46.6); ctx.quadraticCurveTo(6.6, -44.6, 9, -46.4); }); } // the knot
   PR.face(ctx, F);
   // the head-wrap: over the crown, a band at the brow, round the jaw on the far side, tucked in
   ctx.beginPath(); ctx.moveTo(-F.w - 2.6, cy + 2); ctx.bezierCurveTo(-F.w - 3.4, top - 4, F.w + 3.4, top - 4, F.w + 2.6, cy + 2); ctx.bezierCurveTo(F.w + 3, cy + 10, F.w + 1, cy + 16, F.w*.5, cy + 20); ctx.lineTo(F.w*.62, cy + 12); ctx.bezierCurveTo(F.w + .4, cy + 6, F.w + .6, cy - 4, F.w - .4, cy - 8);
@@ -54053,7 +54064,11 @@ Object.assign(POR, {
     F.under = (ctx, F) => { PR.soft(ctx, -6, F.cy + 3, 4.4, 2.6, '#d06a50', .2); PR.soft(ctx, 6, F.cy + 3, 4.4, 2.6, '#a04a3a', .2); PR.soft(ctx, 0, F.cy + 1, 2.6, 1.6, '#d0705a', .2); }; // windburnt
     PR.face(ctx, F);
     BP.hair(ctx, F, {c:['#9a7244', '#5a3a1a', '#1a1008'], v:4.4, wx:2, hl:14.6, ey:-2, n:60, sw:.55, s:['#8a6a40', '#4a3018', '#b08a58'], seed:131, sh:'#ffe8c8', shA:.32, part:4, wisp:0}); // swept back hard
-    PR.strands(ctx, 46, ['#9a7244', '#6a4a24', '#4a3018', '#b88c58'], .7, 133, (i, r) => { const x = -F.w + r()*F.w*2, y = F.cy - 21 + Math.abs(x)*.25 - r()*2; return [x, y, x + 6 + r()*6, y - 3 - r()*3, x + 12 + r()*12, y - 1 - r()*6 + Math.abs(x)*.2]; }); // blown by a wind nobody else feels
+    /* v13.62.5 (David, Nov 20, 2026, 8:35 PM PST: "love the crazy hair, but a little less There's Something About Mary"): it stood up off the brow in one stiff slab. Now it is
+       loose hair in a wind: locks of different lengths lifting off the crown and falling away to one side, a few across the brow, a few strays the other way; nothing stands on end. */
+    PR.strands(ctx, 30, ['#9a7244', '#6a4a24', '#4a3018', '#b88c58'], .6, 133, (i, r) => { const x = -F.w*.9 + r()*F.w*1.9, y = F.cy - 20.4 + Math.abs(x)*.3 - r()*1.6, l = 5 + r()*11, lift = 1 + r()*2.6; return [x, y, x + l*.45, y - lift, x + l, y - lift*.2 + r()*3.4 + Math.abs(x)*.1]; });
+    PR.strands(ctx, 7, ['#8a6a40', '#5a3a1a', '#b08a58'], .5, 137, (i, r) => { const x = -F.w*.5 + r()*F.w*1.1, y = F.cy - 19.6 + r()*1.4, l = 4 + r()*5; return [x, y, x + l*.5, y + 1 + r()*1.6, x + l, y + 3.4 + r()*2.6]; }); // a few fallen across the brow
+    PR.strands(ctx, 5, ['#6a4a24', '#4a3018'], .45, 139, (i, r) => { const x = -F.w*.2 - r()*F.w*.7, y = F.cy - 20.6 - r()*1.4, l = 3 + r()*4; return [x, y, x - l*.5, y - 1.6 - r()*1.6, x - l, y - .4 + r()*2]; }); // and a stray or two against the wind
     return F; },
   /* Rasp: twenty-nine, Malaz City; a marine-trained sapper. Compact, burn-freckled; red-brown hair cropped short and singed at the ends; a leather apron over a jerkin, the satchel of Moranth munitions, the file on her belt, the marine crossbow with its cradle filed to her own pattern */
   rasp(ctx){ const F = {cy:-74, w:12.6, h:19.4, jaw:.84, chin:5, skin:'#cc9e7c', iris:'#3a5a3a', lip:'#8a4a3a', browCol:'#7a3810', browW:1.4, arch:.6, browL:.3, browR:.8, rim:'#d0864a', rimA:.24, nose:1.02, look:.25, open:.92, smileL:.55, smileR:-.1, mouthW:3.8};
@@ -65595,6 +65610,8 @@ Object.assign(POR, {
   ammet(ctx){ const F = {cy:-73, w:13.6, h:19.6, jaw:.9, chin:5.6, skin:'#b88e6e', iris:'#4a3a26', lip:'#8a5846', browCol:'#7a726a', browW:1.7, arch:.45, rim:'#8fb39a', rimA:.2, nose:1.15, bags:.9, age:.85, look:-.15, open:.82, smileL:-.25, smileR:.05, mouthW:3.7};
     PR.torsoPath(ctx, 42, 2); ctx.fillStyle = PR.lit(ctx, '#6e7e6c', '#141a14', -42, 30); ctx.fill(); ctx.save(); PR.torsoPath(ctx, 42, 2); ctx.clip(); // the quilted coat
       for (let x = -40; x < 42; x += 5.2) { const k = (x + 40)/82; PR.soft(ctx, x + 2.6, -20, 2, 28, '#e8f0e0', .1*(1 - k)); } PR.stitch(ctx, 'rgba(10,16,10,.55)', .45, () => { for (let x = -40; x < 42; x += 5.2){ ctx.moveTo(x, -46); ctx.lineTo(x + 1, 4); } });
+      /* v13.62.5 (David, Nov 20, 2026, 8:35 PM PST: "let the leather apron show on top"): the turtleneck is painted here, over the coat and before the apron, so the bib and its strap lie on it */
+      ctx.restore(); PR.neck(ctx, F, 9.6); B5P.collar(ctx, F, '#76866e', '#141a14', 'rgba(10,16,10,.38)', {sw:32, neck:false, over:false}); ctx.save(); PR.torsoPath(ctx, 42, 2); ctx.clip();
       const ap = () => { ctx.beginPath(); ctx.moveTo(-13, -40); ctx.lineTo(13, -40); ctx.quadraticCurveTo(15, -30, 23, -24); ctx.lineTo(27, 6); ctx.lineTo(-27, 6); ctx.lineTo(-23, -24); ctx.quadraticCurveTo(-15, -30, -13, -40); ctx.closePath(); };
       ap(); ctx.fillStyle = PR.lit(ctx, '#9a6c40', '#24160a', -26, 24); ctx.fill(); ctx.save(); ap(); ctx.clip(); const r = PR.rng(43); for (let i = 0; i < 8; i++) PR.soft(ctx, -20 + r()*36, -34 + r()*36, 2 + r()*4, 1.4 + r()*3, i < 3 ? '#3a0e08' : '#1a0e06', .45, r()*3); // stains, old and older
         PR.soft(ctx, -14, -30, 10, 12, '#ffe8c8', .14); ctx.restore(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .6; ap(); ctx.stroke(); PR.stitch(ctx, 'rgba(230,190,130,.5)', .35, () => { ctx.moveTo(-12, -38.6); ctx.lineTo(12, -38.6); ctx.moveTo(-21.6, -23); ctx.lineTo(-25.4, 5); });
@@ -65604,7 +65621,7 @@ Object.assign(POR, {
     ctx.save(); ctx.translate(-15, -20); ctx.rotate(-.12); ctx.fillStyle = PR.lit(ctx, '#7a5634', '#24160a', -11, 11); ctx.fillRect(-11, -4.6, 22, 9.2); // the roll of instruments, half untied
       for (let i = 0; i < 7; i++){ const x = -8.6 + i*2.8, h2 = 5 + (i%3)*1.4; ctx.fillStyle = PR.lin(ctx, x - .6, 0, x + .6, 0, [[0, '#f4f2ec'], [.5, '#a8a8a4'], [1, '#3a3a38']]); ctx.fillRect(x - .55, -4.6 - h2, 1.1, h2 + 2); if (i%2) ell(ctx, x, -4.6 - h2, .9, .5, '#d8d8d0'); }
       PR.stitch(ctx, 'rgba(230,190,130,.5)', .3, () => { ctx.moveTo(-10.4, -3.6); ctx.lineTo(10.4, -3.6); }); PR.stroke(ctx, '#2a1808', .8, () => { ctx.moveTo(4, -4.6); ctx.lineTo(5, 4.6); ctx.moveTo(5, 4.6); ctx.quadraticCurveTo(7, 9, 4, 11); }); ctx.restore();
-    PR.neck(ctx, F, 9.6); B5P.collar(ctx, F, '#76866e', '#141a14', 'rgba(10,16,10,.38)', {sw:32, neck:false, over:false}); // Ammet's turtleneck as it was (David, Nov 20, 7:52 PM PST: "turn ammet's collar back into a proper turtleneck"); only he wears one
+    // (his neck and turtleneck are painted above, under the apron; only Ammet wears one: David's rule)
     F.under = (ctx, F) => { PR.soft(ctx, 0, F.cy - 14, F.w*.7, 1.6, '#2a120c', .25); PR.soft(ctx, -6.6, F.cy + 7, 3.4, 3, '#2a120c', .2); }; // a frown worn in; the cheek fallen a little
     PR.face(ctx, F);
     const hs = B5P.hair(ctx, F, {c:['#b8b2a8', '#7a746a', '#2a2622'], v:2, wx:1.2, hl:14.4, ey:-3, n:40, sw:.5, seed:47, sh:'#ffffff', shA:.2, wisp:0});

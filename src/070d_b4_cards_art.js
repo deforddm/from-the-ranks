@@ -322,7 +322,11 @@ Object.assign(POR, {
     F.under = (ctx, F) => { PR.soft(ctx, -6, F.cy + 3, 4.4, 2.6, '#d06a50', .2); PR.soft(ctx, 6, F.cy + 3, 4.4, 2.6, '#a04a3a', .2); PR.soft(ctx, 0, F.cy + 1, 2.6, 1.6, '#d0705a', .2); }; // windburnt
     PR.face(ctx, F);
     BP.hair(ctx, F, {c:['#9a7244', '#5a3a1a', '#1a1008'], v:4.4, wx:2, hl:14.6, ey:-2, n:60, sw:.55, s:['#8a6a40', '#4a3018', '#b08a58'], seed:131, sh:'#ffe8c8', shA:.32, part:4, wisp:0}); // swept back hard
-    PR.strands(ctx, 46, ['#9a7244', '#6a4a24', '#4a3018', '#b88c58'], .7, 133, (i, r) => { const x = -F.w + r()*F.w*2, y = F.cy - 21 + Math.abs(x)*.25 - r()*2; return [x, y, x + 6 + r()*6, y - 3 - r()*3, x + 12 + r()*12, y - 1 - r()*6 + Math.abs(x)*.2]; }); // blown by a wind nobody else feels
+    /* v13.62.5 (David, Nov 20, 2026, 8:35 PM PST: "love the crazy hair, but a little less There's Something About Mary"): it stood up off the brow in one stiff slab. Now it is
+       loose hair in a wind: locks of different lengths lifting off the crown and falling away to one side, a few across the brow, a few strays the other way; nothing stands on end. */
+    PR.strands(ctx, 30, ['#9a7244', '#6a4a24', '#4a3018', '#b88c58'], .6, 133, (i, r) => { const x = -F.w*.9 + r()*F.w*1.9, y = F.cy - 20.4 + Math.abs(x)*.3 - r()*1.6, l = 5 + r()*11, lift = 1 + r()*2.6; return [x, y, x + l*.45, y - lift, x + l, y - lift*.2 + r()*3.4 + Math.abs(x)*.1]; });
+    PR.strands(ctx, 7, ['#8a6a40', '#5a3a1a', '#b08a58'], .5, 137, (i, r) => { const x = -F.w*.5 + r()*F.w*1.1, y = F.cy - 19.6 + r()*1.4, l = 4 + r()*5; return [x, y, x + l*.5, y + 1 + r()*1.6, x + l, y + 3.4 + r()*2.6]; }); // a few fallen across the brow
+    PR.strands(ctx, 5, ['#6a4a24', '#4a3018'], .45, 139, (i, r) => { const x = -F.w*.2 - r()*F.w*.7, y = F.cy - 20.6 - r()*1.4, l = 3 + r()*4; return [x, y, x - l*.5, y - 1.6 - r()*1.6, x - l, y - .4 + r()*2]; }); // and a stray or two against the wind
     return F; },
   /* Rasp: twenty-nine, Malaz City; a marine-trained sapper. Compact, burn-freckled; red-brown hair cropped short and singed at the ends; a leather apron over a jerkin, the satchel of Moranth munitions, the file on her belt, the marine crossbow with its cradle filed to her own pattern */
   rasp(ctx){ const F = {cy:-74, w:12.6, h:19.4, jaw:.84, chin:5, skin:'#cc9e7c', iris:'#3a5a3a', lip:'#8a4a3a', browCol:'#7a3810', browW:1.4, arch:.6, browL:.3, browR:.8, rim:'#d0864a', rimA:.24, nose:1.02, look:.25, open:.92, smileL:.55, smileR:-.1, mouthW:3.8};
