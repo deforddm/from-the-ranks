@@ -57,25 +57,34 @@ Object.assign(FIGX, {
 });
 
 /* ---------------- the bust ---------------- */
+/* v13.62.10 (David, Nov 21, 2026, 2:05 AM PST: "yes, do it"): repainted to the first five books' standard, as Brask and Book Nine's three were: a neck, their own neckline by kit, a body at its own width (no BODY_FILL), a hand on what they carry */
 POR.ilsa = function(ctx){ const F = {cy:-74, w:11.6, h:19.4, jaw:.7, chin:4.2, skin:'#d2b29a', iris:'#3a3428', lip:'#9a6460', browCol:'#2a1e18', browW:1.15, arch:1, browL:.4, browR:.55, rim:'#a8b0c8', rimA:.26, nose:.95, look:-.2, open:.92, smileL:-.1, smileR:.05, mouthW:3.2, bags:.55, age:.15};
-  ell(ctx, -F.w*.86, F.cy + 9.6, 3.4, 3, PR.rad(ctx, -F.w*.95, F.cy + 8.8, .4, 4, [[0, '#4a3628'], [1, '#0c0806']])); // the knot, tied low behind: at the nape, behind the jaw (v13.50.1: it had been drawn over her eye)
-  PR.neck(ctx, F, 7.6);
-  const B = BP.body(ctx, F, {wide:31, drop:2, v:true, nx:F.w*.66 + 2.6, ny:F.cy + 14, cb:-46.4, c1:'#7c7e86', c2:'#18181e'}); ctx.save(); B.path(); ctx.clip(); // the grey clerk's coat, buttoned to the throat
-    PR.stroke(ctx, 'rgba(0,0,0,.5)', 1.3, () => { ctx.moveTo(.6, -46); ctx.quadraticCurveTo(3, -20, 3, 6); });
-    for (let i = 0; i < 6; i++){ const y = -42 + i*7.6, x = 1.2 + Math.sin((y + 46)/52*1.4)*1.6; ell(ctx, x, y, 1.15, 1.15, PR.rad(ctx, x - .4, y - .4, .1, 1.2, [[0, '#e8e8f0'], [1, '#5a5c66']])); } // the buttons
-    PR.stroke(ctx, 'rgba(0,0,0,.35)', .8, () => { ctx.moveTo(-15, -30); ctx.quadraticCurveTo(-17, -12, -15, 6); ctx.moveTo(19, -30); ctx.quadraticCurveTo(21, -12, 19, 6); }); // the coat's fall
-    PR.soft(ctx, -14, -2, 7, 4, '#2a2a32', .5); // the shine at the elbow-crease, worn
-    ctx.fillStyle = 'rgba(30,26,22,.55)'; ctx.fillRect(9, -30, 7, 2); ctx.fillStyle = '#c9a35a'; ctx.fillRect(10, -38, 1.4, 9); // the penknife's clip at the breast
-    PR.soft(ctx, -18, -36, 10, 6, '#e8ecf8', .1); ctx.restore(); BP.light(ctx, F, B, true);
-  // the high collar, stood up close round the throat
-  [-1, 1].forEach(sd => { ctx.beginPath(); ctx.moveTo(sd*2, -47); ctx.quadraticCurveTo(sd*(F.w*.62), -48.6, sd*(F.w*.62 + 1.4), -54); ctx.lineTo(sd*(F.w*.62 + 3.2), -46); ctx.quadraticCurveTo(sd*9, -44, sd*2, -44.6); ctx.closePath(); ctx.fillStyle = PR.lit(ctx, '#8a8c94', '#24242a', -F.w, F.w); ctx.fill(); });
-  // the near hand raised a little at the bottom edge, its cuff black with ink
-  ctx.save(); ctx.translate(-26, -2); ctx.rotate(-.18); ctx.fillStyle = PR.lin(ctx, -6, -4, 6, 4, [[0, '#6e7078'], [1, '#2a2a30']]); ctx.fillRect(-7, -4, 14, 9); ctx.fillStyle = PR.lin(ctx, -6, -2, 6, 2, [[0, '#18181e'], [1, '#060608']]); ctx.fillRect(-7, -5.6, 14, 3.2); // the inked cuff
-    PR.soft(ctx, 0, -9, 6, 4, '#d2b29a', .95); PR.soft(ctx, -2, -10, 3, 2, '#f0d8c4', .4); ctx.restore();
+  const u = F.h/20;
+  ell(ctx, -F.w*.86, F.cy + 9.6, 3.4, 3, PR.rad(ctx, -F.w*.95, F.cy + 8.8, .4, 4, [[0, '#4a3628'], [1, '#0c0806']])); // the knot, tied low at the nape
+  PR.neck(ctx, F, 7.4);
+  const B = BP.body(ctx, F, {wide:33, drop:2, trap:1, nx:9.4, ny:F.cy + 15.8, cb:-50.2, c1:'#80828a', c2:'#18181e'}); ctx.save(); B.path(); ctx.clip(); // the grey clerk's coat, buttoned to the throat
+    PR.strands(ctx, 110, ['rgba(200,204,214,.1)', 'rgba(10,10,16,.16)'], .4, 123, (i, r) => { const x = -34 + r()*68, y = -52 + r()*56; return [x, y, x + .2, y + 3, x + .3, y + 6 + r()*3]; }); // the worsted's weave
+    PR.stroke(ctx, 'rgba(0,0,0,.55)', 1.1, () => { ctx.moveTo(.8, -50); ctx.quadraticCurveTo(3, -22, 3, 6); }); PR.stroke(ctx, 'rgba(226,230,240,.22)', .45, () => { ctx.moveTo(-.2, -50); ctx.quadraticCurveTo(2, -22, 2, 6); }); // the front edge
+    for (let i = 0; i < 7; i++){ const y = -46.4 + i*7.4, x = -1.6 + Math.sin((y + 50)/56*1.4)*1.5; ell(ctx, x + .3, y + .4, 1.3, 1.3, 'rgba(0,0,0,.45)'); ell(ctx, x, y, 1.2, 1.2, PR.rad(ctx, x - .4, y - .4, .1, 1.3, [[0, '#f0f0f6'], [.6, '#8a8c96'], [1, '#34363e']])); PR.stroke(ctx, 'rgba(0,0,0,.4)', .25, () => { ctx.moveTo(x + 1.2, y); ctx.lineTo(x + 3.8, y); }); } // the buttons and their holes
+    [-1, 1].forEach(sd => { PR.stroke(ctx, 'rgba(0,0,0,.35)', .7, () => { ctx.moveTo(sd*21, -47); ctx.quadraticCurveTo(sd*25, -34, sd*24, -12); }); PR.stroke(ctx, 'rgba(0,0,0,.28)', .7, () => { ctx.moveTo(sd*13, -30); ctx.quadraticCurveTo(sd*15, -12, sd*13.6, 6); }); }); // the sleeve seams and the coat's fall
+    ctx.fillStyle = 'rgba(20,18,22,.6)'; ctx.fillRect(8.6, -31, 8.4, .9); ctx.fillStyle = PR.lin(ctx, 10, 0, 12, 0, [[0, '#e0c070'], [1, '#6a5020']]); ctx.fillRect(10.4, -38.4, 1.5, 8.6); ell(ctx, 11.1, -38.6, 1.1, 1.1, '#c9a35a'); // the penknife clipped at the breast pocket
+    PR.soft(ctx, -19, -40, 11, 6, '#eef0fa', .12); PR.soft(ctx, 22, -16, 16, 22, '#000000', .45); ctx.restore(); BP.light(ctx, F, B, false);
+  /* the stand collar, close round the throat, a line of linen above it */
+  BP.band(ctx, B, -2.3, -1.5); ctx.fillStyle = PR.lit(ctx, '#d8d4ca', '#3e3c36', -B.nx - 2, B.nx + 2); ctx.fill();
+  BP.band(ctx, B, -1.7, 2.6); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 2; ctx.shadowOffsetY = 1; ctx.fillStyle = PR.lit(ctx, '#70727e', '#1c1c22', -B.nx - 3, B.nx + 3); ctx.fill(); ctx.restore();
+  { const [cx, c0] = B.pt(0, -1.7), [, c1] = B.pt(0, 2.6); PR.stroke(ctx, 'rgba(0,0,0,.7)', .6, () => { ctx.moveTo(cx + .6, c0); ctx.lineTo(cx + .9, c1); }); ell(ctx, cx - .9, (c0 + c1)/2, .8, .8, PR.rad(ctx, cx - 1.2, (c0 + c1)/2 - .3, .1, .9, [[0, '#f0f0f6'], [1, '#4a4c56']])); } // its hook and the top button
+  F.under = (ctx, F) => { PR.soft(ctx, -4.8, F.cy + 1.6, 3.4, 1.8, '#3a2a3a', .2); PR.soft(ctx, 4.8, F.cy + 1.6, 3.4, 1.8, '#3a2a3a', .22); }; // lamp-work under the eyes
   PR.face(ctx, F);
-  const u = F.h/20, top = F.cy - 21*u;
-  BP.hair(ctx, F, {c:['#4a3628', '#1e140e', '#080504'], v:1.5, wx:.8, hl:12.8, ey:-2.2, n:76, sw:.45, s:['#3a2a1e', '#100a06', '#5a4434'], seed:121, sh:'#c8b8c0', shA:.22});
-  PR.soft(ctx, F.w*.34, F.cy + 3, 1.4, .8, '#2a2a3a', .45); // an ink smudge on the cheek
+  BP.hair(ctx, F, {c:['#4a3628', '#1e140e', '#080504'], v:1.8, wx:.95, hl:11.6, ey:-1.2, n:76, sw:.45, s:['#3a2a1e', '#100a06', '#5a4434'], seed:121, sh:'#c8b8c0', shA:.22, wisp:4});
+  PR.soft(ctx, F.w*.34, F.cy + 3, 1.4, .8, '#2a2a3a', .5); // an ink smudge on the cheek
+  /* the day-ledger held against her, near side, in a hand inked to the knuckles; the cuff black with it */
+  ctx.save(); ctx.translate(-24, -12); ctx.rotate(-.1);
+    ctx.save(); ctx.filter = 'blur(1.4px)'; ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(-8, -15, 21, 34); ctx.restore();
+    ctx.fillStyle = PR.lin(ctx, -10, 0, 10, 0, [[0, '#f0e8d4'], [1, '#8a8068']]); ctx.fillRect(-9.4, -15.4, 19.6, 34); PR.stroke(ctx, 'rgba(90,80,60,.5)', .3, () => { for (let k = 0; k < 5; k++){ ctx.moveTo(-9.4, -14.6 + k*.5); ctx.lineTo(10.2, -14.6 + k*.5); } }); // the pages' edge
+    ctx.fillStyle = PR.lin(ctx, -10, 0, 11, 0, [[0, '#5a2e2a'], [.6, '#341614'], [1, '#120706']]); ctx.beginPath(); ctx.roundRect(-10, -14, 21, 34, 1); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .5; ctx.stroke();
+    PR.stitch(ctx, 'rgba(216,180,110,.5)', .4, () => { ctx.rect(-8, -12, 17, 30); }); ctx.fillStyle = PR.lin(ctx, -4, 0, 5, 0, [[0, '#e8dcc0'], [1, '#9a8e70']]); ctx.fillRect(-4.6, -8.6, 10, 5.4); PR.stroke(ctx, 'rgba(30,26,40,.7)', .35, () => { ctx.moveTo(-3.4, -6.8); ctx.lineTo(4, -6.8); ctx.moveTo(-3.4, -5.2); ctx.lineTo(1.6, -5.2); }); // the label, in her own hand
+    ctx.fillStyle = PR.lin(ctx, -14, 0, -2, 0, [[0, '#24242a'], [1, '#08080a']]); PR.path(ctx, [[-15.6, 10], [-5.4, 8.6], [-3.6, 22], [-16.6, 22]]); ctx.fill(); // the inked cuff
+    BP.fist(ctx, -9.6, 5, .14, {k:'glove', c:['#e2c4ac', '#a88870', '#3a2a22']}, 6); PR.soft(ctx, -9.6, 3.4, 3.4, 2.2, '#16161e', .5); ctx.restore(); // ink to the knuckles
   return F; };
 
 /* ---------------- backdrops ---------------- */

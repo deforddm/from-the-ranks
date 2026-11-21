@@ -42,19 +42,30 @@ Object.assign(FIGX, {
 });
 
 /* ---------------- the bust ---------------- */
-POR.sorvan = function(ctx){ const F = {cy:-74, w:12.4, h:19.8, jaw:.88, chin:4.6, skin:'#b89470', iris:'#3a4250', lip:'#8a5a4c', browCol:'#2a2420', browW:1.35, arch:.4, browL:.6, browR:.7, rim:'#a8b8d8', rimA:.26, nose:1.1, look:.15, open:.86, smileL:-.15, smileR:-.05, mouthW:3.4, bags:.7, age:.45};
-  PR.neck(ctx, F, 8.4);
-  const B = BP.body(ctx, F, {wide:36, drop:5, trap:3, nx:11.6, ny:F.cy + 15, cb:-44, c1:'#4e6e9e', c2:'#141c2c'}); ctx.save(); B.path(); ctx.clip(); // the blue scale over the shoulders
-    for (let r = 0; r < 9; r++) { const y = -44 + r*6.2; for (let k = -6; k <= 6; k++) { const x = k*6 + (r % 2)*3; ctx.beginPath(); ctx.moveTo(x - 3, y); ctx.quadraticCurveTo(x, y + 5, x + 3, y); ctx.lineWidth = .8; ctx.strokeStyle = 'rgba(8,12,24,.6)'; ctx.stroke();
-        ctx.fillStyle = 'rgba(190,210,250,.10)'; ctx.fillRect(x - 2.2, y + .6, 1.2, 1.6); } } // the plates, laced in rows, each with a glint
-    PR.stroke(ctx, 'rgba(60,40,24,.7)', 1.2, () => { for (let r = 0; r < 9; r++) { ctx.moveTo(-36, -41 + r*6.2); ctx.lineTo(36, -41 + r*6.2); } }); // the lacing
-    PR.soft(ctx, -18, -36, 10, 6, '#dce8ff', .12); ctx.restore(); BP.light(ctx, F, B, false);
-  BP.collar(ctx, F, '#4a3e32', '#16120e', 'rgba(20,14,8,.5)', {style:'fold', sw:16, sy:-46}); // the riding coat's collar turned up over the scale
+/* v13.62.10 (David, Nov 21, 2026, 2:05 AM PST: "yes, do it"): repainted to the first five books' standard, as Brask and Book Nine's three were: a neck, their own neckline by kit, a body at its own width (no BODY_FILL), a hand on what they carry */
+POR.sorvan = function(ctx){ const F = {cy:-74, w:12.6, h:20, jaw:.9, chin:4.8, skin:'#b89470', iris:'#3a4250', lip:'#8a5a4c', browCol:'#2a2420', browW:1.4, arch:.4, browL:.6, browR:.7, rim:'#a8b8d8', rimA:.26, nose:1.1, look:.15, open:.86, smileL:-.15, smileR:-.05, mouthW:3.5, bags:.7, age:.45};
+  const u = F.h/20; PR.neck(ctx, F, 8.8); BP.throat(ctx, F, -48.6);
+  const B = BP.body(ctx, F, {wide:40, drop:3, trap:4, nx:11.2, ny:F.cy + 15.8, cb:-46, c1:'#4e6e9e', c2:'#121a2a'}); ctx.save(); B.path(); ctx.clip(); // the blue-enamelled scale
+    BP.scales(ctx, -46, 46, -64, 4, 5.4, '#4c6c9c', 124);
+    for (let r = 0; r < 10; r++) for (let k = -7; k <= 7; k++){ const x = k*5.4 + (r % 2)*2.7, y = -60 + r*6.2; if (x < 8) ell(ctx, x - 1.1, y + 1.3, .55, .9, 'rgba(214,230,255,.28)'); } // the enamel's glint, plate by plate
+    PR.stroke(ctx, 'rgba(70,46,26,.55)', .7, () => { for (let r = 0; r < 10; r++) { ctx.moveTo(-46, -57.4 + r*6.2); ctx.lineTo(46, -57.4 + r*6.2); } }); // the lacing between the rows
+    [[-17, -30], [9, -19], [-6, -8]].forEach(([x, y]) => PR.soft(ctx, x, y, 2.4, 1.8, '#1a1410', .5)); // plates lost on the road and not replaced
+    BP.sling(ctx, 30, -47, -26, 0, '#3e2c1c', 4); ell(ctx, 4, -24.6, 2, 2, PR.rad(ctx, 3.4, -25.2, .2, 2.4, [[0, '#f0e4c0'], [.5, '#a08848'], [1, '#2a2008']])); // the sabre's baldric
+    PR.soft(ctx, -20, -38, 13, 7, '#dce8ff', .14); PR.soft(ctx, 26, -16, 19, 22, '#000000', .45); ctx.restore(); BP.light(ctx, F, B, false);
+  /* the riding coat's collar, turned up over the scale and open at the front */
+  [[3.2, -2.8, '#5c4c3c']].forEach(([o1, o0, c]) => { BP.band(ctx, B, o0, o1); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 2.4; ctx.shadowOffsetY = 1.2; ctx.fillStyle = PR.lit(ctx, c, '#16100a', -B.nx - 4, B.nx + 4); ctx.fill(); ctx.restore();
+    PR.stitch(ctx, 'rgba(226,196,150,.4)', .35, () => { for (let i = 0; i <= 20; i++){ const [x, y] = B.pt(-1 + i/10, o1 - .9); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } }); });
+  { const [cx, c0] = B.pt(0, -3), [, c1] = B.pt(0, 3.4); ctx.fillStyle = PR.lit(ctx, '#3e5a86', '#101826', -4, 4); PR.path(ctx, [[cx - 2.2, c0 - .4], [cx + 2.2, c0 - .4], [cx + .5, c1], [cx - .5, c1]]); ctx.fill(); PR.stroke(ctx, 'rgba(0,0,0,.6)', .5, () => { ctx.moveTo(cx - 2.2, c0 - .4); ctx.lineTo(cx - .5, c1); ctx.moveTo(cx + 2.2, c0 - .4); ctx.lineTo(cx + .5, c1); }); } // the notch where it stands open
+  F.under = (ctx, F) => { PR.dots(ctx, F, 90, 'rgba(40,34,30,.3)', .45, [6, 19.2, (x, y) => (Math.abs(x) < 4.4 && y > 10.6 && y < 14)]); PR.stroke(ctx, 'rgba(236,206,184,.5)', .7, () => { ctx.moveTo(-F.w*.7, F.cy - 4*u); ctx.quadraticCurveTo(-F.w*.6, F.cy, -F.w*.66, F.cy + 3.4*u); }); }; // road stubble; the old scar by the eye
   PR.face(ctx, F);
-  PR.soft(ctx, -F.w*.32, F.cy + 7.4, 3, .9, '#3a2a20', .55); PR.soft(ctx, F.w*.32, F.cy + 7.4, 3, .9, '#3a2a20', .55); // the close-cut moustache
-  PR.soft(ctx, -F.w*.62, F.cy - 1, 1.6, 3.2, '#8a6a50', .35); // an old scar by the eye, faded
-  BP.hair(ctx, F, {c:['#3a322a', '#14100c', '#060504'], v:1.6, wx:1, hl:12, ey:-1.2, n:60, sw:.4, s:['#5a524a', '#1a1612', '#8a8a8e'], seed:124, sh:'#c8ccd8', shA:.24});
-  PR.soft(ctx, -F.w*.82, F.cy - 6, 2.4, 4, '#9a9aa2', .55); PR.soft(ctx, F.w*.82, F.cy - 6, 2.4, 4, '#9a9aa2', .5); // grey at the sides
+  [-1, 1].forEach(sd => PR.strands(ctx, 16, sd < 0 ? ['#3a322a', '#1a1612', '#6a625a'] : ['#1a1612', '#0a0806'], .55, 126 + sd, (k, r) => { const x = sd*(.4 + r()*F.w*.36), y = F.cy + 6.5*u + r()*.5; return [x, y, x + sd*.8, y + .8, x + sd*(1.3 + r()*.8), y + 1.5 + r()*.6]; })); // the close-cut moustache
+  BP.hair(ctx, F, {c:['#3a322a', '#14100c', '#060504'], v:2, wx:1.1, hl:11.6, ey:.2, n:64, sw:.4, s:['#5a524a', '#1a1612', '#8a8a8e'], seed:124, sh:'#c8ccd8', shA:.24});
+  [-1, 1].forEach(sd => PR.strands(ctx, 12, sd < 0 ? ['#b4b4bc', '#8a8a92'] : ['#5a5a62'], .45, 128 + sd, (k, r) => { const x = sd*(F.w - .6 + r()*1), y = F.cy - 9*u + r()*5*u; return [x, y, x + sd*.4, y + 2.4, x + sd*(.2 + r()*.6), y + 4.6 + r()*2]; })); // grey at the sides
+  /* the lance, sawn short, upright in the far hand: an ash shaft, a leaf blade in its socket, a strip of Bluerose blue tied under it */
+  BP.grip(ctx, 32, -6, .04, -2, 3, ['#b09868', '#72603a', '#1e180c'], {k:'glove', c:['#8a6844', '#523a22', '#1a1008']}, null, 0, -80);
+  ctx.save(); ctx.translate(32, -6); ctx.rotate(.04); ctx.translate(0, 12); ctx.fillStyle = PR.lin(ctx, -2.2, 0, 2.2, 0, [[0, '#a6a49c'], [.5, '#5e5c56'], [1, '#1c1b19']]); ctx.fillRect(-2.2, -97, 4.4, 6);
+    ctx.beginPath(); ctx.moveTo(-1.4, -97); ctx.quadraticCurveTo(-4.4, -104, 0, -116); ctx.quadraticCurveTo(4.4, -104, 1.4, -97); ctx.closePath(); ctx.fillStyle = PR.lin(ctx, -4, 0, 4, 0, [[0, '#e6e4dc'], [.48, '#a09e96'], [.52, '#5a5852'], [1, '#2a2926']]); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineWidth = .5; ctx.stroke();
+    ctx.fillStyle = PR.lin(ctx, 0, -90, 9, -80, [[0, '#5a7ec0'], [1, '#182648']]); PR.path(ctx, [[1.4, -91], [9.6, -89], [7.4, -84.6], [10.6, -79.4], [1.4, -85.4]]); ctx.fill(); PR.stroke(ctx, '#20305a', .8, () => { ctx.moveTo(-1.6, -90.6); ctx.lineTo(1.6, -91.2); ctx.moveTo(-1.6, -89); ctx.lineTo(1.6, -89.6); }); ctx.restore();
   return F; };
 
 /* ---------------- the ground: Book Five's lines with a horse, a wagon and the hill road ---------------- */

@@ -581,7 +581,7 @@ const POR = {
     return F; },
 };
 let BODY_FILL = null;
-const BODY_FILL_OWN = {brask:{w:1, up:0, trap:0}, tegra:{w:1, up:0, trap:0}, brennet:{w:1, up:0, trap:0}, kaedra:{w:1, up:0, trap:0}, ressa:{w:.9, up:2.5, trap:.5}}; // David, Nov 20, 8:35 PM PST: "Ressa looks good but shoulders are too thick": hers was already the widest body of the fourteen
+const BODY_FILL_OWN = {brask:{w:1, up:0, trap:0}, doss:{w:1, up:0, trap:0}, wenna:{w:1, up:0, trap:0}, ilsa:{w:1, up:0, trap:0}, sorvan:{w:1, up:0, trap:0}, mehet:{w:1, up:0, trap:0}, tegra:{w:1, up:0, trap:0}, brennet:{w:1, up:0, trap:0}, kaedra:{w:1, up:0, trap:0}, ressa:{w:.9, up:2.5, trap:.5}}; // David, Nov 20, 8:35 PM PST: "Ressa looks good but shoulders are too thick": hers was already the widest body of the fourteen
 const POR_LIFT = {mehet:1, ressa:1, doss:1, ilsa:1, wenna:1, sorvan:1, vasso:1.15, edrem:1, brask:1, tegra:1, brennet:1, kaedra:1, pruss:1, tirren:1};
 function paintPortrait(ctx, id, W, H, st){
   const s = H/120; ctx.clearRect(0,0,W,H); ctx.save(); ctx.translate(W/2, H*.98); ctx.scale(s, s);
