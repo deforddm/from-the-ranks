@@ -163,3 +163,25 @@ Seen and not touched (outside this change): a few untouched fights read under 60
 | b9_c5_bull | 4 | 6 | 100% | 75% | 80% |
 | b9_c5_dogs | 3 | 8 | 100% | 85% | 85% |
 | b9_c6_gap | 9 | 13 | 88% | 75% | 75% |
+
+## Proposal, not built: enemy health on Bridgeburner for Books Eight and Nine (Sun Nov 22, 2026, 5:09 PM PST)
+
+David's second yes. The to-hit lever is spent on these fights, so the trial used a per-fight Bridgeburner health multiplier (in memory, a `--patch` wrapping `mkFoe`; every trick, 12 runs a fight, so each figure is good to about 14 points). Won % (typical rounds):
+
+| Fight | Now | Health x1.15-1.2 | x1.3 | x1.4-1.5 |
+|---|---|---|---|---|
+| b8_c1_chancers | 90 | | 92 (14) | 25 at x1.5 (16) |
+| b8_c2_raid | 90 | | 75 (15) | |
+| b8_c4_stores | 90 | 75 at x1.15 (22) | 50 (24) | |
+| b8_c5_grass | 100 | | 92 (15) | 50 at x1.5 (20) |
+| b8_c5_peddler | 90 | 75 at x1.2 (21) | 67 (24) | |
+| b8_c6_masks | 100 | | 83 (12) | 100 at x1.4 (12) |
+| b8_c7_doorway | 90 | | 92 (13) | 67 at x1.5 (13) |
+| b8_c7_looters | 95 | 67 at x1.15 (18) | 50 (20) | |
+| b9_c1_stores | 95 | | 83 (16) | |
+| b9_c3_farm | 85 | 58 at x1.2 (18) | | |
+| b9_c4_raid | 85 | 67 at x1.2 (13) | | |
+| b9_c5_dogs | 85 | 67 at x1.2 (13) | | |
+| b9_c7_trail | 88 | | 92 (12) | |
+
+Reading it. Health moves these fights where to-hit did not, but steeply: one fight goes from 92% to 25% between x1.3 and x1.5. It also lengthens fights (stores and peddler run past 20 rounds, against the 10 to 12 the toughness reset aimed for). A sketch that would put Eight near 81% and Nine near 81%: chancers, grass, doorway x1.4; raid x1.3; peddler x1.2; stores, looters x1.15; Nine's stores x1.3, raid and c5_dogs x1.2, farm x1.1. It needs a new `h` field in `TFIGHT`, 20-run confirmation with and without tricks, and David's yes.
