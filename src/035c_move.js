@@ -22,6 +22,18 @@ function moveTake(text){ const b = parseBackup(text); if (!b) return null; const
   const had = list.length; const n = restoreBackup({sergeants:take, settings:had ? null : b.settings, seen:b.seen, at:b.at}); // a device with sergeants already keeps its own settings
   return {n, kept}; }
 let moveNote = '', moveWin = null, moveTimer = null, moveDone = false;
+/* v13.65.2: this address does the merging, so it must be the newest version before it takes anyone's sergeants (David's phone
+   was still on a copy with a merging bug when he carried again, and he had to clear it by hand). A page opened by the carry
+   button asks the server for a newer version of itself first; if there is one it is let in at once and the page reloads (the
+   #carry mark and the way back to the old address both survive a reload), and only the fresh page says it is ready.
+   Resolves true when a reload is on its way. Offline, or with no worker yet (a first visit is fresh from the server), false. */
+function moveFresh(){ try { if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller || typeof window.swUpdateNow !== 'function') return Promise.resolve(false);
+    return navigator.serviceWorker.getRegistration().then(reg => { if (!reg) return false;
+      const settled = () => new Promise(res => { const w = reg.installing; if (!w) return res(); const t = setTimeout(res, 45000);
+        w.addEventListener('statechange', () => { if (w.state !== 'installing') { clearTimeout(t); res(); } }); });
+      const check = Promise.race([reg.update().catch(() => {}), new Promise(res => setTimeout(res, 20000))]); // a check the network never answers must not hold the carry up
+      return check.then(settled).then(() => { if (reg.waiting) { window.swUpdateNow(reg); return true; } return false; }); }).catch(() => false);
+  } catch(e) { return Promise.resolve(false); } }
 function moveSay(html){ const el = document.getElementById('mvMsg'); if (el) el.innerHTML = html; }
 function moveFallback(why){ moveSay(`${why} Save a backup file here, then open <a href="${moveCfg().to}" rel="noopener">${moveHost()}</a> and choose <b>Load a backup or save code</b>. <button class="btn sm" id="mvDown">Save a backup file</button>`);
   const d = document.getElementById('mvDown'); if (d) d.onclick = () => { AUDIO.play('click'); downloadBackup(); }; }
@@ -31,7 +43,8 @@ function moveCarry(){ const c = moveCfg(), n = roster().list.length;
   try { moveWin = window.open(c.to + '#carry', '_blank'); } catch(e) { moveWin = null; }
   if (!moveWin) { moveFallback('The browser would not open the new address from here.'); return; }
   moveSay('Opening the new address and handing your sergeants over…');
-  moveDone = false; clearTimeout(moveTimer); moveTimer = setTimeout(() => { if (!moveDone) moveFallback('The two addresses could not reach each other.'); }, 12000); }
+  moveDone = false; moveArm(12000); }
+function moveArm(ms){ clearTimeout(moveTimer); moveTimer = setTimeout(() => { if (!moveDone) moveFallback('The two addresses could not reach each other.'); }, ms); }
 function moveLineHTML(){ const c = moveCfg(), n = roster().list.length, m = moveMark(), host = moveHost();
   if (moveIsOld()) return `<div class="bkline due mvline" role="status"><span class="fine" id="mvMsg">${m
       ? `Your sergeants were carried to <b>${host}</b> ${agoText(m.at) || 'today'}. Play there from now on: this address will close.`
@@ -49,7 +62,8 @@ function moveMount(){ if (typeof document === 'undefined') return; const old = d
 if (typeof window !== 'undefined') {
   window.addEventListener('message', ev => { const d = ev.data, c = moveCfg(); if (!d || typeof d !== 'object' || !d.ftrMove) return;
     if (moveIsOld()) { if (ev.origin !== moveOrigin(c.to) || !moveWin || ev.source !== moveWin) return;
-      if (d.ftrMove === 'ready') { try { moveWin.postMessage({ftrMove:'carry', text:backupText()}, moveOrigin(c.to)); } catch(e) { moveFallback('The hand-over failed.'); } }
+      if (d.ftrMove === 'wait') { if (!moveDone) { moveSay('The new address is checking it is up to date, then your sergeants go across…'); moveArm(75000); } }
+      else if (d.ftrMove === 'ready') { try { moveWin.postMessage({ftrMove:'carry', text:backupText()}, moveOrigin(c.to)); } catch(e) { moveFallback('The hand-over failed.'); } }
       else if (d.ftrMove === 'carried') { moveDone = true; clearTimeout(moveTimer); try { localStorage.setItem(MOVEDKEY, JSON.stringify({at:Date.now(), n:d.n | 0})); } catch(e) {}
         moveMount(); }
       return; }
@@ -61,7 +75,9 @@ if (typeof window !== 'undefined') {
       if (!S && typeof showTitle === 'function') showTitle(); } });
   /* the new address, opened by the old one's button: say so until the backup arrives (the opener may still be wiring its listener) */
   window.addEventListener('load', () => { if (location.hash !== '#carry' || !window.opener || moveIsOld()) return; const c = moveCfg(); let k = 0;
-    const ping = () => { if (location.hash !== '#carry' || k++ > 24) return; for (const o of c.from) { try { window.opener.postMessage({ftrMove:'ready'}, o); } catch(e) {} } setTimeout(ping, 400); }; ping(); });
+    const tell = what => { for (const o of c.from) { try { window.opener.postMessage({ftrMove:what}, o); } catch(e) {} } };
+    const ping = () => { if (location.hash !== '#carry' || k++ > 24) return; tell('ready'); setTimeout(ping, 400); };
+    tell('wait'); moveFresh().then(reloading => { if (!reloading) ping(); }); });
 }
 /* the title carries the notice: showTitle is wrapped once, after every book's own title code has loaded */
 { const _showTitle = showTitle; showTitle = function(){ const r = _showTitle.apply(this, arguments); try { moveMount(); } catch(e) {} return r; }; }

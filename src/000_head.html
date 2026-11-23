@@ -13,6 +13,10 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
+<script>/* v13.65.2: the official address wears its own icon (green), so its home-screen app can be told from the old address's (brown). Both addresses serve the same files; the page picks by where it is. window.FTR_HOST overrides for a test. */
+(function(){ try { var h = window.FTR_HOST || location.hostname; if (h !== 'playfromtheranks.com' && h !== 'www.playfromtheranks.com') return;
+  var set = function(sel, href){ var l = document.querySelector(sel); if (l) l.setAttribute('href', href); };
+  set('link[rel="manifest"]', 'manifest-official.webmanifest'); set('link[rel="icon"]', 'icon-official-192.png'); set('link[rel="apple-touch-icon"]', 'apple-touch-icon-official.png'); } catch(e) {} })();</script>
 <title>From the Ranks</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

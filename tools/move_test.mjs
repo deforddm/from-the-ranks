@@ -32,18 +32,19 @@ const t0 = await p.evaluate(() => ({ text: (document.querySelector('.mvline') ||
 const pre = await ctx.newPage(); pre.on('pageerror', e => errors.push(String(e))); await pre.goto(NEW + '/index.html'); await pre.waitForTimeout(800);
 await pre.evaluate(() => { localStorage.clear(); S = newState('Hask'); S.chapter = 1; S.silver = 5; save(); S = newStateDG('Vesh'); S.chapter = 4; S.chapters = {1:'a', 2:'b', 3:'c'}; S.silver = 999; save(); S = null; });
 await pre.close();
+const done = async pg => { await pg.waitForLoadState('load'); await pg.waitForFunction(() => location.hash !== '#carry' && !!document.querySelector('.mvline'), null, { timeout: 60000 }).catch(() => {}); await pg.waitForTimeout(300); }; // v13.65.2: the new address checks for an update first, so wait for the carry itself, not a fixed time
 const [np] = await Promise.all([ctx.waitForEvent('page'), p.click('#mvGo')]); np.on('pageerror', e => errors.push(String(e)));
-await np.waitForLoadState('load'); await np.waitForTimeout(2500);
+await done(np);
 const r1 = await np.evaluate(() => ({ origin: location.origin, hash: location.hash, list: roster().list.map(e => { const s = loadSlot(e.id); return s.name + ':' + (s.book || 'gotm') + ':' + (s.chapter || 0) + ':' + s.silver; }).sort(), note: (document.querySelector('.mvline') || {}).textContent || '', art: SET.art }));
 r1.origin === NEW && r1.list.join() === 'Hask:gotm:3:77,Vesh:dg:4:999' ? ok('new address: the further Hask replaced the older one; its own further Vesh was left alone') : no('arrived: ' + JSON.stringify(r1));
 /One sergeant carried across/.test(r1.note) && /left alone/.test(r1.note) ? ok('new address says what came and what was left') : no('note: ' + r1.note);
 r1.hash === '' ? ok('the #carry mark is gone from the address') : no('hash: ' + r1.hash);
 r1.art !== false ? ok('a device with sergeants keeps its own settings') : no('settings were overwritten');
-await p.waitForTimeout(500);
+await p.waitForFunction(() => !!moveMark(), null, { timeout: 15000 }).catch(() => {}); await p.waitForTimeout(300);
 const r2 = await p.evaluate(() => ({ mark: !!moveMark(), text: (document.querySelector('.mvline') || {}).textContent || '', btn: (document.querySelector('#mvGo') || {}).textContent || '', n: roster().list.length }));
 r2.mark && /were carried to localhost/.test(r2.text) && /Go there/.test(r2.btn) && r2.n === 2 ? ok('old address: marked as carried, saves still there, the button now goes to the new address') : no('old after: ' + JSON.stringify(r2));
 // 3. carrying again changes nothing
-const [np2] = await Promise.all([ctx.waitForEvent('page'), p.click('#mvAgain')]); await np2.waitForLoadState('load'); await np2.waitForTimeout(2500);
+const [np2] = await Promise.all([ctx.waitForEvent('page'), p.click('#mvAgain')]); await done(np2);
 const r3 = await np2.evaluate(() => ({ list: roster().list.map(e => { const s = loadSlot(e.id); return s.name + ':' + (s.chapter || 0); }).sort(), note: (document.querySelector('.mvline') || {}).textContent || '' }));
 r3.list.join() === 'Hask:3,Vesh:4' && /Nothing new to carry/.test(r3.note) ? ok('a second carry adds nothing and says so') : no('second carry: ' + JSON.stringify(r3));
 // 4. a stranger's origin is refused: a page that is neither address posts a backup at the new one
@@ -57,7 +58,7 @@ await evil.close();
 const ctx2 = await mk(true); const q = await ctx2.newPage(); q.on('pageerror', e => errors.push(String(e)));
 await q.goto(OLD + '/index.html'); await q.waitForTimeout(800);
 await q.evaluate(() => { localStorage.clear(); S = newState('Brell'); S.chapter = 2; save(); S = null; SET.art = false; saveSet(); showTitle(); try { closeModal(); } catch(e) {} const m = document.getElementById('modal'); if (m) m.hidden = true; }); await q.waitForTimeout(300);
-const [nq] = await Promise.all([ctx2.waitForEvent('page'), q.click('#mvGo')]); await nq.waitForLoadState('load'); await nq.waitForTimeout(2500);
+const [nq] = await Promise.all([ctx2.waitForEvent('page'), q.click('#mvGo')]); await done(nq);
 const r5 = await nq.evaluate(() => ({ list: roster().list.map(e => e.name + ':' + e.ch).join(), art: SET.art, title: !!document.querySelector('#tName') }));
 r5.list === 'Brell:2' && r5.art === false && r5.title ? ok('a fresh device: the sergeant and the settings arrive, the title shows') : no('fresh: ' + JSON.stringify(r5));
 // 5b. v13.65.1: one name in several books (a carried squad keeps its sergeant's name): every book's sergeant arrives, and a
@@ -72,7 +73,7 @@ r5.list === 'Brell:2' && r5.art === false && r5.title ? ok('a fresh device: the 
   // the new address as the broken carry left it: only one of them
   const pre4 = await c4.newPage(); await pre4.goto(NEW + '/index.html'); await pre4.waitForTimeout(800);
   await pre4.evaluate(() => { localStorage.clear(); S = newStateRG('Snert'); S.chapter = 1; save(); S = null; }); await pre4.close();
-  const [n4] = await Promise.all([c4.waitForEvent('page'), q4.click('#mvGo')]); await n4.waitForLoadState('load'); await n4.waitForTimeout(2500);
+  const [n4] = await Promise.all([c4.waitForEvent('page'), q4.click('#mvGo')]); await done(n4);
   const r4 = await n4.evaluate(() => roster().list.map(e => (e.book || 'gotm') + ':' + e.ch).sort().join());
   r4 === 'bh:2,gotm:7,moi:3,rg:1' ? ok('new address: all four books\' sergeants are there after the carry') : no('same name, four books: ' + r4);
   // and a backup file restored onto a cleared device keeps all four
