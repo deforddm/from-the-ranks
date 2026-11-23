@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.65.0', ['From the Ranks has its own address: playfromtheranks.com. Saves stay with the address they were made at, so if you are playing at the old one, the title now offers to carry your sergeants across in one tap. Nothing is lost at the old address when you do.']],
   ['13.64.2', ['More groundwork for the new address; nothing changes for you yet.']],
   ['13.64.1', ['A fix for the new address: the game opens there on a second visit as well as the first.']],
   ['13.64.0', ['Groundwork for the game\'s move to its own address, playfromtheranks.com. Nothing changes for you yet; when it does, the title will offer to carry your sergeants across in one tap.']],

@@ -4,8 +4,8 @@
    sergeant, the settings) across by postMessage, each side checking the other's origin. The new address merges what arrives and
    never lets an older copy replace a sergeant who is further along there. Where the browser will not let the two talk (an installed
    app on some phones opens the tab with no way back), the notice falls back to the backup file, which the new address loads.
-   MOVE.on is the switch: false until the new address is live, so nothing shows before then. window.FTR_MOVE overrides for tests. */
-const MOVE = {on:false, to:'https://playfromtheranks.com/', from:['https://deforddm.github.io']};
+   MOVE.on is the switch: turned on in v13.65.0 (David tried it on his phone with ?move=1, Nov 23, 2026: "The transfer worked with the notice"). window.FTR_MOVE overrides for tests. */
+const MOVE = {on:true, to:'https://playfromtheranks.com/', from:['https://deforddm.github.io']};
 const MOVEDKEY = 'from-the-ranks-moved'; // on the old address: {at, n} once a carry was acknowledged
 const moveTry = (() => { try { return /[?&]move=1(&|$)/.test(location.search); } catch(e) { return false; } })(); // ?move=1 on the old address shows the notice for that visit only, to try it before it is switched on for everyone
 const moveCfg = () => Object.assign({}, MOVE, moveTry ? {on:true} : {}, (typeof window !== 'undefined' && window.FTR_MOVE) || {});
