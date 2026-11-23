@@ -153,7 +153,7 @@ const GLOSS = [
   [0, 'Warrens', 'The paths sorcery is drawn from. Tuft draws on Meanas, shadow and illusion; Ohl on Denul, healing. Draw too hard and it costs strain, and then blood.'],
   [0, 'Meanas', 'The warren of shadow and illusion: Tuft\'s. Quiet, and good for hiding things in.'],
   [0, 'Denul', 'The warren of healing: Ohl\'s. It closes wounds; it does not argue with Hood for free.'],
-  [0, 'Moranth munitions', 'Clay grenados from the Moranth alchemists: sharpers throw iron, burners throw fire, smokers throw cover, and cussers take down walls. Thirteen to a crate: twelve and a dud.'],
+  [0, 'Moranth munitions', 'Grenados of fired clay or fine glass from the Moranth alchemists: sharpers throw iron, burners throw fire, smokers throw cover, and cussers take down walls. Thirteen to a crate: twelve and a dud.'],
   [0, "The Moon's Spawn", 'A mountain of black stone that floats, and hangs over whatever it chooses.'],
   [0, 'The Deck of Dragons', 'A deck of cards whose Houses are the powers of the world. A reading shows who is watching you.'],
   [0, 'Hood', 'The Lord of Death. Soldiers swear by his breath, his teeth and his gate.'],
@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.63.2', ['A burner is a sealed glass cylinder of liquid fire, as the books have it: its picture and its words.']],
   ['13.63.1', ['Book Seven, Bridgeburner: the alley fight in Chapter 2 was being lost half the time. The enemy there lands a few fewer blows now.']],
   ['13.63.0', ['Bridgeburner bites harder in Books One, Three, Four, Six, Seven, Eight and Nine: in about a hundred fights the enemy lands more blows. Soldier is as it was, and so are each book\'s first fight and the hold-the-line fights.']],
   ['13.62.17', ['Pruss carries no helm in his portrait now; Tirren\'s plait is one woven rope, grown from the hair behind her ear and lying over the shoulder.']],

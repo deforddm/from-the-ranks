@@ -161,7 +161,7 @@ GLOSSX.dg = [
   [0, 'Warrens', 'The paths of power mages draw on. In Seven Cities this summer they are fouled: thin some days, wrong on others, as if something huge were wading through them.'],
   [0, 'Denul', 'The warren of healing. Marrow\'s. It has gone strange.'],
   [0, 'Hood', 'The Lord of Death. His gate stands open across Seven Cities this summer, and every soldier knows it.'],
-  [0, 'Moranth munitions', 'Clay grenades from the Moranth of Genabackis: sharpers, burners, smokers and cussers. Nobody in Seven Cities makes them. Every one thrown is one fewer, for good.'],
+  [0, 'Moranth munitions', 'Grenades of clay and glass from the Moranth of Genabackis: sharpers, burners, smokers and cussers. Nobody in Seven Cities makes them. Every one thrown is one fewer, for good.'],
   [1, 'The Chain', 'What the column becomes: soldiers, refugees, cattle and carts, strung out for leagues, walking west to Aren with an army on every side. The soldiers have started calling it the Chain of Dogs.', ()=>S.chapter >= 1],
   [1, 'Duiker', 'The Imperial Historian, who came to Hissar to write the history of a quiet province. He rides with Coltaine now, and writes everything down.', ()=>!!(S.f && S.f.b2_duiker)],
   [1, 'Bult', 'Coltaine\'s uncle, and his second. Old, scarred, and the only man in the Seventh who laughs at the Fist to his face.', ()=>!!(S.f && S.f.b2_bult)],
