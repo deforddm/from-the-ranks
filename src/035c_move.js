@@ -7,7 +7,8 @@
    MOVE.on is the switch: false until the new address is live, so nothing shows before then. window.FTR_MOVE overrides for tests. */
 const MOVE = {on:false, to:'https://playfromtheranks.com/', from:['https://deforddm.github.io']};
 const MOVEDKEY = 'from-the-ranks-moved'; // on the old address: {at, n} once a carry was acknowledged
-const moveCfg = () => Object.assign({}, MOVE, (typeof window !== 'undefined' && window.FTR_MOVE) || {});
+const moveTry = (() => { try { return /[?&]move=1(&|$)/.test(location.search); } catch(e) { return false; } })(); // ?move=1 on the old address shows the notice for that visit only, to try it before it is switched on for everyone
+const moveCfg = () => Object.assign({}, MOVE, moveTry ? {on:true} : {}, (typeof window !== 'undefined' && window.FTR_MOVE) || {});
 const moveOrigin = u => { try { return new URL(u).origin; } catch(e) { return ''; } };
 const moveIsOld = () => { const c = moveCfg(); return !!c.on && c.from.includes(location.origin); };
 const moveHost = () => { try { return new URL(moveCfg().to).host; } catch(e) { return 'the new address'; } };

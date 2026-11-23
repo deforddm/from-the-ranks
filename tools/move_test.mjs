@@ -15,6 +15,12 @@ const errors = [];
   await p.evaluate(() => { localStorage.clear(); S = newState('Hask'); save(); S = null; showTitle(); try { closeModal(); } catch(e) {} const m = document.getElementById('modal'); if (m) m.hidden = true; }); await p.waitForTimeout(300);
   (await p.evaluate(() => !document.querySelector('.mvline'))) ? ok('switch off: no notice on the old address') : no('switch off: a notice shows');
   await ctx.close(); }
+// 1b. the switch off, but ?move=1 on the address: the notice shows for that visit
+{ const ctx = await mk(false), p = await ctx.newPage(); await ctx.addInitScript(() => { delete window.FTR_MOVE.on; });
+  await p.goto(OLD + '/index.html?move=1'); await p.waitForTimeout(800);
+  await p.evaluate(() => { localStorage.clear(); S = newState('Hask'); save(); S = null; showTitle(); }); await p.waitForTimeout(300);
+  (await p.evaluate(() => !!document.querySelector('.mvline #mvGo'))) ? ok('?move=1 shows the notice with the switch off') : no('?move=1 did not show the notice');
+  await ctx.close(); }
 // 2. the switch on: notice, one tap, both sergeants arrive
 const ctx = await mk(true); const p = await ctx.newPage(); p.on('pageerror', e => errors.push(String(e)));
 await p.goto(OLD + '/index.html'); await p.waitForTimeout(800);
