@@ -697,7 +697,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.63.0';
+const VERSION = '13.63.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -10164,6 +10164,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.63.1', ['Book Seven, Bridgeburner: the alley fight in Chapter 2 was being lost half the time. The enemy there lands a few fewer blows now.']],
   ['13.63.0', ['Bridgeburner bites harder in Books One, Three, Four, Six, Seven, Eight and Nine: in about a hundred fights the enemy lands more blows. Soldier is as it was, and so are each book\'s first fight and the hold-the-line fights.']],
   ['13.62.17', ['Pruss carries no helm in his portrait now; Tirren\'s plait is one woven rope, grown from the hair behind her ear and lying over the shoulder.']],
   ['13.62.16', ['Pruss\'s helm hangs from his trace-strap instead of sitting in the air; Tirren wears a tied kerchief, not a cap, and her plait comes out from behind her neck and lies over the shoulder.']],
@@ -123259,7 +123260,7 @@ const TFIGHT = { // Nov 22, 2026 (David: "2", then "Yes and yes"): Bridgeburner 
   b6_c6_night:{b: 8}, // b+2 75% | Nov 22: b+8 (every trick 80%, none 85%)
   b6_c6_wells:{b: 6}, // b+6 85%
   b7_c1_dunes:{b: -1}, // b-3 75% | Nov 18: b-1
-  b7_c2_alley:{b: 2}, // b+2 65%
+  b7_c2_alley:{b: 1}, // b+2 65% | Nov 22: b+1 (at +2 it read 50% over 40 runs; at +1 every trick 70%, none 80%; David: "yes")
   b7_c2_bridge:{b: 2}, // | Nov 18: b+2
   b7_c2_gate:{b: 3}, // | Nov 18: b+2 | Nov 22: b+3 (every trick 100%, none 70%)
   b7_c3_factor:{b: 4}, // | Nov 18: b+3 | Nov 22: b+4 (every trick 75%, none 70%)

@@ -90,7 +90,7 @@ const TFIGHT = { // Nov 22, 2026 (David: "2", then "Yes and yes"): Bridgeburner 
   b6_c6_night:{b: 8}, // b+2 75% | Nov 22: b+8 (every trick 80%, none 85%)
   b6_c6_wells:{b: 6}, // b+6 85%
   b7_c1_dunes:{b: -1}, // b-3 75% | Nov 18: b-1
-  b7_c2_alley:{b: 2}, // b+2 65%
+  b7_c2_alley:{b: 1}, // b+2 65% | Nov 22: b+1 (at +2 it read 50% over 40 runs; at +1 every trick 70%, none 80%; David: "yes")
   b7_c2_bridge:{b: 2}, // | Nov 18: b+2
   b7_c2_gate:{b: 3}, // | Nov 18: b+2 | Nov 22: b+3 (every trick 100%, none 70%)
   b7_c3_factor:{b: 4}, // | Nov 18: b+3 | Nov 22: b+4 (every trick 75%, none 70%)

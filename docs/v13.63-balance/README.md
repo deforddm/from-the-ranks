@@ -185,3 +185,7 @@ David's second yes. The to-hit lever is spent on these fights, so the trial used
 | b9_c7_trail | 88 | | 92 (12) | |
 
 Reading it. Health moves these fights where to-hit did not, but steeply: one fight goes from 92% to 25% between x1.3 and x1.5. It also lengthens fights (stores and peddler run past 20 rounds, against the 10 to 12 the toughness reset aimed for). A sketch that would put Eight near 81% and Nine near 81%: chancers, grass, doorway x1.4; raid x1.3; peddler x1.2; stores, looters x1.15; Nine's stores x1.3, raid and c5_dogs x1.2, farm x1.1. It needs a new `h` field in `TFIGHT`, 20-run confirmation with and without tricks, and David's yes.
+
+## v13.63.1: the six older fights, checked (Sun Nov 22, 2026, 9:19 PM PST)
+
+David, Nov 22, 7:17 PM PST: "check the next thing". Bridgeburner, 20 runs each, no tricks / every trick: `knives` 65 / 75, `b4_c1_brawl` 80 / 80, `b9_c2_drill` 60 / 65 (a survive fight, left alone), `b3_c4_breakout` 90 / 80, `b6_c1_edge` 90 / 85, `b7_c2_alley` 50 / 50. The alley was under the floor at its Nov 13 step of +2. Trial: +1 gave 80 / 70, 0 gave 75 / 90. David, 7:58 PM: "yes" to +1. Shipped as v13.63.1; run_all --play=3 166/166.
