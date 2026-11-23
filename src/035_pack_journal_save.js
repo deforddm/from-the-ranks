@@ -62,7 +62,7 @@ function openModal(tab){
     bl.onclick = () => { let s = null; try { s = JSON.parse(decodeURIComponent(escape(atob($('#imp').value.trim())))); } catch(e) {}
       if (!s || s.v !== 1) { const b = parseBackup($('#imp').value); if (b && b.sergeants.length > 1) { unarm(); $('#impMsg').textContent = 'That is a whole backup, not one sergeant\'s code: load it with Load a backup file above.'; return; } // v8.2
         unarm(); $('#impMsg').textContent = 'That code didn\'t load. Check that it was copied in full.'; return; }
-      s.name = String(s.name || 'Hask').slice(0, 18); const ex = roster().list.find(e => sameName(e.name, s.name));
+      s.name = String(s.name || 'Hask').slice(0, 18); const ex = roster().list.find(e => sameSgt(e, s));
       if (ex && !bl.dataset.arm) { bl.dataset.arm = 1; bl.classList.add('warn'); bl.textContent = `Replace Sergeant ${ex.name}`; $('#impMsg').textContent = tapWord(`Sergeant ${ex.name} already has a save on this device. Tap again to replace it with the one in this code.`); return; }
       AUDIO.play('click'); s.sid = ex ? ex.id : newSid(); S = migrate(s); save(); m.hidden = true; resume(); };
   }
@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.65.1', ['Carrying sergeants to the new address, or loading a backup file, lost every sergeant but one of the same name: a squad carried into a later book keeps its sergeant\'s name. Each book\'s sergeant now arrives. If some of yours did not, open the old address and tap Carry again; nothing was removed there.']],
   ['13.65.0', ['From the Ranks has its own address: playfromtheranks.com. Saves stay with the address they were made at, so if you are playing at the old one, the title now offers to carry your sergeants across in one tap. Nothing is lost at the old address when you do.']],
   ['13.64.2', ['More groundwork for the new address; nothing changes for you yet.']],
   ['13.64.1', ['A fix for the new address: the game opens there on a second visit as well as the first.']],

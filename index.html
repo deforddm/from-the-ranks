@@ -697,7 +697,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.65.0';
+const VERSION = '13.65.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -10030,7 +10030,7 @@ function openModal(tab){
     bl.onclick = () => { let s = null; try { s = JSON.parse(decodeURIComponent(escape(atob($('#imp').value.trim())))); } catch(e) {}
       if (!s || s.v !== 1) { const b = parseBackup($('#imp').value); if (b && b.sergeants.length > 1) { unarm(); $('#impMsg').textContent = 'That is a whole backup, not one sergeant\'s code: load it with Load a backup file above.'; return; } // v8.2
         unarm(); $('#impMsg').textContent = 'That code didn\'t load. Check that it was copied in full.'; return; }
-      s.name = String(s.name || 'Hask').slice(0, 18); const ex = roster().list.find(e => sameName(e.name, s.name));
+      s.name = String(s.name || 'Hask').slice(0, 18); const ex = roster().list.find(e => sameSgt(e, s));
       if (ex && !bl.dataset.arm) { bl.dataset.arm = 1; bl.classList.add('warn'); bl.textContent = `Replace Sergeant ${ex.name}`; $('#impMsg').textContent = tapWord(`Sergeant ${ex.name} already has a save on this device. Tap again to replace it with the one in this code.`); return; }
       AUDIO.play('click'); s.sid = ex ? ex.id : newSid(); S = migrate(s); save(); m.hidden = true; resume(); };
   }
@@ -10164,6 +10164,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.65.1', ['Carrying sergeants to the new address, or loading a backup file, lost every sergeant but one of the same name: a squad carried into a later book keeps its sergeant\'s name. Each book\'s sergeant now arrives. If some of yours did not, open the old address and tap Carry again; nothing was removed there.']],
   ['13.65.0', ['From the Ranks has its own address: playfromtheranks.com. Saves stay with the address they were made at, so if you are playing at the old one, the title now offers to carry your sergeants across in one tap. Nothing is lost at the old address when you do.']],
   ['13.64.2', ['More groundwork for the new address; nothing changes for you yet.']],
   ['13.64.1', ['A fix for the new address: the game opens there on a second visit as well as the first.']],
@@ -10575,11 +10576,14 @@ function parseBackup(text){ const t = String(text || '').trim(); if (!t) return 
   if (o && o.ftr === 1 && Array.isArray(o.sergeants)) return {sergeants:o.sergeants.filter(s => s && s.v === 1), settings:o.settings && typeof o.settings === 'object' ? o.settings : null, seen:o.seen || null, at:o.at || null};
   if (o && o.v === 1) return {sergeants:[o], settings:null, seen:null, at:null};
   return null; }
-/* which sergeants in a backup would replace one already here (same name) */
-function backupClashes(b){ const list = roster().list; return b.sergeants.filter(s => list.find(e => sameName(e.name, s.name))).map(s => String(s.name || 'Hask').slice(0, 18)); }
+/* v13.65.1: a sergeant is one name IN ONE BOOK. A squad carried into a later book keeps its sergeant's name, so one name can hold a save
+   in several books; matching on the name alone folded those into one slot on a restore or a carry (David lost Books Three, Six and Seven's). */
+const sameSgt = (e, s) => sameName(e.name, s.name) && (e.book || 'gotm') === (s.book || 'gotm');
+/* which sergeants in a backup would replace one already here (same name, same book) */
+function backupClashes(b){ const list = roster().list; return b.sergeants.filter(s => list.find(e => sameSgt(e, s))).map(s => String(s.name || 'Hask').slice(0, 18)); }
 function restoreBackup(b){ let n = 0;
   for (const raw of b.sergeants) { let s; try { s = migrate(JSON.parse(JSON.stringify(raw))); } catch(e) { continue; }
-    s.name = String(s.name || 'Hask').slice(0, 18); const ex = roster().list.find(e => sameName(e.name, s.name)); s.sid = ex ? ex.id : newSid();
+    s.name = String(s.name || 'Hask').slice(0, 18); const ex = roster().list.find(e => sameSgt(e, s)); s.sid = ex ? ex.id : newSid();
     try { localStorage.setItem(slotKey(s.sid), JSON.stringify(s)); const r = roster(); r.list = [rosterMeta(s), ...r.list.filter(e => e.id !== s.sid)]; localStorage.setItem(RKEY, JSON.stringify(r)); n++; } catch(e) {} }
   if (b.settings && typeof SET !== 'undefined') { try { Object.assign(SET, b.settings); saveSet(); } catch(e) {} }
   if (b.seen) { try { if (!localStorage.getItem(SEENKEY)) localStorage.setItem(SEENKEY, b.seen); } catch(e) {} }
@@ -10613,8 +10617,8 @@ function moveMark(){ let m = null; try { m = JSON.parse(localStorage.getItem(MOV
 const moveFar = s => (s && s.chapters ? Object.keys(s.chapters).length : 0) * 10000 + ((s && s.chapter) || 0) * 100 + ((s && s.lvl) || 1);
 /* the new address takes a backup: sergeants not here yet come in; one already here is replaced only by a copy further along */
 function moveTake(text){ const b = parseBackup(text); if (!b) return null; const list = roster().list; let kept = 0;
-  const take = b.sergeants.filter(s => { const ex = list.find(e => sameName(e.name, s.name)); if (!ex) return true;
-    const here = loadSlot(ex.id); if (here && (here.book || 'gotm') === (s.book || 'gotm') && moveFar(s) > moveFar(here)) return true; kept++; return false; });
+  const take = b.sergeants.filter(s => { const ex = list.find(e => sameSgt(e, s)); if (!ex) return true; // the same name in another book is another sergeant (v13.65.1)
+    const here = loadSlot(ex.id); if (here && moveFar(s) > moveFar(here)) return true; kept++; return false; });
   const had = list.length; const n = restoreBackup({sergeants:take, settings:had ? null : b.settings, seen:b.seen, at:b.at}); // a device with sergeants already keeps its own settings
   return {n, kept}; }
 let moveNote = '', moveWin = null, moveTimer = null, moveDone = false;

@@ -30,11 +30,14 @@ function parseBackup(text){ const t = String(text || '').trim(); if (!t) return 
   if (o && o.ftr === 1 && Array.isArray(o.sergeants)) return {sergeants:o.sergeants.filter(s => s && s.v === 1), settings:o.settings && typeof o.settings === 'object' ? o.settings : null, seen:o.seen || null, at:o.at || null};
   if (o && o.v === 1) return {sergeants:[o], settings:null, seen:null, at:null};
   return null; }
-/* which sergeants in a backup would replace one already here (same name) */
-function backupClashes(b){ const list = roster().list; return b.sergeants.filter(s => list.find(e => sameName(e.name, s.name))).map(s => String(s.name || 'Hask').slice(0, 18)); }
+/* v13.65.1: a sergeant is one name IN ONE BOOK. A squad carried into a later book keeps its sergeant's name, so one name can hold a save
+   in several books; matching on the name alone folded those into one slot on a restore or a carry (David lost Books Three, Six and Seven's). */
+const sameSgt = (e, s) => sameName(e.name, s.name) && (e.book || 'gotm') === (s.book || 'gotm');
+/* which sergeants in a backup would replace one already here (same name, same book) */
+function backupClashes(b){ const list = roster().list; return b.sergeants.filter(s => list.find(e => sameSgt(e, s))).map(s => String(s.name || 'Hask').slice(0, 18)); }
 function restoreBackup(b){ let n = 0;
   for (const raw of b.sergeants) { let s; try { s = migrate(JSON.parse(JSON.stringify(raw))); } catch(e) { continue; }
-    s.name = String(s.name || 'Hask').slice(0, 18); const ex = roster().list.find(e => sameName(e.name, s.name)); s.sid = ex ? ex.id : newSid();
+    s.name = String(s.name || 'Hask').slice(0, 18); const ex = roster().list.find(e => sameSgt(e, s)); s.sid = ex ? ex.id : newSid();
     try { localStorage.setItem(slotKey(s.sid), JSON.stringify(s)); const r = roster(); r.list = [rosterMeta(s), ...r.list.filter(e => e.id !== s.sid)]; localStorage.setItem(RKEY, JSON.stringify(r)); n++; } catch(e) {} }
   if (b.settings && typeof SET !== 'undefined') { try { Object.assign(SET, b.settings); saveSet(); } catch(e) {} }
   if (b.seen) { try { if (!localStorage.getItem(SEENKEY)) localStorage.setItem(SEENKEY, b.seen); } catch(e) {} }

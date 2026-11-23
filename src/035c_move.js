@@ -17,8 +17,8 @@ function moveMark(){ let m = null; try { m = JSON.parse(localStorage.getItem(MOV
 const moveFar = s => (s && s.chapters ? Object.keys(s.chapters).length : 0) * 10000 + ((s && s.chapter) || 0) * 100 + ((s && s.lvl) || 1);
 /* the new address takes a backup: sergeants not here yet come in; one already here is replaced only by a copy further along */
 function moveTake(text){ const b = parseBackup(text); if (!b) return null; const list = roster().list; let kept = 0;
-  const take = b.sergeants.filter(s => { const ex = list.find(e => sameName(e.name, s.name)); if (!ex) return true;
-    const here = loadSlot(ex.id); if (here && (here.book || 'gotm') === (s.book || 'gotm') && moveFar(s) > moveFar(here)) return true; kept++; return false; });
+  const take = b.sergeants.filter(s => { const ex = list.find(e => sameSgt(e, s)); if (!ex) return true; // the same name in another book is another sergeant (v13.65.1)
+    const here = loadSlot(ex.id); if (here && moveFar(s) > moveFar(here)) return true; kept++; return false; });
   const had = list.length; const n = restoreBackup({sergeants:take, settings:had ? null : b.settings, seen:b.seen, at:b.at}); // a device with sergeants already keeps its own settings
   return {n, kept}; }
 let moveNote = '', moveWin = null, moveTimer = null, moveDone = false;

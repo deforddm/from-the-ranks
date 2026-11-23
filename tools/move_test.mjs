@@ -60,6 +60,25 @@ await q.evaluate(() => { localStorage.clear(); S = newState('Brell'); S.chapter 
 const [nq] = await Promise.all([ctx2.waitForEvent('page'), q.click('#mvGo')]); await nq.waitForLoadState('load'); await nq.waitForTimeout(2500);
 const r5 = await nq.evaluate(() => ({ list: roster().list.map(e => e.name + ':' + e.ch).join(), art: SET.art, title: !!document.querySelector('#tName') }));
 r5.list === 'Brell:2' && r5.art === false && r5.title ? ok('a fresh device: the sergeant and the settings arrive, the title shows') : no('fresh: ' + JSON.stringify(r5));
+// 5b. v13.65.1: one name in several books (a carried squad keeps its sergeant's name): every book's sergeant arrives, and a
+// second carry brings the ones an earlier, broken carry dropped
+{ const c4 = await mk(true); const q4 = await c4.newPage(); q4.on('pageerror', e => errors.push(String(e)));
+  await q4.goto(OLD + '/index.html'); await q4.waitForTimeout(800);
+  await q4.evaluate(() => { localStorage.clear(); const mk = (fn, ch) => { S = fn('Snert'); S.sid = newSid(); S.chapter = ch; save(); };
+    mk(newState, 7); mk(newStateMOI, 3); mk(newStateBH, 2); mk(newStateRG, 1); S = null; showTitle(); try { closeModal(); } catch(e) {} const m = document.getElementById('modal'); if (m) m.hidden = true; });
+  await q4.waitForTimeout(300);
+  const n0 = await q4.evaluate(() => roster().list.map(e => (e.book || 'gotm')).sort().join());
+  n0 === 'bh,gotm,moi,rg' ? ok('old address: four Snerts, one a book') : no('setup: ' + n0);
+  // the new address as the broken carry left it: only one of them
+  const pre4 = await c4.newPage(); await pre4.goto(NEW + '/index.html'); await pre4.waitForTimeout(800);
+  await pre4.evaluate(() => { localStorage.clear(); S = newStateRG('Snert'); S.chapter = 1; save(); S = null; }); await pre4.close();
+  const [n4] = await Promise.all([c4.waitForEvent('page'), q4.click('#mvGo')]); await n4.waitForLoadState('load'); await n4.waitForTimeout(2500);
+  const r4 = await n4.evaluate(() => roster().list.map(e => (e.book || 'gotm') + ':' + e.ch).sort().join());
+  r4 === 'bh:2,gotm:7,moi:3,rg:1' ? ok('new address: all four books\' sergeants are there after the carry') : no('same name, four books: ' + r4);
+  // and a backup file restored onto a cleared device keeps all four
+  const b4 = await q4.evaluate(() => { const t = backupText(); localStorage.clear(); const n = restoreBackup(parseBackup(t)); return n + ':' + roster().list.map(e => (e.book || 'gotm')).sort().join(); });
+  b4 === '4:bh,gotm,moi,rg' ? ok('a backup file restores all four as well') : no('backup restore: ' + b4);
+  await c4.close(); }
 // 6. no sergeants on the old address: the button is a plain link onward
 const ctx3 = await mk(true); const z = await ctx3.newPage(); await z.goto(OLD + '/index.html'); await z.waitForTimeout(800);
 await z.evaluate(() => { localStorage.clear(); showTitle(); try { closeModal(); } catch(e) {} const m = document.getElementById('modal'); if (m) m.hidden = true; }); await z.waitForTimeout(300);
