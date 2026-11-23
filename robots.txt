@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /src/
+Disallow: /tools/
+Disallow: /docs/
+Disallow: /preview/
+
+Sitemap: https://playfromtheranks.com/sitemap.xml

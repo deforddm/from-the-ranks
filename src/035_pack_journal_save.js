@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.65.3', ['Housekeeping so search engines can find the game at playfromtheranks.com. Nothing changes in play.']],
   ['13.65.2', ['Carrying sergeants across: the new address now makes sure it is on the newest version before it takes them.', 'The game at playfromtheranks.com has a green icon, so its home-screen app can be told from the old address\'s brown one. An app already on a home screen keeps its icon until it is removed and added again.']],
   ['13.65.1', ['Carrying sergeants to the new address, or loading a backup file, lost every sergeant but one of the same name: a squad carried into a later book keeps its sergeant\'s name. Each book\'s sergeant now arrives. If some of yours did not, open the old address and tap Carry again; nothing was removed there.']],
   ['13.65.0', ['From the Ranks has its own address: playfromtheranks.com. Saves stay with the address they were made at, so if you are playing at the old one, the title now offers to carry your sergeants across in one tap. Nothing is lost at the old address when you do.']],

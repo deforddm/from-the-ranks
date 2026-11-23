@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v13.65.2'; // backups: a save file that survives a cleared browser
+const CACHE = 'ftr-v13.65.3'; // backups: a save file that survives a cleared browser
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const OFFICIAL = /(^|\.)playfromtheranks\.com$/.test(self.location.hostname) && !/^trygalle\./.test(self.location.hostname); // the official address has its own icon set (v13.65.2)
