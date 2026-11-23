@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.64.1', ['A fix for the new address: the game opens there on a second visit as well as the first.']],
   ['13.64.0', ['Groundwork for the game\'s move to its own address, playfromtheranks.com. Nothing changes for you yet; when it does, the title will offer to carry your sergeants across in one tap.']],
   ['13.63.2', ['A burner is a sealed glass cylinder of liquid fire, as the books have it: its picture and its words.']],
   ['13.63.1', ['Book Seven, Bridgeburner: the alley fight in Chapter 2 was being lost half the time. The enemy there lands a few fewer blows now.']],

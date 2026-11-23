@@ -1,4 +1,4 @@
-const CACHE = 'ftr-v13.64.0'; // backups: a save file that survives a cleared browser
+const CACHE = 'ftr-v13.64.1'; // backups: a save file that survives a cleared browser
 const FONTS = 'ftr-fonts'; // Google Fonts, kept across versions so the typography survives offline play
 const PAGE = './index.html'; // the 2.5 MB game. Precached once; './' and every navigation are answered from it.
 const ASSETS = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
@@ -10,8 +10,16 @@ const FONT_CSS = 'https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&fa
 const warmFonts = () => caches.open(FONTS).then(c => fetch(FONT_CSS).then(r => { if (!r.ok) return ''; c.put(FONT_CSS, r.clone()); return r.text(); })
   .then(css => { const urls = []; String(css || '').replace(/\/\* latin \*\/[^}]*?url\((https:\/\/fonts\.gstatic\.com\/[^)]+)\)/g, (_, u) => urls.push(u));
     return Promise.all(urls.map(u => c.match(u).then(hit => hit || fetch(u).then(res => res.ok ? c.put(u, res) : null)))); })).catch(() => {});
+/* v13.64.1: a host that answers './index.html' with a redirect to './' (Cloudflare Pages does) hands back a response marked
+   "redirected", and a browser refuses to show one of those for a page load (the game then fails to open at all once this worker
+   is in charge). So what is precached is always a plain copy. And if the version before this one cached a redirected page, it
+   cannot show the "Update ready" button to let this one in, so this one takes over at once. */
+const plain = res => !res.redirected ? Promise.resolve(res) : res.blob().then(b => new Response(b, {status:res.status, statusText:res.statusText, headers:res.headers}));
+const precache = c => Promise.all(ASSETS.map(u => fetch(new Request(u, {cache:'reload'})).then(res => { if (!res.ok) throw new Error('precache ' + u + ' ' + res.status); return plain(res).then(p => c.put(u, p)); })));
+const oldBroken = () => caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('ftr-v') && k !== CACHE).map(k => caches.open(k).then(c => c.match(PAGE)).then(r => !!(r && r.redirected))))).then(a => a.some(Boolean)).catch(() => false);
 self.addEventListener('install', e => {
-  e.waitUntil(Promise.all([caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, {cache:'reload'})))), warmFonts()])); // past the HTTP cache: a new version must not precache the old page
+  e.waitUntil(Promise.all([caches.open(CACHE).then(precache), warmFonts()]) // past the HTTP cache: a new version must not precache the old page
+    .then(() => oldBroken()).then(bad => { if (bad) return self.skipWaiting(); }));
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('ftr-v') && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
