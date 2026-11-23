@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.64.0', ['Groundwork for the game\'s move to its own address, playfromtheranks.com. Nothing changes for you yet; when it does, the title will offer to carry your sergeants across in one tap.']],
   ['13.63.2', ['A burner is a sealed glass cylinder of liquid fire, as the books have it: its picture and its words.']],
   ['13.63.1', ['Book Seven, Bridgeburner: the alley fight in Chapter 2 was being lost half the time. The enemy there lands a few fewer blows now.']],
   ['13.63.0', ['Bridgeburner bites harder in Books One, Three, Four, Six, Seven, Eight and Nine: in about a hundred fights the enemy lands more blows. Soldier is as it was, and so are each book\'s first fight and the hold-the-line fights.']],
