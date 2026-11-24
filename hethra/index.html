@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<meta name="theme-color" content="#07080a">
+<title>Hethra, City of the Fallen</title>
+<meta name="description" content="A fan-made 3D warband skirmish game for Windows PC, set in a burning, ruined city of the Malazan world.">
+<meta property="og:title" content="Hethra, City of the Fallen">
+<meta property="og:description" content="A fan-made 3D warband skirmish game for Windows PC, set in a burning, ruined city of the Malazan world.">
+<meta property="og:image" content="https://playfromtheranks.com/hethra/shots/fight.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07080a;
+    --bg-2: #0e1013;
+    --panel: rgba(18, 20, 24, 0.86);
+    --ink: #e9e2d3;
+    --ink-2: #b8ae9c;
+    --ink-3: #7f776a;
+    --ember: #e08a3c;
+    --ember-2: #b3541e;
+    --jade: #57c7a8;
+    --line: rgba(224, 138, 60, 0.22);
+    --gothic: 'Grenze Gotisch', 'Palatino Linotype', Palatino, Georgia, serif;
+    --sc: 'Alegreya Sans SC', 'Alegreya Sans', 'Segoe UI', sans-serif;
+    --sans: 'Alegreya Sans', 'Segoe UI', system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body { margin: 0; min-width: 1100px; background: var(--bg); color: var(--ink); font: 18px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: var(--ember); }
+  .wrap { width: 1140px; margin: 0 auto; }
+
+  /* hero */
+  .hero { position: relative; height: 720px; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 40%; filter: saturate(0.9) brightness(0.62); transform: scale(1.04); }
+  .hero::after { content: ''; position: absolute; inset: 0; background:
+      radial-gradient(ellipse at 30% 55%, rgba(7,8,10,0) 0%, rgba(7,8,10,0.55) 55%, rgba(7,8,10,0.95) 100%),
+      linear-gradient(180deg, rgba(7,8,10,0.55) 0%, rgba(7,8,10,0) 30%, rgba(7,8,10,0) 60%, var(--bg) 100%); }
+  .hero .wrap { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 84px; }
+  .kicker { font: 600 15px/1 var(--sc); letter-spacing: 0.22em; text-transform: uppercase; color: var(--ember); margin-bottom: 18px; }
+  h1 { margin: 0; font: 700 128px/0.9 var(--gothic); letter-spacing: 0.01em; color: #f3ead7; text-shadow: 0 0 40px rgba(224,138,60,0.35), 0 4px 0 #000; }
+  .sub { margin: 10px 0 0; font: 500 40px/1 var(--gothic); color: var(--ink-2); }
+  .lede { max-width: 620px; margin: 26px 0 34px; font-size: 21px; color: var(--ink); }
+  .cta { display: flex; align-items: center; gap: 26px; }
+  .btn { display: inline-flex; align-items: center; gap: 14px; padding: 18px 30px; border-radius: 4px; text-decoration: none;
+    font: 700 20px/1 var(--sc); letter-spacing: 0.06em; color: #170c04;
+    background: linear-gradient(180deg, #f2a457 0%, var(--ember) 45%, var(--ember-2) 100%);
+    box-shadow: 0 0 0 1px rgba(255,190,120,0.5) inset, 0 10px 30px rgba(224,138,60,0.28); transition: transform .15s, box-shadow .15s; }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(255,210,150,0.7) inset, 0 14px 36px rgba(224,138,60,0.42); }
+  .btn svg { width: 22px; height: 22px; }
+  .meta { font-size: 15px; color: var(--ink-3); line-height: 1.5; }
+  .meta b { color: var(--ink-2); font-weight: 500; }
+
+  section { padding: 84px 0 0; }
+  h2 { margin: 0 0 26px; font: 700 52px/1 var(--gothic); color: #efe5d1; }
+  h2 small { display: block; margin-top: 10px; font: 500 15px/1 var(--sc); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ember); }
+
+  /* gallery */
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .gallery a { position: relative; display: block; border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); background: var(--bg-2); }
+  .gallery a.wide { grid-column: span 2; grid-row: span 2; }
+  .gallery img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16 / 9; transition: transform .4s, filter .4s; filter: brightness(0.92); }
+  .gallery a:hover img { transform: scale(1.03); filter: brightness(1.05); }
+  .gallery span { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 14px 10px; font: 500 15px/1.2 var(--sc); letter-spacing: 0.06em; color: var(--ink);
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.78) 100%); }
+
+  /* features */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { padding: 26px 26px 24px; background: var(--panel); border: 1px solid rgba(255,255,255,0.06); border-top: 2px solid var(--ember-2); border-radius: 4px; }
+  .card h3 { margin: 0 0 10px; font: 700 26px/1.1 var(--gothic); color: #f1e6cf; }
+  .card p { margin: 0; color: var(--ink-2); font-size: 17px; }
+
+  .warbands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .wb { padding: 24px 26px; border-radius: 4px; background: var(--bg-2); border: 1px solid rgba(255,255,255,0.06); }
+  .wb h3 { margin: 0 0 8px; font: 700 30px/1.05 var(--gothic); }
+  .wb p { margin: 0; color: var(--ink-2); font-size: 17px; }
+  .wb.m h3 { color: #d9b06a; } .wb.c h3 { color: #c7675b; } .wb.w h3 { color: #d8c38a; }
+
+  /* install */
+  .install { display: grid; grid-template-columns: 1.2fr 1fr; gap: 34px; align-items: start; }
+  ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 18px 54px; color: var(--ink-2); }
+  ol.steps li::before { content: counter(s); position: absolute; left: 0; top: -2px; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+    font: 700 18px/1 var(--sc); color: var(--ember); border: 1px solid var(--line); background: rgba(224,138,60,0.07); }
+  ol.steps b { color: var(--ink); font-weight: 500; }
+  .note { padding: 22px 24px; border-radius: 4px; background: rgba(224,138,60,0.07); border: 1px solid var(--line); color: var(--ink-2); font-size: 17px; }
+  .note h3 { margin: 0 0 8px; font: 700 18px/1.2 var(--sc); letter-spacing: 0.06em; color: var(--ember); }
+  .note p { margin: 0 0 10px; } .note p:last-child { margin: 0; }
+  table.keys { width: 100%; border-collapse: collapse; font-size: 16px; color: var(--ink-2); }
+  table.keys td { padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  table.keys td:first-child { width: 40%; color: var(--ink); font-family: var(--sc); letter-spacing: 0.04em; }
+
+  footer { margin-top: 96px; padding: 48px 0 64px; border-top: 1px solid var(--line); background: #050607; color: var(--ink-3); font-size: 15px; }
+  footer .cols { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+  footer h3 { margin: 0 0 10px; font: 700 15px/1 var(--sc); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); }
+  footer p { margin: 0 0 10px; }
+
+  /* lightbox */
+  .lb { position: fixed; inset: 0; z-index: 10; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.92); cursor: zoom-out; }
+  .lb.on { display: flex; }
+  .lb img { max-width: 92vw; max-height: 88vh; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 80px #000; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <img class="bg" src="shots/fight.jpg" alt="">
+  <div class="wrap">
+    <div class="kicker">A Malazan warband skirmish game · Windows PC</div>
+    <h1>Hethra</h1>
+    <div class="sub">City of the Fallen</div>
+    <p class="lede">Where the Crippled God's pain fell burning from the sky, Hethra died in a night. Its ruins are thick with godshards, and every faction wants them. Lead your warband through the streets, rooftops and plank bridges, and hold what you can.</p>
+    <div class="cta">
+      <a class="btn" id="dl" href="https://github.com/deforddm/from-the-ranks/raw/main/hethra/Hethra-windows.zip">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.1 10.4 4v7.2H3V5.1Zm8.3-1.2L21 2.5v8.7h-9.7V3.9ZM3 12.8h7.4V20L3 18.9v-6.1Zm8.3 0H21v8.7l-9.7-1.4v-7.3Z"/></svg>
+        Download for Windows
+      </a>
+      <div class="meta"><b>Version 0.1</b> · 53 MB zip · Windows 10 or 11, 64-bit<br>A dedicated graphics card is recommended.</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section>
+    <h2>From the ruins<small>Screenshots from the game</small></h2>
+    <div class="gallery">
+      <a class="wide" href="shots/fight.jpg"><img src="shots/fight.jpg" alt="A marine charges a cultist beside a burning brazier"><span>A charge in the torchlight</span></a>
+      <a href="shots/idol.jpg"><img src="shots/idol-sm.jpg" alt="The chained bronze idol in the square"><span>The Idol Square</span></a>
+      <a href="shots/overview.jpg"><img src="shots/overview-sm.jpg" alt="The ruined city at night from above"><span>Hethra by night</span></a>
+      <a href="shots/orders.jpg"><img src="shots/orders-sm.jpg" alt="Giving orders to a fighter"><span>Orders</span></a>
+      <a href="shots/battle.jpg"><img src="shots/battle-sm.jpg" alt="The battle spreads across the rooftops"><span>Rooftops and bridges</span></a>
+      <a href="shots/title.jpg"><img src="shots/title-sm.jpg" alt="The title screen"><span>Choose your warband</span></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>The fight<small>What is in version 0.1</small></h2>
+    <div class="features">
+      <div class="card"><h3>A city in full 3D</h3><p>Streets, ruined towers, rooftops and plank bridges, lit by braziers and fires, under ash and fog. Climb, jump gaps and risk the fall.</p></div>
+      <div class="card"><h3>Every fighter counts</h3><p>Each fighter has their own stat line, weapons and armour. Wounds, knockdowns, stuns and the long fall out of action are all rolled for.</p></div>
+      <div class="card"><h3>Warrens and munitions</h3><p>Mages open their warrens for shadow, storm and healing. Marines carry Moranth sharpers, crackers and the dreaded cusser.</p></div>
+      <div class="card"><h3>Hidden in the dark</h3><p>Line of sight is real. Enemies you cannot see stay hidden, and a figure behind a wall shows only as a silhouette.</p></div>
+      <div class="card"><h3>Godshards</h3><p>Shards of the fallen god glow in the ruins. Hold the most when the battle ends, or break the enemy's nerve first.</p></div>
+      <div class="card"><h3>An enemy that plays to win</h3><p>The foe moves, shoots, charges and contests the shards on its own, and you see its moves only when your fighters can see it.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Warbands<small>Pick yours and your foe</small></h2>
+    <div class="warbands">
+      <div class="wb m"><h3>Malazan Marines</h3><p>A squad of the Empire's marines with crossbows, Moranth munitions, a sapper and a squad mage who would rather be anywhere else.</p></div>
+      <div class="wb c"><h3>Cult of the Chained One</h3><p>Pilgrims of the fallen god, many and unafraid of wounds. Chain-priests, shard-eaters, thrown stones and the Chained One's pain.</p></div>
+      <div class="wb w"><h3>Sworn of the Whirlwind</h3><p>Desert rebels who rose in the goddess's name. Dervishes, sand archers and a seer, hunting Malazans as gladly as shards.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Getting started<small>Download, unzip, play</small></h2>
+    <div class="install">
+      <div>
+        <ol class="steps">
+          <li><b>Download</b> the zip with the button above, then right-click it and choose <b>Extract All</b>.</li>
+          <li>Open the <b>Hethra</b> folder and run <b>Hethra.exe</b>. Nothing is installed.</li>
+          <li>Pick your warband and your foe, then press <b>Into the ruins</b>.</li>
+          <li>Slow PC? On the title screen, press <b>Graphics</b> to switch to fast.</li>
+        </ol>
+        <table class="keys">
+          <tr><td>Click, or Tab</td><td>Choose a fighter</td></tr>
+          <tr><td>Click a glowing disc</td><td>Move there</td></tr>
+          <tr><td>Click an enemy</td><td>Fight, charge or shoot (hover first for the odds)</td></tr>
+          <tr><td>WASD, Q E, R F</td><td>Pan, turn and tilt the camera; mouse wheel zooms</td></tr>
+          <tr><td>1 to 6</td><td>Move, Dash, Charge, Shoot, Throw, Cast</td></tr>
+          <tr><td>Enter · F1</td><td>End turn · How to play</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="note">
+          <h3>Windows may warn you</h3>
+          <p>Hethra.exe is not code-signed, so Windows SmartScreen may say it protected your PC from an unrecognised app.</p>
+          <p>Choose <b>More info</b>, then <b>Run anyway</b>. Your antivirus may also scan it the first time.</p>
+        </div>
+        <p class="meta" style="margin-top:22px">Want to look inside? The full Godot 4.7 project is here too: <a href="https://github.com/deforddm/from-the-ranks/raw/main/hethra/Hethra-godot-project.zip">Hethra-godot-project.zip</a> (12 MB). Import <b>project.godot</b> in Godot and press F5.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap cols">
+    <div>
+      <h3>Credits</h3>
+      <p>Hethra is a free, non-commercial fan work set in the world of the <i>Malazan Book of the Fallen</i> by <b>Steven Erikson</b> and the <i>Novels of the Malazan Empire</i> by <b>Ian C. Esslemont</b>. The Malazan world, its peoples, gods and warrens are theirs. This game is not endorsed by them or their publishers.</p>
+      <p>Its rules, art, names of fighters and places, and text are original. No assets from any other game are used.</p>
+    </div>
+    <div>
+      <h3>Made with</h3>
+      <p>Godot Engine 4.7 (MIT licence). Fonts: Grenze Gotisch and Alegreya Sans (SIL Open Font Licence). All 3D art is generated in code.</p>
+      <p><a href="../">From the Ranks</a></p>
+    </div>
+  </div>
+</footer>
+
+<div class="lb" id="lb"><img alt=""></div>
+<script>
+  const lb = document.getElementById('lb'), big = lb.querySelector('img');
+  document.querySelectorAll('.gallery a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); big.src = a.getAttribute('href'); big.alt = a.querySelector('img').alt; lb.classList.add('on'); }));
+  lb.addEventListener('click', () => lb.classList.remove('on'));
+  addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('on'); });
+</script>
+</body>
+</html>
