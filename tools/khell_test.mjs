@@ -28,8 +28,8 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   // a plain blow of 10 lands for 5
   B.units.forEach(u => { u.x = 0; u.y = 0; }); b.x = 3; b.y = 3; kh.x = 4; kh.y = 3; kh.hp = kh.maxhp; b.atk = 60; let res; for (let i = 0; i < 40; i++) { B.log = []; res = attack(b, kh, {dmg:[1,1,9]}); if (res.hit && !B.log.some(l => /critical|Parried/.test(String(l)))) break; } out.blow = res.dmg;
   // a sharper's 10 does 5 to it and 10 to a squadmate beside it; a cusser's 10 does 15
-  kh.parryLeft = 0; b.hp = b.maxhp = 60; const hp0 = kh.hp; B.blastKind = 'sharper'; blast({x:4, y:3}, [[1,1,9],[1,1,9]], '#fff'); out.sharper = {hunter:hp0 - kh.hp, brisk:Math.round(60 - b.hp)};
-  const hp1 = kh.hp; b.hp = 60; B.blastKind = 'cusser'; blast({x:4, y:3}, [[1,1,9],[1,1,9]], '#fff'); out.cusser = {hunter:hp1 - kh.hp, brisk:Math.round(60 - b.hp)};
+  kh.parryLeft = 0; b.hp = b.maxhp = 60; const hp0 = kh.hp; B.blastKind = 'sharper'; blast({x:4, y:3}, [[1,1,9],[1,1,9]], '#fff'); out.sharper = {hunter:hp0 - kh.hp, brisk:Math.round(60 - b.hp), want:Math.max(1, Math.round((10 + munFloor(kh, 'sharper', 0)) * .5))}; // v13.67.0: the sharper's share of its full health is halved with the dice
+  const hp1 = kh.hp; b.hp = 60; B.blastKind = 'cusser'; blast({x:4, y:3}, [[1,1,9],[1,1,9]], '#fff'); out.cusser = {hunter:hp1 - kh.hp, brisk:Math.round(60 - b.hp), want:Math.min(hp1, Math.round((10 + munFloor(kh, 'cusser', 0)) * 1.5))};
   // Vell's hook in the open: a rope on it, not "too heavy"
   kh.hp = kh.maxhp; v.x = 4; v.y = 6; v.atk = 60; v.cdHook = -1; let roped = false; for (let i = 0; i < 20 && !roped; i++) { v.cdHook = -1; B.log = []; await AB.grapple.run(v, kh.x, kh.y); roped = kh.b3RopeUntil >= B.round; if (B.log.some(l => /too heavy/.test(String(l)))) { out.tooHeavy = true; break; } }
   out.vellRope = {roped, ac:kh.b3RopeAc, hit:kh.b3RopeHit, flag:S.f.b3_c4_vellRope, moved:kh.x === 4 && kh.y === 3, line:B.log.some(l => /One more rope on it/.test(String(l)))};
@@ -46,8 +46,8 @@ ok(r.vell && r.vell.find && r.vell.ok && r.vell.after && r.vell.held && r.vellAf
 ok(r.loyUp === 1 && r.coil, `the coil is his, and Vell's loyalty goes up one (${r.loyUp})`);
 ok(r.inFight && r.inFight.attacks === 2 && r.inFight.rng === 2 && r.inFight.parry === 1 && r.inFight.dr === 5 && r.inFight.boss, `in the fight: reach 2, a parry, hide 5 (${JSON.stringify(r.inFight)})`);
 ok(r.blow === 5, `a plain blow of 10 lands for 5 through the hide (${r.blow})`);
-ok(r.sharper && r.sharper.hunter === 5 && r.sharper.brisk === 10, `a sharper's 10 does 5 to the Hunter and 10 to the squadmate beside it (${JSON.stringify(r.sharper)})`);
-ok(r.cusser && r.cusser.hunter === 15 && r.cusser.brisk === 10, `a cusser's 10 does 15 to the Hunter (${JSON.stringify(r.cusser)})`);
+ok(r.sharper && r.sharper.hunter === r.sharper.want && r.sharper.want > 5 && r.sharper.brisk === 10, `a sharper's 10 and its share do half to the Hunter and 10 to the squadmate beside it (${JSON.stringify(r.sharper)})`);
+ok(r.cusser && r.cusser.hunter === r.cusser.want && r.cusser.want > 15 && r.cusser.brisk === 10, `a cusser's 10 and its share do half again to the Hunter (${JSON.stringify(r.cusser)})`);
 ok(r.vellRope && r.vellRope.roped && r.vellRope.ac === 4 && r.vellRope.hit === 4 && r.vellRope.flag === 1 && r.vellRope.moved && r.vellRope.line && !r.tooHeavy, `Vell's hook in the open: a rope on it, it stays where it stands (${JSON.stringify(r.vellRope)})`);
 ok(r.gully && r.gully.heavy && r.gully.flag === 0 && !r.gully.roped, `in the gully his hook is a hook again: the roped one is too heavy to haul (${JSON.stringify(r.gully)})`);
 ok(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.join(' | ') : ''));

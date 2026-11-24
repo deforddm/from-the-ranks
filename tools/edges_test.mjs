@@ -41,6 +41,23 @@ const r = await page.evaluate(async (CASES) => {
     const pct = Math.round(100 * over / N), want = boss ? 33 : 66; if (Math.abs(pct - want) > 7) out.push(`${boss ? 'a leader' : 'a soldier'} with attack 40 went over ${pct}% of ${N} times, not about ${want}%`); }
   // fire, bleeding and a slam grow with the squad's level on an enemy, never on the squad
   { const e = B.units.find(u => u.side === 'e'), p = B.units.find(u => u.side === 'p'); S.lvl = 22; if (wearDmg(e) !== lvDmg() || lvDmg() < 5) out.push(`an enemy's burn, bleed or slam adds ${wearDmg(e)} at level 22, not the level's damage bonus (${lvDmg()})`); if (wearDmg(p) !== 0) out.push('the squad takes the level bonus from fire or bleeding'); }
+  // v13.67.0: a munition takes a share of an enemy's full health and rolls its dice on top; a leader half the share; the very heavy the whole share; the squad the dice only
+  { const e = B.units.find(u => u.side === 'e'), p = B.units.find(u => u.side === 'p'); e.maxhp = 200; e.boss = false; e.heavy = false; e.immortal = false;
+    const want = [['cusser', 0, 100], ['cusser', 1, 100], ['cusser', 2, 30], ['sharper', 0, 50], ['sharper', 1, 20], ['burner', 0, 20], ['burner', 1, 20], ['smoker', 0, 0], [null, 0, 0]];
+    for (const [k, d, n] of want) if (munFloor(e, k, d) !== n) out.push(`a ${k} at distance ${d} takes ${munFloor(e, k, d)} of 200 health before the dice, not ${n}`);
+    e.boss = true; if (munFloor(e, 'cusser', 0) !== 50) out.push('a leader does not take half the share'); e.boss = false;
+    e.heavy = true; e.boss = true; if (munFloor(e, 'cusser', 0) !== 100) out.push('the very heavy do not take the whole share'); e.heavy = false; e.boss = false; e.immortal = true; if (munFloor(e, 'cusser', 0) !== 0) out.push('the deathless take a share'); e.immortal = false;
+    if (munFloor(p, 'cusser', 0) !== 0) out.push('the squad takes a share of its own health from a blast');
+    B.units.filter(u => u !== e && u !== p).forEach((u, i) => { u.x = i % 8; u.y = 9; }); e.x = 3; e.y = 3; p.x = 3; p.y = 4; e.hp = e.maxhp = 200; e.resist = null; e.weak = null; e.soak = 0; p.hp = p.maxhp = 200; p.ward = 0; B.blastKind = 'cusser'; B.cur = null;
+    blast({x:3, y:3}, [[3,8,0],[3,8,0],[1,8,0]], '#fff'); const lostE = 200 - e.hp, lostP = 200 - p.hp;
+    if (lostE < 103 || lostE > 124) out.push(`a cusser on a 200-health soldier took ${lostE}, not 100 and 3d8`);
+    if (lostP < 1 || lostP > 24) out.push(`a squadmate beside a cusser lost ${lostP}, not 3d8 at most`); }
+  // Book Eight's Hound: blades do not touch it; munitions tear it, and two cussers send it into Shadow (it does not die)
+  { const hd = mkFoe('b8_hound', 5, 1); B.units.push(hd); B.initOrder.push(hd); hd.x = 6; hd.y = 0; hurt(hd, 5000); if (!B.units.includes(hd) || hd.hp < 999) out.push('a blade touched the Hound');
+    B.units.filter(u => u !== hd).forEach((u, i) => { u.x = i % 8; u.y = 9; }); B.blastKind = 'cusser'; B.cur = null;
+    blast({x:6, y:0}, [[3,8,0],[3,8,0],[1,8,0]], '#fff'); if (!B.units.includes(hd)) out.push('one cusser sent the Hound off'); if (!(hd.b8torn >= 500)) out.push(`one cusser tore ${hd.b8torn} from the Hound, not half and the dice`);
+    B.blastKind = 'cusser'; blast({x:6, y:0}, [[3,8,0],[3,8,0],[1,8,0]], '#fff'); if (B.units.includes(hd)) out.push('two cussers did not send the Hound into Shadow');
+    if (!(B.log || []).join(' ').includes('into Shadow')) out.push('the Hound left without the line'); if ((B.log || []).join(' ').match(/Hound of Shadow goes down/)) out.push('the Hound was told as killed'); }
   B.over = true;
   return out;
 }, CASES);

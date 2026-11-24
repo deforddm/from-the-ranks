@@ -214,6 +214,11 @@ Object.entries(BOONS).forEach(([god, b]) => { BOON_BY_KEY[b.key] ??= Object.assi
     return c; }; }
 { const _hurt = hurt;
   hurt = function(u, n, crit){
+    if (u && u.b8hound && B && B.munHit && n > 0) { // v13.67.0 (David, Nov 23, 2026: "Two cussers would tear a hound to shreds"; "you can always have a hound escape into shadow to avoid a non Canon death")
+      u.b8torn = (u.b8torn || 0) + n; float(u, 'torn', '#ffcf7a'); u.flash = performance.now();
+      if (u.b8torn >= u.maxhp) { b8HoundOut(u); blog(`<em>${u.name} is torn to rags by it, and does not fall.</em> It turns its head, once, toward the squad, and steps sideways into Shadow, and the street has no Hound in it. Nothing died here.`); }
+      else if (!u.b8tornTold) { u.b8tornTold = 1; blog(`<em>The ${B.munHit} opens ${u.name} to the bone.</em> Blades do not touch it. Moranth munitions do. It is still standing.`); }
+      return; }
     if (u && u.b8hound) { if (!u.b8told) { u.b8told = 1; blog(`<em>Nothing the squad has touches the Hound.</em> It does not seem to notice that anyone tried.`); } float(u, 'untouched', '#cfc8b8'); return; } // rule 14: no Hound dies at the Fourth's hands
     const before = u ? u.hp : 0; _hurt(u, n, crit);
     /* the Guardians' boon: as Hood's, once each, and a ward on top (the post-check is the Gate card's, 60c) */
@@ -305,6 +310,7 @@ Object.assign(FOES, {
 const FOE_SORC_B8 = ['b8_kelykpriest']; FOE_SORC_B8.forEach(k => FOE_SORC.add(k)); // the priest's kelyk is sorcery: it goes past soak
 /* the Hound passes: it arrives, stays its rounds (FOES.b8_hound.stay, 2), and goes on down the street; nothing the squad has can drop it */
 { const _mkFoe = mkFoe; mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra); if (FOES[k] && FOES[k].b8hound) { u.b8hound = true; u.b8leave = ((B && B.round) || 1) + (FOES[k].stay || 2); u.maxhp = u.hp = 999; } return u; }; }
+function b8HoundOut(u){ const k = B.units.indexOf(u); if (k < 0) return; B.units.splice(k, 1); const i = B.initOrder.indexOf(u); if (i >= 0) B.initOrder.splice(i, 1); if (B.order !== B.initOrder) { const j = B.order.indexOf(u); if (j >= 0) B.order.splice(j, 1); } }
 { const _nr = newRound; newRound = function(){ _nr(); if (!B || B.over) return;
     const gone = B.units.filter(u => u.b8hound && u.hp > 0 && u.b8leave != null && B.round >= u.b8leave);
     gone.forEach(u => { B.units.splice(B.units.indexOf(u), 1); const i = B.initOrder.indexOf(u); if (i >= 0) B.initOrder.splice(i, 1); if (B.order !== B.initOrder) { const j = B.order.indexOf(u); if (j >= 0) B.order.splice(j, 1); }

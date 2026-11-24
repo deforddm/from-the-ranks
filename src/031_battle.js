@@ -141,10 +141,10 @@ function startBattle(id, opt={}){
     const nearP = c => fsP.filter(f => Math.abs(f.x - c.x) <= 1 && Math.abs(f.y - c.y) <= 1).length;
     const aimP = fsP.slice().sort((a, b) => nearP(b) - nearP(a) || Math.hypot(a.x - mxP, a.y - myP) - Math.hypot(b.x - mxP, b.y - myP))[0];
     const cxP = aimP ? aimP.x : 3, cyP = aimP ? aimP.y : 1, ownP = !!def.preFx;
-    if (mun === 'sharper') { AUDIO.play('sharper'); B.fx.push({kind:'boom', x:3.5, y:1, r:1, col:'#f2c46b', t:performance.now()}); sparks(3.5, 1, 30, '#f2c46b'); shakeMap(); foes().forEach(f => { const n = roll(1,10); hurt(f, f.resist && f.resist.sharper ? Math.max(1, Math.round(n * f.resist.sharper)) : n); }); }
+    if (mun === 'sharper') { AUDIO.play('sharper'); B.fx.push({kind:'boom', x:3.5, y:1, r:1, col:'#f2c46b', t:performance.now()}); sparks(3.5, 1, 30, '#f2c46b'); shakeMap(); foes().forEach(f => { const n = roll(1,10) + munFloor(f, 'sharper', 1); hurt(f, f.resist && f.resist.sharper ? Math.max(1, Math.round(n * f.resist.sharper)) : n); }); }
     else if (mun === 'burner') { AUDIO.play('burner'); B.fx.push({kind:'boom', x:cxP, y:cyP, r:1, col:'#ff7a3a', t:performance.now()}); sparks(cxP, cyP, 30, '#ff9a3a', .6); shakeMap();
       if (!ownP) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preFire(cxP + dx, cyP + dy, 2);
-      foes().filter(f => Math.abs(f.x - cxP) <= 1 && Math.abs(f.y - cyP) <= 1).forEach(f => { const n = roll(1,6); hurt(f, f.resist && f.resist.burner ? Math.max(1, Math.round(n * f.resist.burner)) : n); }); }
+      foes().filter(f => Math.abs(f.x - cxP) <= 1 && Math.abs(f.y - cyP) <= 1).forEach(f => { const n = roll(1,6) + munFloor(f, 'burner', 1); hurt(f, f.resist && f.resist.burner ? Math.max(1, Math.round(n * f.resist.burner)) : n); }); }
     else { AUDIO.play('smoker'); sparks(cxP, cyP, 18, '#9a968e', .35); if (!ownP) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) preSmoke(cxP + dx, cyP + dy, 2); }
     /* v8.2.4: a burner or smoker opener whose fight has its own preText already tells the throw in the scene's words; the general line would tell it twice, in the wrong place */
     if (typeof opt.pre === 'string' || mun === 'sharper' || !def.preText) blog(typeof opt.pre === 'string' ? opt.pre : mun === 'burner' ? `${named} goes off in the middle of them. The whole ${placeWord(def)} fills with orange light.` : mun === 'smoker' ? `${named} breaks in the middle of them. Grey rolls out across the ${placeWord(def)} and sits there like a held breath.` : `${named} skips across the ground and goes off in the middle of them. The whole ${placeWord(def)} hears it.`); }
@@ -260,13 +260,13 @@ const AB = {
   bash:{name:'Shield bash', desc:()=>`Adjacent enemy: 1d6+${3 + lvDmg()} damage, and it loses its next turn on a hit. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}.`, ok:u=>!(u.cdBash >= B.round),
     tiles:u=>foes().filter(f => cheb(u,f) === 1),
     run(u,x,y){ const t = unitAt(x,y); u.cdBash = B.round + 2 - lvAt(6); const r = attack(u, t, {dmg:[1,6,3 + lvDmg()], verb:'shield-bashes'}); if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.stun = true; blog(`${t.name} reels, dazed.`); } }},
-  sharper:{name:'Sharper', item:'sharper', boom:true, aoe:1, range:4, desc:()=>'Throw, range 4. 1d10+2 where it lands and 1d6 to everything next to it, squad included. A natural 1 scatters it.',
+  sharper:{name:'Sharper', item:'sharper', boom:true, aoe:1, range:4, desc:()=>'Throw, range 4. 1d10+2 where it lands and 1d6 to everything next to it, squad included. An enemy also loses a quarter of its full health where it lands, a tenth beside it (a leader half that). A natural 1 scatters it.',
     run(u,x,y){ const pt = scatter(u,x,y,1,1); throwArc(u, pt, () => { blast(pt, [[1,10,2],[1,6,0]], '#f2c46b'); AUDIO.play('sharper'); sparks(pt.x, pt.y, 26, '#f2c46b'); }); blog(`${u.name} lobs a sharper.`); }},
-  burner:{name:'Burner', item:'burner', boom:true, aoe:1, range:4, desc:()=>'Throw, range 4. 1d6 to everything in a 3×3 and leaves it burning for 2 rounds. A natural 1 scatters it.',
+  burner:{name:'Burner', item:'burner', boom:true, aoe:1, range:4, desc:()=>'Throw, range 4. 1d6 to everything in a 3×3 and leaves it burning for 2 rounds. An enemy in it also loses a tenth of its full health (a leader half that). A natural 1 scatters it.',
     run(u,x,y){ const pt = scatter(u,x,y,1,1); throwArc(u, pt, () => { blast(pt, [[1,6,0],[1,6,0]], '#ff7a3a'); AUDIO.play('burner'); sparks(pt.x, pt.y, 30, '#ff9a3a', .6);
       for (let dy=-1;dy<=1;dy++) for (let dx=-1;dx<=1;dx++) if (!wall(pt.x+dx, pt.y+dy)) B.fires.push({x:pt.x+dx, y:pt.y+dy, until:B.round+2}); });
       blog(`${u.name} throws a burner. The ${placeWord(B.def)} fills with orange light.`); }},
-  cusser:{name:'Cusser', item:'cusser', boom:true, aoe:2, range:3, desc:()=>'Fired from the crossbow\'s cradle, range 3: nobody throws a cusser by hand twice. 3d8 to the centre and everything next to it, 1d8 one step further. Scatters on a 1–2.' + (maudKept() ? ' Maud, Chub\'s cusser, stays in the satchel: Kettle is keeping her for the one that matters.' : ''),
+  cusser:{name:'Cusser', item:'cusser', boom:true, aoe:2, range:3, desc:()=>'Fired from the crossbow\'s cradle, range 3: nobody throws a cusser by hand twice. 3d8 to the centre and everything next to it, 1d8 one step further. An enemy also loses half its full health at the centre and beside it, a seventh one step further (a leader half that). Scatters on a 1–2.' + (maudKept() ? ' Maud, Chub\'s cusser, stays in the satchel: Kettle is keeping her for the one that matters.' : ''),
     run(u,x,y){ const pt = scatter(u,x,y,2,R(2)+1); throwArc(u, pt, () => { blast(pt, [[3,8,0],[3,8,0],[1,8,0]], '#fff1c2'); AUDIO.play('cusser'); sparks(pt.x, pt.y, 60, '#fff1c2', 1.6); shakeMap(); const f = $('#flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }); blog(`${u.name} cradles a cusser on the crossbow and looses it. The ${placeWord(B.def) === 'tunnel' || placeWord(B.def) === 'vault' ? 'ceiling' : 'ground'} thinks about it.`); }},
   smoker:{name:'Smoker', item:'smoker', boom:true, aoe:1, range:4, smoke:true, desc:()=>'Throw, range 4. A 3×3 of smoke for 2 rounds: nobody shoots into it, out of it or through it. Blades still work. A natural 1 scatters it.',
     run(u,x,y){ const pt = scatter(u,x,y,1,1); throwArc(u, pt, () => { AUDIO.play('smoker'); sparks(pt.x, pt.y, 18, '#9a968e', .35);
@@ -370,12 +370,21 @@ function scatter(u, x, y, failOn, dist){
 }
 /* the arc is only drawn; the blast runs on a timer, so a throw still lands if the screen stops drawing (the app backgrounded mid-throw) */
 function throwArc(u, pt, then){ const dur = REDUCE() ? 1 : 420; B.fx.push({kind:'arc', from:{x:u.x,y:u.y}, to:pt, t:performance.now(), dur}); later(then, dur); }
+/* v13.67.0 (David, Nov 23, 2026: "Munitions should always be devastating, especially cussers... They can have that minimum damage base
+   but also roll their damage on top of it"). His rule that munitions never grow stands: the dice are Book One's. But a cusser was half
+   a Book One soldier and an eighth of a Book Ten one. So a Moranth munition also takes a share of an enemy's full health, by how near it
+   landed, and the dice go on top. A leader takes half the share. The very heavy take the whole share, leader or not (David, the same
+   night: "Two cussers would tear a hound to shreds"). The deathless take the dice only, but for Book Eight's Hound,
+   which blades cannot touch and munitions can: torn to nothing, it goes into Shadow (140). A foe that resists a munition resists the whole.
+   Never the squad or its allies. */
+const MUN_FLOOR = {cusser:[.5, .5, .15], sharper:[.25, .1], burner:[.1, .1]};
+const munFloor = (u, k, d) => { const sh = (MUN_FLOOR[k] || [])[d]; if (!sh || !u || u.side !== 'e' || (u.immortal && !u.b8hound)) return 0; return Math.round((u.maxhp || 0) * sh * (u.boss && !u.heavy ? .5 : 1)); };
 function blast(pt, dice, col){
   B.fx.push({kind:'boom', x:pt.x, y:pt.y, r:dice.length - 1, col, t:performance.now()});
-  B.units.filter(u => u.hp > 0).forEach(u => { const d = cheb(u, pt); if (d < dice.length) { const [n,s,p] = dice[d]; let dmg = roll(n,s,p); const k = B.blastKind;
+  B.units.filter(u => u.hp > 0).forEach(u => { const d = cheb(u, pt); if (d < dice.length) { const [n,s,p] = dice[d]; const k = B.blastKind; let dmg = roll(n,s,p) + munFloor(u, k, d);
     if (k && u.resist && u.resist[k]) { dmg = Math.max(1, Math.round(dmg * u.resist[k])); blog(`<em>The ${k}'s iron rattles off ${u.name}.</em> ${dmg} damage, where it should have been more.`); float(u, 'shrugs it off', '#a99a88'); } // a hide that laughs at sharpers (v6.10)
     else if (k && u.weak && u.weak[k]) { dmg = Math.round(dmg * u.weak[k]); blog(`<em>The ${k} does what nothing else could.</em> ${u.name} is torn open: ${dmg} damage.`); float(u, 'torn open', '#ffcf7a'); }
-    hurt(u, dmg); if (u.side === 'p') blog(`${u.name} is caught in the blast.`); } });
+    B.munHit = MUN_FLOOR[k] ? k : null; try { hurt(u, dmg); } finally { if (B) B.munHit = null; } if (u.side === 'p') blog(`${u.name} is caught in the blast.`); } });
   updBattleUI(); if (B.cur && B.cur.side === 'p') afterAct(); else if (checkEnd()) updBattleUI();
 }
 /* flanking: attacker gets +2 if an ally is adjacent to the target on the far side (works for melee and ranged) */

@@ -20,7 +20,8 @@ const r = await page.evaluate(async FIGHTS => {
     const fs = B.units.filter(u => u.side === 'e'), hurtF = fs.filter(f => f.hp < f.maxhp);
     const log = (B.log || []).map(l => l.replace(/<[^>]+>/g, ''));
     const told = log.filter(l => /(burner|smoker) (goes|breaks|lobs|into|across|up|over|onto|down)|lobs a (burner|smoker)|drops a (burner|smoker)/i.test(l)).length;
-    const res = {foes:fs.length, hit:hurtF.length, maxLoss:Math.max(0, ...fs.map(f => f.maxhp - Math.max(0, f.hp))), fires:(B.fires || []).length, smoke:(B.smoke || []).length, told};
+    const res = {foes:fs.length, hit:hurtF.length, maxLoss:Math.max(0, ...fs.map(f => f.maxhp - Math.max(0, f.hp))), over:Math.max(0, ...fs.map(f => f.maxhp - Math.max(0, f.hp) - munFloor(f, 'burner', 1))), // v13.67.0: what a foe lost beyond the burner's share of its health
+      fires:(B.fires || []).length, smoke:(B.smoke || []).length, told};
     B.over = true; await wait(40); return res;
   };
   for (const [id, mun, bk] of FIGHTS) {
@@ -36,7 +37,7 @@ for (const f of r) {
   const { id, mun, runs, sharp } = f;
   if (mun === 'burner') {
     runs.every(x => x.hit >= 1) ? ok(`${id}: the burner reaches at least one foe every time (${runs.map(x => x.hit).join(',')} hit)`) : no(`${id}: a burner opener hit nobody (${runs.map(x => x.hit).join(',')})`);
-    runs.every(x => x.maxLoss <= 6) ? ok(`${id}: 1d6 at most to any foe, not the sharper's 1d10`) : no(`${id}: a foe lost more than 6 to a burner opener (${runs.map(x => x.maxLoss).join(',')})`);
+    runs.every(x => x.over <= 6) ? ok(`${id}: 1d6 at most to any foe on top of the burner's tenth, not the sharper's 1d10`) : no(`${id}: a foe lost more than 6 to a burner opener (${runs.map(x => x.maxLoss).join(',')})`);
     runs.every(x => x.fires > 0) ? ok(`${id}: the ground burns`) : no(`${id}: no fire after a burner opener`);
   } else {
     runs.every(x => x.hit === 0) ? ok(`${id}: the smoker does no damage`) : no(`${id}: a smoker opener hurt someone (${runs.map(x => x.hit).join(',')})`);
