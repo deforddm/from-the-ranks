@@ -284,7 +284,7 @@ const B5CH7 = {
       preText:()=>`They are on the tiers along the Low Walk where the Drownings crowd sits, among the benches, too big to be wolves and moving like wolves: going at the gaps between people, not at the people. The citizens who came down to watch the canal are going back up the tiers the other way, as fast as they can.${b57If('pessa', ' Pessa has her boathook down off the upright. "Not on my canal," she says.')}`,
       stage2:{title:'The footbridge', xp:80,
         text:()=>`The first of them are down, or gone off along the Low Walk with their tails low. Then the footbridge: two more on it, coming over from the far side, and behind them, at the foot of the bridge, one much bigger, grey to the muzzle, walking. It does not hurry. It has never needed to.${b57Say({thegg:'\n\n"Behind me," Thegg says, and sets his shield across the footbridge\'s end.', brune:'\n\nBrune looks at the water under the bridge, and then at the wolf. "It will not swim," she says. "Remember that."', _:''})}`,
-        map:["#.......","#.......","#..t....","#.......","#.......","#....t..","#.......","#.......","#.......","#......."],
+        map:["#......#","#......#","#..t...#","#......#","#......#","#....t.#","#......#","#......#","#......#","#......#"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
         foes:[['b5_jheck',3,1],['b5_jheck',5,1],['b5_c7_greatwolf',4,0]]} },
     /* the day (main): the Edur at the barricade, before the sorcery; then the Low Walk, until it comes. Not mortal. */

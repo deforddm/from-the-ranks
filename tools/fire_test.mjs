@@ -17,8 +17,8 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
   // Rally puts it out
   const p = AB.rally; B.used.rally = 0; p.run(g); out.afterRally = g.burnTurns;
   // a save made: hurt, not alight
-  e.x = 6; e.y = 2; B.fires.push({x:6, y:2, until:B.round + 3}); const atk0 = e.atk; e.atk = 60; // +30 to the save: only a natural 1 fails
-  for (let i = 0; i < 6; i++) { e.burnTurns = 0; e.hp = e.maxhp = 40; enterFire(e); if (!e.burnTurns) break; } e.atk = atk0; out.enemyHurt = 40 - e.hp; out.enemyBurning = e.burnTurns || 0;
+  e.x = 6; e.y = 2; B.fires.push({x:6, y:2, until:B.round + 3}); const atk0 = e.atk; e.atk = 60; // v13.66.0: an enemy's save is a flat chance now (it catches 66 times in a hundred), whatever its attack; roll until one is made
+  for (let i = 0; i < 40; i++) { e.burnTurns = 0; e.hp = e.maxhp = 40; enterFire(e); if (!e.burnTurns) break; } e.atk = atk0; out.enemyHurt = 40 - e.hp; out.enemyBurning = e.burnTurns || 0;
   // driven through fire by the sergeant's drive
   e.burnTurns = 0; e.hp = 40; e.boss = false; e.immortal = false; S.lvl = 5; B.fires = []; B.units.filter(u => u !== g && u !== e).forEach((u, i) => { u.x = i; u.y = 9; });
   g.x = 3; g.y = 6; e.x = 3; e.y = 5; B.fires.push({x:3, y:4, until:B.round + 3}); e.atk = -30; const realAtk = attack; // −15 to the save: it can only catch window.attack = () => ({hit:true, dmg:1});
@@ -31,7 +31,8 @@ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => 
 console.log(JSON.stringify(r));
 ok(r.hurt >= 1 && r.hurt <= 4 && r.burning === 2, `going through fire burns 1d4 and a failed save sets them alight for 2 turns (${r.hurt}, ${r.burning})`);
 ok(r.afterRally === 0, 'Rally puts the fire out');
-ok(r.enemyHurt >= 1 && r.enemyHurt <= 4 && r.enemyBurning === 0, 'a made save still burns, but does not catch');
+ok(r.enemyHurt >= 1 && r.enemyHurt <= 4 + 9 && r.enemyBurning === 0, // 1d4, and on an enemy the squad level's damage bonus (v13.66.0)
+   'a made save still burns, but does not catch');
 ok(r.driven.y <= 4 && r.driven.hp < 40 && r.driven.caught, `driven back through a burning tile, it burns and catches (${JSON.stringify(r.driven)})`);
 console.log('ERRORS:', errors.length ? errors.join('\n') : 'none');
 await br.close(); srv.kill();

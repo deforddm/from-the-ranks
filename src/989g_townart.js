@@ -9,7 +9,7 @@ const TOWNART = {
   lether:{roof:['#3c4654', '#6a3e34', '#3e5a50', '#4a4658'], roofHi:['#566478', '#8c5646', '#588070', '#666280'], body:['#6a6860', '#5e6068', '#72695a', '#646066'], lite:['#8a877c', '#7c7e88', '#928674', '#84808a'], foot:'#3a3834', frame:'#22201c', door:'#3a2a1c', dark:'#141a24', tall:true, litP:.62},
   coral: {roof:['#1e2028', '#24222c', '#1a1e26', '#22242e'], roofHi:['#30333f', '#383544', '#2a303c', '#353846'], body:['#2c2c36', '#28283a', '#30303a', '#2a2c34'], lite:['#3e3e4c', '#3a3a50', '#444450', '#3c4048'], foot:'#16161c', frame:'#0c0c10', door:'#1c1820', dark:'#0a0c14', tall:true, litP:.86},
 };
-const TOWNART_STYLE = {hissar:'flat', b6_c4_town:'flat', b6_c4_town_night:'flat', b4_c1_aren:'aren', b5_c1_canal:'lether', b5_c7_canal:'lether', b5_c7_canalnight:'lether', b5_c7_walk:'lether', b5_c1_walk:'lether', b5_c7_lowwalk:'lether', b3_c7_coral:'coral', b3_c7_coral_night:'coral'};
+const TOWNART_STYLE = {hissar:'flat', b6_c4_town:'flat', b6_c4_town_night:'flat', b4_c1_aren:'aren', b5_c1_canal:'lether', b5_c7_canal:'lether', b5_c7_canalnight:'lether', b5_c7_walk:'lether', b3_c7_coral:'coral', b3_c7_coral_night:'coral'};
 const townArtOn = (style) => { try { return !(typeof window !== 'undefined' && (window.FTR_NOTOWNART || window.FTR_NOTILEART)) && !!TOWNART[TOWNART_STYLE[style]]; } catch (e) { return false; } };
 function townArt(ctx, map, cols, rows, T, dark, style){
   const P = TOWNART[TOWNART_STYLE[style]], at = (x, y) => (map[y] || '')[x], wall = (x, y) => at(x, y) === '#', open = (x, y) => at(x, y) !== undefined && !wall(x, y);

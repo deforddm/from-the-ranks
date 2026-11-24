@@ -10,10 +10,10 @@ async function kitDrive(u, t, dist, from){
   const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} takes it and doesn't give a step.` : `${t.name} braces behind the blow and holds.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; }
   const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y); let to = {x:t.x, y:t.y}, slam = false;
   for (let i = 0; i < dist; i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, t)) { slam = true; break; } to = n; }
-  if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
+  if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0) + wearDmg(t); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
   blog(`${u.name} drives ${t.name} back${slam ? ' into what is behind it' : ''}.`); float(t, 'driven back', '#e8c073'); AUDIO.play('sword');
   if (await forcedMove(t, to, 'driven')) return;
-  if (slam && t.hp > 0) { const d = roll(1,6,0); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); }
+  if (slam && t.hp > 0) { const d = roll(1,6,0) + wearDmg(t); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); }
 }
 Object.assign(AB, {
   /* Brannoc, Falari marine: the boarding line is Vell's hook thrown from a ship's rail, and the leap is how a marine crosses to the other deck */
@@ -34,7 +34,7 @@ Object.assign(AB, {
     tiles:u=>AB.ropeswing.tiles(u),
     run(u,x,y){ u.swungTurn = B.turn; AUDIO.play('step'); sparks(u.x, u.y, 8, '#c26a3a', .4); u.x = x; u.y = y; sparks(x, y, 8, '#c26a3a', .4); blog(`${u.name} goes across the gap the way he would go across to another deck: all at once, and already swinging.`); enterFire(u); updBattleUI(); }},
   /* Darrut, late of the Aren Guard: the sergeant's Shield Drive, learned on a gate */
-  gatedrive:{name:'Gate drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}. Grows with level.`,
+  gatedrive:{name:'Gate drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6${lvDmg() ? '+' + lvDmg() : ''} instead of the ground. Toward a pit, a roof's edge or the water: it goes over two times in three (a leader one in three), or catches the lip and goes down prone. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}. Grows with level.`,
     ok:u=>AB.shove.ok(u), tiles:u=>AB.shove.tiles(u), run(u,x,y){ return AB.shove.run(u,x,y); }},
   /* Ottar, Grey Helm of the Perish: the Wolves' howl, as the Grey Swords' acolyte has it (060) */
   wolfhowl:{name:'The Wolves\' Howl', self:true, desc:()=>`Enemies within 2 take −2 to hit until Ottar's next turn. Recharges after 3 rounds.`,
@@ -73,7 +73,7 @@ Object.assign(AB, {
       await wait(pace(250)); if (!B || t.hp <= 0) return;
       await kitDrive(u, t, 2); }},
   /* Tirren, farrier: the hammer to make it lift the foot, the hoof-knife for what the foot was covering */
-  hoofknife:{name:'Hoof-knife', desc:()=>`The hammer, then the knife into what it opened: 1d6+${2 + lvDmg()} at an adjacent enemy on a hit, and it bleeds for three rounds (1d4 a round). Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
+  hoofknife:{name:'Hoof-knife', desc:()=>`The hammer, then the knife into what it opened: 1d6+${2 + lvDmg()} at an adjacent enemy on a hit, and it bleeds for three rounds (1d4${lvDmg() ? '+' + lvDmg() : ''} a round). Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'puts the hammer and then the hoof-knife into'});
       if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.bleed = has(u.id, 'deepcut') ? 5 : 3; later(() => { if (B && t.hp > 0) float(t, 'bleeding', '#e0574a'); }, pace(260));

@@ -704,7 +704,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.65.3';
+const VERSION = '13.66.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1442,7 +1442,7 @@ const AUDIO = (() => {
     // Brans Keep (86): the lines on the eve, the lake shore, the dry channel in battle, the hills behind the keep, the Dissent road, the barrow
     b5_c6_lines:'camp_night', b5_c6_eve:'camp_night', b5_c6_shore:'lake', b5_c6_channel:'siege', b5_c6_pillars:'siege', b5_c6_break:'siege', b5_c6_hills:'hills', b5_c6_dissent:'plain', b5_c6_barrow:'barrow',
     // Letheras falls (87): the Drownings District at night, the footbridge by night and by day, the walls, the sorcery, under the arch, the Low Walk after
-    b5_c7_streets:'city_night', b5_c7_night:'burning', b5_c7_canalnight:'canal', b5_c7_canal:'canal', b5_c7_lowwalk:'canal', b5_c7_barricade:'siege', b5_c7_walls:'city', b5_c7_sorcery:'dark', b5_c7_under:'canal', b5_c7_walk:'canal', b5_c7_finale:'city_night',
+    b7_c7_stair:'interior', b5_c7_streets:'city_night', b5_c7_night:'burning', b5_c7_canalnight:'canal', b5_c7_canal:'canal', b5_c7_lowwalk:'canal', b5_c7_barricade:'siege', b5_c7_walls:'city', b5_c7_sorcery:'dark', b5_c7_under:'canal', b5_c7_walk:'canal', b5_c7_finale:'city_night',
     // the sound pass (series polish §4): the canals of Letheras (Books Five and Seven), Darujhistan after dark (Book Eight), the Wastes (Book Nine), the glass (Book Ten)
     b7_c2_bridge:'canal', b7_c2_alley:'canal', b7_c7_after:'canal', b7_letheras:'canal',
     b8_daru_night:'daru_night', b8_c1_roofs:'daru_night',
@@ -8114,7 +8114,8 @@ const smoked = (x, y) => !!(B && B.smoke && B.smoke.some(s => s.x === x && s.y =
    low    't' tables, crates, stalls, barrow-stones: nobody walks through them, but you can see and shoot over them (with cover behind)
    pit    'o' pits and shafts, and on the roofs and the quays '#' is the drop or the lake: nobody walks over, everyone sees across, and anyone forced into one falls */
 const tileCh = (x, y) => inB(x, y) ? (B.def.map[y] || '')[x] || '.' : '#';
-const dropStyle = () => !!(B && B.def && (B.def.style === 'roof' || B.def.style === 'dock'));
+const CANAL_STYLE = {b5_c1_walk:1, b5_c7_lowwalk:1}; // v13.66.0: the Low Walk and the canal bridges. Their '#' was always drawn as the canal; now it is one
+const dropStyle = () => !!(B && B.def && (B.def.style === 'roof' || B.def.style === 'dock' || CANAL_STYLE[B.def.style]));
 const pitAt = (x, y) => inB(x, y) && (tileCh(x, y) === 'o' || (tileCh(x, y) === '#' && dropStyle()));
 const lowAt = (x, y) => inB(x, y) && tileCh(x, y) === 't';
 const solid = (x, y) => !inB(x, y) || (tileCh(x, y) === '#' && !dropStyle());
@@ -8286,7 +8287,7 @@ function nextTurn(){
   if (u.hot && u.hot.left > 0 && u.hp > 0) { u.hot.left--; heal(u, u.hot.n); if (!u.hot.left) u.hot = null; } // v13.5: Field Surgeon's dressing
   if (u.anvilOn) u.anvilOn = false; // v13.5: Anvil holds until the heavy's next turn
   if (u.calledUntil != null && B.round > u.calledUntil) { u.ac += 2; u.calledUntil = null; } // v13.5: Called Shot's 2 armour comes back with the Mark
-  if (u.burnTurns > 0) { u.burnTurns--; blog(`${u.name} is burning${u.burnTurns ? '' : ', the last of it'}.`); sparks(u.x, u.y, 8, '#ff9a3a', .5); hurt(u, roll(1,4)); }
+  if (u.burnTurns > 0) { u.burnTurns--; blog(`${u.name} is burning${u.burnTurns ? '' : ', the last of it'}.`); sparks(u.x, u.y, 8, '#ff9a3a', .5); hurt(u, roll(1,4) + wearDmg(u)); }
   { const fi = B.fires.find(f => f.x === u.x && f.y === u.y); if (fi && u.hp > 0) { blog(`${u.name} is caught in ${fi.txt || 'burner fire'}.`); hurt(u, roll(1,6)); } }
   if (u.hp <= 0) { B.busy = true; updBattleUI(); if (checkEnd()) return; return later(nextTurn, pace(600)); }
   if (u.stun) { u.stun = false; B.busy = true; blog(`${u.name} is dazed and loses the turn.`); float(u, 'dazed', '#c9bbff'); updBattleUI(); return later(nextTurn, pace(800)); }
@@ -8411,7 +8412,7 @@ const AB = {
       if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'snared', '#b0a0c8'); }
       if (has(u.id, 'handover') && B && t.hp > 0 && u.hp > 0 && cheb(u, t) === 1) { await wait(pace(200)); if (B && t.hp > 0) attack(u, t, {verb:'meets it, hand over hand, with a blow for'}); } }}, // v13.52.0
   /* the sergeant's shield, picked up at Nathilog and never put down: drive an enemy back, out of the squad's reach, and let the squad answer it */
-  shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+  shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6${lvDmg() ? '+' + lvDmg() : ''} instead of the ground. Toward a pit, a roof's edge or the water: it goes over two times in three (a leader one in three), or catches the lip and goes down prone. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdShove >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdShove = B.round + 2 - lvAt(6); u.aooTurn = B.turn; // the sergeant's own swing is spent on the drive
       const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'drives a shield into'}); if (!r.hit) return;
@@ -8419,12 +8420,12 @@ const AB = {
       { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} takes the shield and doesn't give a step.` : `${t.name} braces behind the blow and holds.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
       const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y); let to = {x:t.x, y:t.y}, slam = false;
       for (let i = 0; i < shoveDist(); i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, t)) { slam = true; break; } to = n; } // a pit takes it (forcedMove asks the save)
-      if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
+      if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0) + wearDmg(t); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
       blog(`${u.name} drives ${t.name} back${slam ? ' into what is behind it' : ''}.`); float(t, 'driven back', '#e8c073'); AUDIO.play('sword');
       const left = {x:x, y:y};
       if (await forcedMove(t, to, 'driven')) { if (B && u.hp > 0 && free(left.x, left.y, u)) offerFollow(u, left, t); return; }
       if (B && u.hp > 0 && (t.x !== left.x || t.y !== left.y) && free(left.x, left.y, u)) offerFollow(u, left, t);
-      if (slam && t.hp > 0) { const d = roll(1,6,0); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); } }},
+      if (slam && t.hp > 0) { const d = roll(1,6,0) + wearDmg(t); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); } }},
   ropeswing:{name:'Rope Swing', free:true, desc:()=>`Once a turn, and it does not use his action: swing to any open tile within ${3 + lvT()}. No free swings. Grows with level.`, ok:u=>u.swungTurn !== B.turn,
     tiles:u=>{ const out = []; for (let y=0;y<10;y++) for (let x=0;x<8;x++) if (cheb(u,{x,y}) <= 3 + lvT() && free(x,y,u) && !(x === u.x && y === u.y) && sees(u,{x,y})) out.push({x,y,step:true}); return out; },
     run(u,x,y){ u.swungTurn = B.turn; AUDIO.play('step'); sparks(u.x, u.y, 8, '#b0a0c8', .4); u.x = x; u.y = y; sparks(x, y, 8, '#b0a0c8', .4); blog(`${u.name} throws the hook at something high and goes with it.`); enterFire(u); updBattleUI(); }},
@@ -8603,11 +8604,12 @@ const fireAt = (x, y) => !!(B && B.fires && B.fires.some(f => f.x === x && f.y =
 function enterFire(u){
   if (!B || !u || u.hp <= 0 || !fireAt(u.x, u.y)) return;
   const fi = B.fires.find(f => f.x === u.x && f.y === u.y), mine = u.side === 'p' && !u.ally;
-  blog(`${u.name} goes through ${fi.txt || 'the burner fire'}.`); sparks(u.x, u.y, 10, '#ff9a3a', .5); hurt(u, roll(1,4)); if (u.hp <= 0) return;
+  blog(`${u.name} goes through ${fi.txt || 'the burner fire'}.`); sparks(u.x, u.y, 10, '#ff9a3a', .5); hurt(u, roll(1,4) + wearDmg(u)); if (u.hp <= 0) return;
   const mod = mine ? Math.max(statOf(u.id, 'might'), statOf(u.id, 'guile')) + (u.steady ? 2 : 0) : Math.floor((u.atk || 0) / 2), dc = 12 + (mine ? DIFF().dc : 0), nat = d20();
-  if (nat !== 1 && (nat === 20 || nat + mod >= dc)) { blog(`${u.name} beats the flames out${SET.dice ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : ''}.`); return; }
+  const need = mine ? 0 : edgeFall(u), pct = mine ? 0 : 1 + Math.floor(Math.random() * 100); // v13.66.0: an enemy catches fire on the same flat chance as it falls (66, a leader 33), not on its attack
+  if (mine ? nat !== 1 && (nat === 20 || nat + mod >= dc) : pct > need) { blog(`${u.name} beats the flames out${!SET.dice ? '' : mine ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : ` <span class="stat">(${pct} vs ${need})</span>`}.`); return; }
   u.burnTurns = Math.max(u.burnTurns || 0, 2); float(u, 'on fire!', '#ff9a3a'); AUDIO.play('burner', .5);
-  blog(`<em>${u.name} catches fire!</em>${SET.dice ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : ''}`);
+  blog(`<em>${u.name} catches fire!</em>${!SET.dice ? '' : mine ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : ` <span class="stat">(${pct} vs ${need})</span>`}`);
 }
 const putOut = u => { if (u.burnTurns > 0) { u.burnTurns = 0; float(u, 'put out', '#9fe0b8'); } };
 /* forced movement (Vell's hook, the sergeant's Shield Drive): the target goes tile by tile, and every squadmate it is dragged or driven out of reach of
@@ -8615,17 +8617,26 @@ const putOut = u => { if (u.burnTurns > 0) { u.burnTurns = 0; float(u, 'put out'
 /* the edge (v3.19): anything dragged, driven or shoved into a pit, off a roof or into the lake gets a save, the same as fire's.
    Make it and it catches the lip and goes down on the ground where it stood, prone: no move next turn, and blades next to it hit it easier (−2 armour).
    Miss it and it goes over. An enemy is out of the fight. A squadmate climbs back up hurt (2d6+2) and prone. Returns true if it dropped. */
-const edgeWord = (x, y) => tileCh(x, y) === 'o' ? (B.def.pitTxt || 'the pit') : B.def.style === 'dock' ? 'the lake' : 'the drop';
+const edgeWord = (x, y) => tileCh(x, y) === 'o' ? (B.def.pitTxt || 'the pit') : B.def.style === 'dock' ? 'the lake' : CANAL_STYLE[B.def.style] ? 'the canal' : 'the drop';
+/* v13.66.0 (David, Nov 23, 2026): fire, bleeding and a slam into what is behind were fixed dice from Book One (1d4, 1d6) against enemies
+   with four times the health. On an enemy they now add the squad level's damage bonus, as every skill does. Never on the squad. */
+const wearDmg = u => u && u.side === 'e' ? lvDmg() : 0;
+const EDGE_FALL = {soldier:66, leader:33}; // an enemy at a drop: the chance in a hundred that it goes over
+const edgeFall = t => t && t.boss ? EDGE_FALL.leader : EDGE_FALL.soldier;
 async function overEdge(t, pit, how){
   const mine = t.side === 'p', what = edgeWord(pit.x, pit.y);
   const mod = mine && !t.ally ? Math.max(statOf(t.id, 'might'), statOf(t.id, 'guile')) + (t.steady ? 2 : 0) : Math.floor((t.atk || 0) / 2), dc = 12 + (mine && !t.ally ? DIFF().dc : 0), nat = d20();
-  const math = SET.dice ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : '';
-  if (nat !== 1 && (nat === 20 || nat + mod >= dc)) {
+  /* v13.66.0 (David, Nov 23, 2026: "regular soldiers fall 66% of the time and leaders can be 33%"). An enemy's save ran on half its attack
+     against Book One's 12, and attack grew with the books until only a rolled 1 sent a Book Eight enemy over. It is a flat chance now,
+     the same in every book and on every difficulty. The squad and its allies save as before. */
+  const foe = !mine, need = foe ? edgeFall(t) : 0, pct = foe ? 1 + Math.floor(Math.random() * 100) : 0;
+  const math = !SET.dice ? '' : foe ? ` <span class="stat">(${pct} vs ${need})</span>` : ` <span class="stat">(${nat}+${mod} vs ${dc})</span>`;
+  if (foe ? pct > need : nat !== 1 && (nat === 20 || nat + mod >= dc)) {
     t.prone = true; float(t, 'catches the edge', '#e8c073'); AUDIO.play('step'); sparks(pit.x, pit.y, 6, '#a99a88', .3);
     blog(`${t.name} is ${how || 'forced'} to the lip of ${what}, catches it, and goes down on the ground instead of over${math}.`); updBattleUI(); return false; }
   if (mine) { blog(`<em>${t.name} goes over into ${what}</em>${math} and comes back up it, the hard way.`); float(t, 'fell', '#f08a7c'); hurt(t, roll(2,6,2)); if (t.hp > 0) t.prone = true; updBattleUI(); return t.hp <= 0; }
   t.x = pit.x; t.y = pit.y; t.fell = true; AUDIO.play('miss'); sparks(pit.x, pit.y, 10, '#6a6460', .5);
-  blog(`<em>${t.name} goes over into ${what}.</em>${math} It isn't coming back up.`); tally('pitfalls'); hurt(t, t.hp); updBattleUI(); return true; }
+  blog(`<em>${t.name} goes over into ${what}.</em>${math} ${CANAL_STYLE[B.def.style] && tileCh(pit.x, pit.y) === '#' ? 'It is out of the fight.' : `It isn't coming back up.`}`); tally('pitfalls'); hurt(t, t.hp); updBattleUI(); return true; }
 /* v13.4 (David, Nov 12): who a push moves (Shield Drive, the hook, the lance thrust, the Sky's Shove). It used to be anything marked boss
    or with 45 health or more, a Book One number the later books' health carried nearly every soldier past. Now it is what the enemy is:
    the very heavy (HEAVY_FOES, or heavy:true on the def) and the deathless never move; a leader (boss) braces and holds about half the
@@ -8689,7 +8700,7 @@ async function aiTurn(u, turnId){
   if (!B || B.over || B.turn !== turnId) return;
   const b0 = B, gone = () => B !== b0 || B.turn !== turnId; // the battle was left or restarted, or the turn moved on, while this one played out
   const done = () => { updBattleUI(); if (!checkEnd()) endTurn(); };
-  if (u.side === 'e' && u.bleed > 0) { u.bleed--; blog(`${u.name} is bleeding.`); float(u, 'bleeding', '#e0574a'); hurt(u, roll(1,4)); updBattleUI(); // v13: a lance's thrust (b2_lance) bleeds an enemy
+  if (u.side === 'e' && u.bleed > 0) { u.bleed--; blog(`${u.name} is bleeding.`); float(u, 'bleeding', '#e0574a'); hurt(u, roll(1,4) + wearDmg(u)); updBattleUI(); // v13: a lance's thrust (b2_lance) bleeds an enemy
     if (u.hp <= 0) { await wait(300); if (gone()) return; return done(); } }
   const inRange = () => foesOf(u).filter(p => cheb(u,p) <= u.rng && canShoot(u,p));
   if (u.turned) { u.turned = false; // Mockra Whisper: this turn belongs to its own side
@@ -10171,6 +10182,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.66.0', ['The canal is a drop. On the Low Walk and the canal bridges in Books Five and Seven, anything driven, dragged or thrown toward the water saves to catch the edge or goes in, the squad included. The footbridge and the bridge in Letheras have water on both sides now.', 'At any drop, in every book: an ordinary enemy forced to the edge goes over two times in three, a leader one time in three. Before, the chance shrank book by book until it was almost nothing in the later ones. Your own soldiers save as they always did.', 'The same for fire: an enemy that goes through burner fire catches two times in three. Burning, bleeding and being driven into a wall now hurt an enemy more as the squad levels, as every skill does; they had stayed at Book One\'s numbers. None of this touches what happens to your own soldiers.', 'The burned wayhouse roof in Book Eight and the landing ledge in Book Three have an edge to go over.', 'The canal is drawn as water again on those boards, and the counting-house stair in Book Seven has walls that look like walls. Saves are untouched.']],
   ['13.65.3', ['Housekeeping so search engines can find the game at playfromtheranks.com. Nothing changes in play.']],
   ['13.65.2', ['Carrying sergeants across: the new address now makes sure it is on the newest version before it takes them.', 'The game at playfromtheranks.com has a green icon, so its home-screen app can be told from the old address\'s brown one. An app already on a home screen keeps its icon until it is removed and added again.']],
   ['13.65.1', ['Carrying sergeants to the new address, or loading a backup file, lost every sergeant but one of the same name: a squad carried into a later book keeps its sergeant\'s name. Each book\'s sergeant now arrives. If some of yours did not, open the old address and tap Carry again; nothing was removed there.']],
@@ -48126,10 +48138,10 @@ ${b3In('greysword') ? `
 
     /* the landing ledge above Coral, at night: a Pannion picket nobody knew was there */
     b3_c6_landing:{title:'The landing ledge', style:'b3_c6_ridgeb', dark:true, open:true, warrenText:'Night in the mountains above Coral · the warrens poisoned, and the cold getting into them', warren:{denul:1, meanas:1}, music:'battle',
-      map:["##....##","#...t..#","........","..t.....","........","....t...","##......","#.......","........","........"],
+      pitTxt:'the drop', map:["##....##","#...t..#",".......o","..t....o",".......o","....t..o","##.....o","#......o",".......o",".......o"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
       foes:[['b3_beklite',2,2],['b3_beklite',5,2],['b3_beklite',3,4],['b3_beklite',5,4],['b3_c6_runner',1,1],['b3_c6_runner',6,1]], xp:150, after:'b3_c6_q_after_land',
-      waves:[{round:2, foes:[['b3_beklite',7,4]], text:'Another comes up over the lip of the ledge from below, spear first, where nobody thought there was a way up.'}],
+      waves:[{round:2, foes:[['b3_beklite',6,4]], text:'Another comes up over the lip of the ledge from below, spear first, where nobody thought there was a way up.'}],
       preText:()=>`The sharper drops out of the dark from twenty feet up, off a quorl's harness, and lands among the picket's packs. The picket fire goes up the mountain in sparks. So does most of the picket.`,
       stage2:{title:'The goat track', xp:70,
         text:()=>`The ledge is yours. Above it a goat track goes up between two crags toward the trench mouth, and on the track somebody in dark armour is coming down without hurrying, a long mace across his shoulders, and the air round him has gone grey and wrong.
@@ -54337,10 +54349,10 @@ Object.assign(AB, {
         const dx = Math.sign(f.x - u.x), dy = Math.sign(f.y - u.y); if (!dx && !dy) continue;
         let to = {x:f.x, y:f.y}, slam = false;
         for (let i = 0; i < d; i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, f)) { slam = true; break; } to = n; }
-        if (to.x === f.x && to.y === f.y) { blog(`${f.name} is thrown into what is behind it.`); hurt(f, roll(1, 6, 0)); updBattleUI(); continue; }
+        if (to.x === f.x && to.y === f.y) { blog(`${f.name} is thrown into what is behind it.`); hurt(f, roll(1, 6, 0) + wearDmg(f)); updBattleUI(); continue; }
         float(f, 'thrown back', '#d8ecff'); f.b4thrown = B.round;
         if (await forcedMove(f, to, 'thrown')) continue;
-        if (slam && f.hp > 0) { blog(`${f.name} fetches up hard against what is behind it.`); hurt(f, roll(1, 6, 0)); }
+        if (slam && f.hp > 0) { blog(`${f.name} fetches up hard against what is behind it.`); hurt(f, roll(1, 6, 0) + wearDmg(f)); }
         updBattleUI(); await wait(pace(100)); } }},
 });
 /* Autumn's Touch: the rot strips armour (−3) while it lasts */
@@ -72666,7 +72678,7 @@ const B5CH7 = {
       preText:()=>`They are on the tiers along the Low Walk where the Drownings crowd sits, among the benches, too big to be wolves and moving like wolves: going at the gaps between people, not at the people. The citizens who came down to watch the canal are going back up the tiers the other way, as fast as they can.${b57If('pessa', ' Pessa has her boathook down off the upright. "Not on my canal," she says.')}`,
       stage2:{title:'The footbridge', xp:80,
         text:()=>`The first of them are down, or gone off along the Low Walk with their tails low. Then the footbridge: two more on it, coming over from the far side, and behind them, at the foot of the bridge, one much bigger, grey to the muzzle, walking. It does not hurry. It has never needed to.${b57Say({thegg:'\n\n"Behind me," Thegg says, and sets his shield across the footbridge\'s end.', brune:'\n\nBrune looks at the water under the bridge, and then at the wolf. "It will not swim," she says. "Remember that."', _:''})}`,
-        map:["#.......","#.......","#..t....","#.......","#.......","#....t..","#.......","#.......","#.......","#......."],
+        map:["#......#","#......#","#..t...#","#......#","#......#","#....t.#","#......#","#......#","#......#","#......#"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
         foes:[['b5_jheck',3,1],['b5_jheck',5,1],['b5_c7_greatwolf',4,0]]} },
     /* the day (main): the Edur at the barricade, before the sorcery; then the Low Walk, until it comes. Not mortal. */
@@ -93669,14 +93681,14 @@ const B7CH7 = {
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
       foes:[['b7_c7_patriot',2,1],['b7_c7_patriot',5,1],['b7_c7_patriot',3,3],['b7_lethsoldier',3,0],['b7_lethsoldier',5,0],['b7_lethxbow',6,0]], xp:130, after:'b7_c7_holdouts_after',
       preText:()=>`They have barricaded the street in front of the counting-house with a cart and the broker's furniture, and behind it there are grey coats with long knives, and with them soldiers from the palace who threw in with them and are wishing now that they had not. The crowd is at the end of the street, waiting for somebody to go first.${b77If('doss', ' Doss looks hard at the grey coats. He has never seen one close before.')}`,
-      stage2:{title:'The counting-house stair', xp:55,
+      stage2:{title:'The counting-house stair', style:'b7_c7_stair', xp:55,
         text:()=>`Through the barricade, and into the counting-house, and up its stair, where the grey coats have gone to make their stand among the broker's ledgers. At the top, with his back to a window and a long knife in each hand, the one the others look at.\n\nHe has a list in his coat. He has always had a list in his coat. He has just found out that nobody is going to read it.`,
         map:["#......#","#..t...#","#......#","#......#","#.t..t.#","#......#","#......#","#......#","#......#","#......#"],
         party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
         foes:[['b7_c7_patcaptain',2,1],['b7_c7_patriot',2,2],['b7_c7_patriot',5,2],['b7_lethxbow',4,0]]} },
     /* the bridge (optional): garrison crossbowmen who have not surrendered, holding a bridge against the crowd */
     b7_c7_bridge:{title:'The bridge', style:'b5_c7_lowwalk', warrenText:'A bridge in Letheras · the canal slow and brown below, the crowd at both ends', warren:{meanas:1, denul:1}, music:'battle',
-      map:["#.......","#..t....","#.......","#.....t.","#.......","#..t....","#.......","#.......","#.......","#......."],
+      map:["#......#","#..t...#","#......#","#.....t#","#......#","#..t...#","#......#","#......#","#......#","#......#"],
       party:[[3,8],[4,8],[2,8],[5,8],[3,9],[4,9]],
       foes:[['b7_lethxbow',2,1],['b7_lethxbow',5,1],['b7_lethxbow',4,0],['b7_lethsoldier',3,2],['b7_lethsoldier',6,2]], xp:90, after:'b7_c7_bridge_after',
       preText:()=>`Garrison crossbowmen, a squad of them, on the hump of the bridge behind an overturned handcart, with the crowd at both ends throwing what it can find. They have shot into it once already. They will do it again, because they are frightened, and a frightened crossbowman is the most dangerous thing in any city.`} },
@@ -94726,6 +94738,22 @@ SCENEX.b7_fin_home = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
       + `<ellipse cx="-10" cy="-12" rx="14" ry="8" fill="#fff" fill-opacity=".35" transform="rotate(-30)"/></g>`);
   }
 })();
+
+/* v13.66.0 (David, Nov 23, 2026: the counting-house stair's sides read as a drop). The stair is a room: its walls are the broker's
+   panelling, with ledger shelves and a lamp bracket here and there. Everything else is the street's own painter. Looks only. */
+function b77StairWall(ctx, x, y, T){ const px = x*T, py = y*T, h = (i) => hash(x, y, 40 + i);
+  const g = ctx.createLinearGradient(px, 0, px + T, 0); g.addColorStop(0, '#3a2a1c'); g.addColorStop(.5, '#4a3624'); g.addColorStop(1, '#33251a'); ctx.fillStyle = g; ctx.fillRect(px, py, T, T);
+  ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.fillRect(px + T*.48, py, Math.max(1, T*.04), T); // the join between two panels
+  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; ctx.strokeRect(px + T*.08 + .5, py + T*.08 + .5, T*.34, T*.84); ctx.strokeRect(px + T*.58 + .5, py + T*.08 + .5, T*.34, T*.84);
+  ctx.fillStyle = 'rgba(255,225,170,.07)'; ctx.fillRect(px + T*.09, py + T*.09, T*.33, Math.max(1, T*.03)); ctx.fillRect(px + T*.59, py + T*.09, T*.33, Math.max(1, T*.03));
+  if (h(1) > .45) { // a shelf of ledgers
+    const sy = py + T*(.3 + h(2)*.3); ctx.fillStyle = '#1e150d'; ctx.fillRect(px + T*.06, sy + T*.2, T*.88, T*.05);
+    const cols = ['#6a2f24', '#2f4a3a', '#7a6234', '#2c3a56', '#5a4630']; let bx = px + T*.1;
+    for (let i = 0; i < 7 && bx < px + T*.86; i++) { const w = T*(.07 + h(3 + i)*.06), bh = T*(.13 + h(11 + i)*.07); ctx.fillStyle = cols[(h(19 + i)*cols.length) | 0]; ctx.fillRect(bx, sy + T*.2 - bh, w, bh); ctx.fillStyle = 'rgba(255,230,180,.22)'; ctx.fillRect(bx + w*.3, sy + T*.2 - bh*.75, w*.4, Math.max(1, bh*.12)); bx += w + T*.012; } }
+  else if (h(4) > .55) { // a lamp on a bracket
+    const cx = px + T*.5, cy = py + T*.42; ctx.fillStyle = '#17110b'; ctx.fillRect(cx - T*.02, cy, T*.04, T*.18); const lg = ctx.createRadialGradient(cx, cy, 0, cx, cy, T*.42); lg.addColorStop(0, 'rgba(250,200,110,.5)'); lg.addColorStop(1, 'rgba(250,200,110,0)'); ctx.fillStyle = lg; ctx.fillRect(px, py, T, T); ctx.fillStyle = '#f6d48a'; ctx.beginPath(); ctx.arc(cx, cy, T*.07, 0, 7); ctx.fill(); } }
+if (typeof TILEX !== 'undefined') TILEX.b7_c7_stair = (ctx, ch, x, y, T, dark) => ch === '#' ? b2Clip(ctx, x, y, T, () => b77StairWall(ctx, x, y, T)) : TILEX.b5_c7_streets(ctx, ch, x, y, T, dark);
+{ const _df = drawFeature; drawFeature = function(ctx, ch, x, y, T, dark, style, map){ return _df(ctx, ch, x, y, T, dark, style === 'b7_c7_stair' ? 'b5_c7_streets' : style, map); }; } // the stair's casks are the street's
 
 /* ============ Book Seven: the seven visions of Unwitnessed ============
    One per chapter, played when Book Seven's reader turns a card or lays a tile and looks into it. Book Seven reads through each squad's own
@@ -101189,7 +101217,7 @@ const B8CH5 = {
       preText:()=>`The wayhouse has no roof and three walls, and the Guild has made a nest of it: a crossbow behind the gap where the door was, and knives in the dark along the inside of the walls, waiting for wagons. They were not waiting for the Fourth to come up the back of the rise on foot.`,
       stage2:{title:'The wayhouse roof', xp:130,
         text:()=>`The ones in the walls are down. The one on what is left of the roof beam is not, and neither is the knife who was keeping him company up there, and they have both stopped pretending to be part of the wayhouse.${b85Say({vasso:`\n\nVasso looks up at the beam and his mouth goes tight. "I know the one with the bow," he says. "He taught me knots." He draws anyway.`, vell:`\n\nVell is already looking at the beam the way he looks at a roof: which bits hold. "Left end," he says. "The right end is charcoal."`, _:''})}`,
-        map:["##.##.##","........","..t.....","........",".....t..","........","........","..t..t..","........","........"],
+        pitTxt:'the drop off the roof', map:["##.##.##","o......o","o.t....o","o......o","o....t.o","o......o","o......o","o.t..t.o","o......o","o......o"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
         foes:[['b8_knife',3,1],['b8_guildbow',5,0]]} } },
 
@@ -123482,10 +123510,10 @@ async function kitDrive(u, t, dist, from){
   const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} takes it and doesn't give a step.` : `${t.name} braces behind the blow and holds.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; }
   const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y); let to = {x:t.x, y:t.y}, slam = false;
   for (let i = 0; i < dist; i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, t)) { slam = true; break; } to = n; }
-  if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
+  if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0) + wearDmg(t); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
   blog(`${u.name} drives ${t.name} back${slam ? ' into what is behind it' : ''}.`); float(t, 'driven back', '#e8c073'); AUDIO.play('sword');
   if (await forcedMove(t, to, 'driven')) return;
-  if (slam && t.hp > 0) { const d = roll(1,6,0); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); }
+  if (slam && t.hp > 0) { const d = roll(1,6,0) + wearDmg(t); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); }
 }
 Object.assign(AB, {
   /* Brannoc, Falari marine: the boarding line is Vell's hook thrown from a ship's rail, and the leap is how a marine crosses to the other deck */
@@ -123506,7 +123534,7 @@ Object.assign(AB, {
     tiles:u=>AB.ropeswing.tiles(u),
     run(u,x,y){ u.swungTurn = B.turn; AUDIO.play('step'); sparks(u.x, u.y, 8, '#c26a3a', .4); u.x = x; u.y = y; sparks(x, y, 8, '#c26a3a', .4); blog(`${u.name} goes across the gap the way he would go across to another deck: all at once, and already swinging.`); enterFire(u); updBattleUI(); }},
   /* Darrut, late of the Aren Guard: the sergeant's Shield Drive, learned on a gate */
-  gatedrive:{name:'Gate drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}. Grows with level.`,
+  gatedrive:{name:'Gate drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6${lvDmg() ? '+' + lvDmg() : ''} instead of the ground. Toward a pit, a roof's edge or the water: it goes over two times in three (a leader one in three), or catches the lip and goes down prone. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}. Grows with level.`,
     ok:u=>AB.shove.ok(u), tiles:u=>AB.shove.tiles(u), run(u,x,y){ return AB.shove.run(u,x,y); }},
   /* Ottar, Grey Helm of the Perish: the Wolves' howl, as the Grey Swords' acolyte has it (060) */
   wolfhowl:{name:'The Wolves\' Howl', self:true, desc:()=>`Enemies within 2 take −2 to hit until Ottar's next turn. Recharges after 3 rounds.`,
@@ -123545,7 +123573,7 @@ Object.assign(AB, {
       await wait(pace(250)); if (!B || t.hp <= 0) return;
       await kitDrive(u, t, 2); }},
   /* Tirren, farrier: the hammer to make it lift the foot, the hoof-knife for what the foot was covering */
-  hoofknife:{name:'Hoof-knife', desc:()=>`The hammer, then the knife into what it opened: 1d6+${2 + lvDmg()} at an adjacent enemy on a hit, and it bleeds for three rounds (1d4 a round). Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
+  hoofknife:{name:'Hoof-knife', desc:()=>`The hammer, then the knife into what it opened: 1d6+${2 + lvDmg()} at an adjacent enemy on a hit, and it bleeds for three rounds (1d4${lvDmg() ? '+' + lvDmg() : ''} a round). Recharges after ${kitCd()} round${kitCd() > 1 ? 's' : ''}.`,
     ok:u=>!(u.cdKit >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdKit = B.round + kitCd(); const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'puts the hammer and then the hoof-knife into'});
       if (r.hit && (t.hp - r.dmg > 0 || t.immortal)) { t.bleed = has(u.id, 'deepcut') ? 5 : 3; later(() => { if (B && t.hp > 0) float(t, 'bleeding', '#e0574a'); }, pace(260));
@@ -124523,7 +124551,7 @@ const TOWNART = {
   lether:{roof:['#3c4654', '#6a3e34', '#3e5a50', '#4a4658'], roofHi:['#566478', '#8c5646', '#588070', '#666280'], body:['#6a6860', '#5e6068', '#72695a', '#646066'], lite:['#8a877c', '#7c7e88', '#928674', '#84808a'], foot:'#3a3834', frame:'#22201c', door:'#3a2a1c', dark:'#141a24', tall:true, litP:.62},
   coral: {roof:['#1e2028', '#24222c', '#1a1e26', '#22242e'], roofHi:['#30333f', '#383544', '#2a303c', '#353846'], body:['#2c2c36', '#28283a', '#30303a', '#2a2c34'], lite:['#3e3e4c', '#3a3a50', '#444450', '#3c4048'], foot:'#16161c', frame:'#0c0c10', door:'#1c1820', dark:'#0a0c14', tall:true, litP:.86},
 };
-const TOWNART_STYLE = {hissar:'flat', b6_c4_town:'flat', b6_c4_town_night:'flat', b4_c1_aren:'aren', b5_c1_canal:'lether', b5_c7_canal:'lether', b5_c7_canalnight:'lether', b5_c7_walk:'lether', b5_c1_walk:'lether', b5_c7_lowwalk:'lether', b3_c7_coral:'coral', b3_c7_coral_night:'coral'};
+const TOWNART_STYLE = {hissar:'flat', b6_c4_town:'flat', b6_c4_town_night:'flat', b4_c1_aren:'aren', b5_c1_canal:'lether', b5_c7_canal:'lether', b5_c7_canalnight:'lether', b5_c7_walk:'lether', b3_c7_coral:'coral', b3_c7_coral_night:'coral'};
 const townArtOn = (style) => { try { return !(typeof window !== 'undefined' && (window.FTR_NOTOWNART || window.FTR_NOTILEART)) && !!TOWNART[TOWNART_STYLE[style]]; } catch (e) { return false; } };
 function townArt(ctx, map, cols, rows, T, dark, style){
   const P = TOWNART[TOWNART_STYLE[style]], at = (x, y) => (map[y] || '')[x], wall = (x, y) => at(x, y) === '#', open = (x, y) => at(x, y) !== undefined && !wall(x, y);

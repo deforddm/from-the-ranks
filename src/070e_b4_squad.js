@@ -113,10 +113,10 @@ Object.assign(AB, {
         const dx = Math.sign(f.x - u.x), dy = Math.sign(f.y - u.y); if (!dx && !dy) continue;
         let to = {x:f.x, y:f.y}, slam = false;
         for (let i = 0; i < d; i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, f)) { slam = true; break; } to = n; }
-        if (to.x === f.x && to.y === f.y) { blog(`${f.name} is thrown into what is behind it.`); hurt(f, roll(1, 6, 0)); updBattleUI(); continue; }
+        if (to.x === f.x && to.y === f.y) { blog(`${f.name} is thrown into what is behind it.`); hurt(f, roll(1, 6, 0) + wearDmg(f)); updBattleUI(); continue; }
         float(f, 'thrown back', '#d8ecff'); f.b4thrown = B.round;
         if (await forcedMove(f, to, 'thrown')) continue;
-        if (slam && f.hp > 0) { blog(`${f.name} fetches up hard against what is behind it.`); hurt(f, roll(1, 6, 0)); }
+        if (slam && f.hp > 0) { blog(`${f.name} fetches up hard against what is behind it.`); hurt(f, roll(1, 6, 0) + wearDmg(f)); }
         updBattleUI(); await wait(pace(100)); } }},
 });
 /* Autumn's Touch: the rot strips armour (−3) while it lasts */

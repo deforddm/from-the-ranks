@@ -674,7 +674,7 @@ const AUDIO = (() => {
     // Brans Keep (86): the lines on the eve, the lake shore, the dry channel in battle, the hills behind the keep, the Dissent road, the barrow
     b5_c6_lines:'camp_night', b5_c6_eve:'camp_night', b5_c6_shore:'lake', b5_c6_channel:'siege', b5_c6_pillars:'siege', b5_c6_break:'siege', b5_c6_hills:'hills', b5_c6_dissent:'plain', b5_c6_barrow:'barrow',
     // Letheras falls (87): the Drownings District at night, the footbridge by night and by day, the walls, the sorcery, under the arch, the Low Walk after
-    b5_c7_streets:'city_night', b5_c7_night:'burning', b5_c7_canalnight:'canal', b5_c7_canal:'canal', b5_c7_lowwalk:'canal', b5_c7_barricade:'siege', b5_c7_walls:'city', b5_c7_sorcery:'dark', b5_c7_under:'canal', b5_c7_walk:'canal', b5_c7_finale:'city_night',
+    b7_c7_stair:'interior', b5_c7_streets:'city_night', b5_c7_night:'burning', b5_c7_canalnight:'canal', b5_c7_canal:'canal', b5_c7_lowwalk:'canal', b5_c7_barricade:'siege', b5_c7_walls:'city', b5_c7_sorcery:'dark', b5_c7_under:'canal', b5_c7_walk:'canal', b5_c7_finale:'city_night',
     // the sound pass (series polish §4): the canals of Letheras (Books Five and Seven), Darujhistan after dark (Book Eight), the Wastes (Book Nine), the glass (Book Ten)
     b7_c2_bridge:'canal', b7_c2_alley:'canal', b7_c7_after:'canal', b7_letheras:'canal',
     b8_daru_night:'daru_night', b8_c1_roofs:'daru_night',

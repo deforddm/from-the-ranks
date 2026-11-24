@@ -240,7 +240,7 @@ const B8CH5 = {
       preText:()=>`The wayhouse has no roof and three walls, and the Guild has made a nest of it: a crossbow behind the gap where the door was, and knives in the dark along the inside of the walls, waiting for wagons. They were not waiting for the Fourth to come up the back of the rise on foot.`,
       stage2:{title:'The wayhouse roof', xp:130,
         text:()=>`The ones in the walls are down. The one on what is left of the roof beam is not, and neither is the knife who was keeping him company up there, and they have both stopped pretending to be part of the wayhouse.${b85Say({vasso:`\n\nVasso looks up at the beam and his mouth goes tight. "I know the one with the bow," he says. "He taught me knots." He draws anyway.`, vell:`\n\nVell is already looking at the beam the way he looks at a roof: which bits hold. "Left end," he says. "The right end is charcoal."`, _:''})}`,
-        map:["##.##.##","........","..t.....","........",".....t..","........","........","..t..t..","........","........"],
+        pitTxt:'the drop off the roof', map:["##.##.##","o......o","o.t....o","o......o","o....t.o","o......o","o......o","o.t..t.o","o......o","o......o"],
         party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
         foes:[['b8_knife',3,1],['b8_guildbow',5,0]]} } },
 

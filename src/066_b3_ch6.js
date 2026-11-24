@@ -215,10 +215,10 @@ ${b3In('greysword') ? `
 
     /* the landing ledge above Coral, at night: a Pannion picket nobody knew was there */
     b3_c6_landing:{title:'The landing ledge', style:'b3_c6_ridgeb', dark:true, open:true, warrenText:'Night in the mountains above Coral · the warrens poisoned, and the cold getting into them', warren:{denul:1, meanas:1}, music:'battle',
-      map:["##....##","#...t..#","........","..t.....","........","....t...","##......","#.......","........","........"],
+      pitTxt:'the drop', map:["##....##","#...t..#",".......o","..t....o",".......o","....t..o","##.....o","#......o",".......o",".......o"],
       party:[[3,8],[4,8],[2,9],[5,9],[3,9],[4,9]],
       foes:[['b3_beklite',2,2],['b3_beklite',5,2],['b3_beklite',3,4],['b3_beklite',5,4],['b3_c6_runner',1,1],['b3_c6_runner',6,1]], xp:150, after:'b3_c6_q_after_land',
-      waves:[{round:2, foes:[['b3_beklite',7,4]], text:'Another comes up over the lip of the ledge from below, spear first, where nobody thought there was a way up.'}],
+      waves:[{round:2, foes:[['b3_beklite',6,4]], text:'Another comes up over the lip of the ledge from below, spear first, where nobody thought there was a way up.'}],
       preText:()=>`The sharper drops out of the dark from twenty feet up, off a quorl's harness, and lands among the picket's packs. The picket fire goes up the mountain in sparks. So does most of the picket.`,
       stage2:{title:'The goat track', xp:70,
         text:()=>`The ledge is yours. Above it a goat track goes up between two crags toward the trench mouth, and on the track somebody in dark armour is coming down without hurrying, a long mace across his shoulders, and the air round him has gone grey and wrong.

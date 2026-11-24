@@ -13,7 +13,8 @@ const smoked = (x, y) => !!(B && B.smoke && B.smoke.some(s => s.x === x && s.y =
    low    't' tables, crates, stalls, barrow-stones: nobody walks through them, but you can see and shoot over them (with cover behind)
    pit    'o' pits and shafts, and on the roofs and the quays '#' is the drop or the lake: nobody walks over, everyone sees across, and anyone forced into one falls */
 const tileCh = (x, y) => inB(x, y) ? (B.def.map[y] || '')[x] || '.' : '#';
-const dropStyle = () => !!(B && B.def && (B.def.style === 'roof' || B.def.style === 'dock'));
+const CANAL_STYLE = {b5_c1_walk:1, b5_c7_lowwalk:1}; // v13.66.0: the Low Walk and the canal bridges. Their '#' was always drawn as the canal; now it is one
+const dropStyle = () => !!(B && B.def && (B.def.style === 'roof' || B.def.style === 'dock' || CANAL_STYLE[B.def.style]));
 const pitAt = (x, y) => inB(x, y) && (tileCh(x, y) === 'o' || (tileCh(x, y) === '#' && dropStyle()));
 const lowAt = (x, y) => inB(x, y) && tileCh(x, y) === 't';
 const solid = (x, y) => !inB(x, y) || (tileCh(x, y) === '#' && !dropStyle());
@@ -185,7 +186,7 @@ function nextTurn(){
   if (u.hot && u.hot.left > 0 && u.hp > 0) { u.hot.left--; heal(u, u.hot.n); if (!u.hot.left) u.hot = null; } // v13.5: Field Surgeon's dressing
   if (u.anvilOn) u.anvilOn = false; // v13.5: Anvil holds until the heavy's next turn
   if (u.calledUntil != null && B.round > u.calledUntil) { u.ac += 2; u.calledUntil = null; } // v13.5: Called Shot's 2 armour comes back with the Mark
-  if (u.burnTurns > 0) { u.burnTurns--; blog(`${u.name} is burning${u.burnTurns ? '' : ', the last of it'}.`); sparks(u.x, u.y, 8, '#ff9a3a', .5); hurt(u, roll(1,4)); }
+  if (u.burnTurns > 0) { u.burnTurns--; blog(`${u.name} is burning${u.burnTurns ? '' : ', the last of it'}.`); sparks(u.x, u.y, 8, '#ff9a3a', .5); hurt(u, roll(1,4) + wearDmg(u)); }
   { const fi = B.fires.find(f => f.x === u.x && f.y === u.y); if (fi && u.hp > 0) { blog(`${u.name} is caught in ${fi.txt || 'burner fire'}.`); hurt(u, roll(1,6)); } }
   if (u.hp <= 0) { B.busy = true; updBattleUI(); if (checkEnd()) return; return later(nextTurn, pace(600)); }
   if (u.stun) { u.stun = false; B.busy = true; blog(`${u.name} is dazed and loses the turn.`); float(u, 'dazed', '#c9bbff'); updBattleUI(); return later(nextTurn, pace(800)); }
@@ -310,7 +311,7 @@ const AB = {
       if (has(u.id, 'snare')) { t.snareUntil = B.round + 1; float(t, 'snared', '#b0a0c8'); }
       if (has(u.id, 'handover') && B && t.hp > 0 && u.hp > 0 && cheb(u, t) === 1) { await wait(pace(200)); if (B && t.hp > 0) attack(u, t, {verb:'meets it, hand over hand, with a blow for'}); } }}, // v13.52.0
   /* the sergeant's shield, picked up at Nathilog and never put down: drive an enemy back, out of the squad's reach, and let the squad answer it */
-  shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6 instead of the ground. Toward a pit, a roof's edge or the water: it saves to catch the lip and go down prone, or goes over. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
+  shove:{name:'Shield Drive', desc:()=>`An adjacent enemy: 1d6+${2 + lvDmg()} on a hit, and it is driven straight back ${shoveDist() > 1 ? `up to ${shoveDist()} tiles` : '1 tile'}. Every squadmate it is driven out of reach of gets a free swing. Into a wall or a body: +1d6${lvDmg() ? '+' + lvDmg() : ''} instead of the ground. Toward a pit, a roof's edge or the water: it goes over two times in three (a leader one in three), or catches the lip and goes down prone. Then he may follow through into the tile it left: one step, no free swings. The very heavy don't move; a leader braces and holds about half the time. Recharges after ${2 - lvAt(6)} round${lvAt(6) ? '' : 's'}. Grows with level.`,
     ok:u=>!(u.cdShove >= B.round), tiles:u=>foes().filter(f => cheb(u,f) === 1),
     async run(u,x,y){ const t = unitAt(x,y); if (!t) return; u.cdShove = B.round + 2 - lvAt(6); u.aooTurn = B.turn; // the sergeant's own swing is spent on the drive
       const r = attack(u, t, {dmg:[1,6,2 + lvDmg()], verb:'drives a shield into'}); if (!r.hit) return;
@@ -318,12 +319,12 @@ const AB = {
       { const hold = pushHolds(t); if (hold) { blog(hold === 'heavy' ? `${t.name} takes the shield and doesn't give a step.` : `${t.name} braces behind the blow and holds.`); float(t, hold === 'heavy' ? 'too heavy' : 'braces', '#a99a88'); return; } }
       const dx = Math.sign(t.x - u.x), dy = Math.sign(t.y - u.y); let to = {x:t.x, y:t.y}, slam = false;
       for (let i = 0; i < shoveDist(); i++) { const n = {x:to.x + dx, y:to.y + dy}; if (pitAt(n.x, n.y)) { to = n; break; } if (!free(n.x, n.y, t)) { slam = true; break; } to = n; } // a pit takes it (forcedMove asks the save)
-      if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
+      if (to.x === t.x && to.y === t.y) { const d = roll(1,6,0) + wearDmg(t); blog(`${t.name} goes back into what's behind it, hard.`); hurt(t, d); updBattleUI(); return; }
       blog(`${u.name} drives ${t.name} back${slam ? ' into what is behind it' : ''}.`); float(t, 'driven back', '#e8c073'); AUDIO.play('sword');
       const left = {x:x, y:y};
       if (await forcedMove(t, to, 'driven')) { if (B && u.hp > 0 && free(left.x, left.y, u)) offerFollow(u, left, t); return; }
       if (B && u.hp > 0 && (t.x !== left.x || t.y !== left.y) && free(left.x, left.y, u)) offerFollow(u, left, t);
-      if (slam && t.hp > 0) { const d = roll(1,6,0); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); } }},
+      if (slam && t.hp > 0) { const d = roll(1,6,0) + wearDmg(t); blog(`${t.name} fetches up against it with a sound like a dropped sack.`); hurt(t, d); updBattleUI(); } }},
   ropeswing:{name:'Rope Swing', free:true, desc:()=>`Once a turn, and it does not use his action: swing to any open tile within ${3 + lvT()}. No free swings. Grows with level.`, ok:u=>u.swungTurn !== B.turn,
     tiles:u=>{ const out = []; for (let y=0;y<10;y++) for (let x=0;x<8;x++) if (cheb(u,{x,y}) <= 3 + lvT() && free(x,y,u) && !(x === u.x && y === u.y) && sees(u,{x,y})) out.push({x,y,step:true}); return out; },
     run(u,x,y){ u.swungTurn = B.turn; AUDIO.play('step'); sparks(u.x, u.y, 8, '#b0a0c8', .4); u.x = x; u.y = y; sparks(x, y, 8, '#b0a0c8', .4); blog(`${u.name} throws the hook at something high and goes with it.`); enterFire(u); updBattleUI(); }},
@@ -502,11 +503,12 @@ const fireAt = (x, y) => !!(B && B.fires && B.fires.some(f => f.x === x && f.y =
 function enterFire(u){
   if (!B || !u || u.hp <= 0 || !fireAt(u.x, u.y)) return;
   const fi = B.fires.find(f => f.x === u.x && f.y === u.y), mine = u.side === 'p' && !u.ally;
-  blog(`${u.name} goes through ${fi.txt || 'the burner fire'}.`); sparks(u.x, u.y, 10, '#ff9a3a', .5); hurt(u, roll(1,4)); if (u.hp <= 0) return;
+  blog(`${u.name} goes through ${fi.txt || 'the burner fire'}.`); sparks(u.x, u.y, 10, '#ff9a3a', .5); hurt(u, roll(1,4) + wearDmg(u)); if (u.hp <= 0) return;
   const mod = mine ? Math.max(statOf(u.id, 'might'), statOf(u.id, 'guile')) + (u.steady ? 2 : 0) : Math.floor((u.atk || 0) / 2), dc = 12 + (mine ? DIFF().dc : 0), nat = d20();
-  if (nat !== 1 && (nat === 20 || nat + mod >= dc)) { blog(`${u.name} beats the flames out${SET.dice ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : ''}.`); return; }
+  const need = mine ? 0 : edgeFall(u), pct = mine ? 0 : 1 + Math.floor(Math.random() * 100); // v13.66.0: an enemy catches fire on the same flat chance as it falls (66, a leader 33), not on its attack
+  if (mine ? nat !== 1 && (nat === 20 || nat + mod >= dc) : pct > need) { blog(`${u.name} beats the flames out${!SET.dice ? '' : mine ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : ` <span class="stat">(${pct} vs ${need})</span>`}.`); return; }
   u.burnTurns = Math.max(u.burnTurns || 0, 2); float(u, 'on fire!', '#ff9a3a'); AUDIO.play('burner', .5);
-  blog(`<em>${u.name} catches fire!</em>${SET.dice ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : ''}`);
+  blog(`<em>${u.name} catches fire!</em>${!SET.dice ? '' : mine ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : ` <span class="stat">(${pct} vs ${need})</span>`}`);
 }
 const putOut = u => { if (u.burnTurns > 0) { u.burnTurns = 0; float(u, 'put out', '#9fe0b8'); } };
 /* forced movement (Vell's hook, the sergeant's Shield Drive): the target goes tile by tile, and every squadmate it is dragged or driven out of reach of
@@ -514,17 +516,26 @@ const putOut = u => { if (u.burnTurns > 0) { u.burnTurns = 0; float(u, 'put out'
 /* the edge (v3.19): anything dragged, driven or shoved into a pit, off a roof or into the lake gets a save, the same as fire's.
    Make it and it catches the lip and goes down on the ground where it stood, prone: no move next turn, and blades next to it hit it easier (−2 armour).
    Miss it and it goes over. An enemy is out of the fight. A squadmate climbs back up hurt (2d6+2) and prone. Returns true if it dropped. */
-const edgeWord = (x, y) => tileCh(x, y) === 'o' ? (B.def.pitTxt || 'the pit') : B.def.style === 'dock' ? 'the lake' : 'the drop';
+const edgeWord = (x, y) => tileCh(x, y) === 'o' ? (B.def.pitTxt || 'the pit') : B.def.style === 'dock' ? 'the lake' : CANAL_STYLE[B.def.style] ? 'the canal' : 'the drop';
+/* v13.66.0 (David, Nov 23, 2026): fire, bleeding and a slam into what is behind were fixed dice from Book One (1d4, 1d6) against enemies
+   with four times the health. On an enemy they now add the squad level's damage bonus, as every skill does. Never on the squad. */
+const wearDmg = u => u && u.side === 'e' ? lvDmg() : 0;
+const EDGE_FALL = {soldier:66, leader:33}; // an enemy at a drop: the chance in a hundred that it goes over
+const edgeFall = t => t && t.boss ? EDGE_FALL.leader : EDGE_FALL.soldier;
 async function overEdge(t, pit, how){
   const mine = t.side === 'p', what = edgeWord(pit.x, pit.y);
   const mod = mine && !t.ally ? Math.max(statOf(t.id, 'might'), statOf(t.id, 'guile')) + (t.steady ? 2 : 0) : Math.floor((t.atk || 0) / 2), dc = 12 + (mine && !t.ally ? DIFF().dc : 0), nat = d20();
-  const math = SET.dice ? ` <span class="stat">(${nat}+${mod} vs ${dc})</span>` : '';
-  if (nat !== 1 && (nat === 20 || nat + mod >= dc)) {
+  /* v13.66.0 (David, Nov 23, 2026: "regular soldiers fall 66% of the time and leaders can be 33%"). An enemy's save ran on half its attack
+     against Book One's 12, and attack grew with the books until only a rolled 1 sent a Book Eight enemy over. It is a flat chance now,
+     the same in every book and on every difficulty. The squad and its allies save as before. */
+  const foe = !mine, need = foe ? edgeFall(t) : 0, pct = foe ? 1 + Math.floor(Math.random() * 100) : 0;
+  const math = !SET.dice ? '' : foe ? ` <span class="stat">(${pct} vs ${need})</span>` : ` <span class="stat">(${nat}+${mod} vs ${dc})</span>`;
+  if (foe ? pct > need : nat !== 1 && (nat === 20 || nat + mod >= dc)) {
     t.prone = true; float(t, 'catches the edge', '#e8c073'); AUDIO.play('step'); sparks(pit.x, pit.y, 6, '#a99a88', .3);
     blog(`${t.name} is ${how || 'forced'} to the lip of ${what}, catches it, and goes down on the ground instead of over${math}.`); updBattleUI(); return false; }
   if (mine) { blog(`<em>${t.name} goes over into ${what}</em>${math} and comes back up it, the hard way.`); float(t, 'fell', '#f08a7c'); hurt(t, roll(2,6,2)); if (t.hp > 0) t.prone = true; updBattleUI(); return t.hp <= 0; }
   t.x = pit.x; t.y = pit.y; t.fell = true; AUDIO.play('miss'); sparks(pit.x, pit.y, 10, '#6a6460', .5);
-  blog(`<em>${t.name} goes over into ${what}.</em>${math} It isn't coming back up.`); tally('pitfalls'); hurt(t, t.hp); updBattleUI(); return true; }
+  blog(`<em>${t.name} goes over into ${what}.</em>${math} ${CANAL_STYLE[B.def.style] && tileCh(pit.x, pit.y) === '#' ? 'It is out of the fight.' : `It isn't coming back up.`}`); tally('pitfalls'); hurt(t, t.hp); updBattleUI(); return true; }
 /* v13.4 (David, Nov 12): who a push moves (Shield Drive, the hook, the lance thrust, the Sky's Shove). It used to be anything marked boss
    or with 45 health or more, a Book One number the later books' health carried nearly every soldier past. Now it is what the enemy is:
    the very heavy (HEAVY_FOES, or heavy:true on the def) and the deathless never move; a leader (boss) braces and holds about half the
@@ -588,7 +599,7 @@ async function aiTurn(u, turnId){
   if (!B || B.over || B.turn !== turnId) return;
   const b0 = B, gone = () => B !== b0 || B.turn !== turnId; // the battle was left or restarted, or the turn moved on, while this one played out
   const done = () => { updBattleUI(); if (!checkEnd()) endTurn(); };
-  if (u.side === 'e' && u.bleed > 0) { u.bleed--; blog(`${u.name} is bleeding.`); float(u, 'bleeding', '#e0574a'); hurt(u, roll(1,4)); updBattleUI(); // v13: a lance's thrust (b2_lance) bleeds an enemy
+  if (u.side === 'e' && u.bleed > 0) { u.bleed--; blog(`${u.name} is bleeding.`); float(u, 'bleeding', '#e0574a'); hurt(u, roll(1,4) + wearDmg(u)); updBattleUI(); // v13: a lance's thrust (b2_lance) bleeds an enemy
     if (u.hp <= 0) { await wait(300); if (gone()) return; return done(); } }
   const inRange = () => foesOf(u).filter(p => cheb(u,p) <= u.rng && canShoot(u,p));
   if (u.turned) { u.turned = false; // Mockra Whisper: this turn belongs to its own side

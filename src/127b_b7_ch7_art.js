@@ -279,3 +279,19 @@ SCENEX.b7_fin_home = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
       + `<ellipse cx="-10" cy="-12" rx="14" ry="8" fill="#fff" fill-opacity=".35" transform="rotate(-30)"/></g>`);
   }
 })();
+
+/* v13.66.0 (David, Nov 23, 2026: the counting-house stair's sides read as a drop). The stair is a room: its walls are the broker's
+   panelling, with ledger shelves and a lamp bracket here and there. Everything else is the street's own painter. Looks only. */
+function b77StairWall(ctx, x, y, T){ const px = x*T, py = y*T, h = (i) => hash(x, y, 40 + i);
+  const g = ctx.createLinearGradient(px, 0, px + T, 0); g.addColorStop(0, '#3a2a1c'); g.addColorStop(.5, '#4a3624'); g.addColorStop(1, '#33251a'); ctx.fillStyle = g; ctx.fillRect(px, py, T, T);
+  ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.fillRect(px + T*.48, py, Math.max(1, T*.04), T); // the join between two panels
+  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1; ctx.strokeRect(px + T*.08 + .5, py + T*.08 + .5, T*.34, T*.84); ctx.strokeRect(px + T*.58 + .5, py + T*.08 + .5, T*.34, T*.84);
+  ctx.fillStyle = 'rgba(255,225,170,.07)'; ctx.fillRect(px + T*.09, py + T*.09, T*.33, Math.max(1, T*.03)); ctx.fillRect(px + T*.59, py + T*.09, T*.33, Math.max(1, T*.03));
+  if (h(1) > .45) { // a shelf of ledgers
+    const sy = py + T*(.3 + h(2)*.3); ctx.fillStyle = '#1e150d'; ctx.fillRect(px + T*.06, sy + T*.2, T*.88, T*.05);
+    const cols = ['#6a2f24', '#2f4a3a', '#7a6234', '#2c3a56', '#5a4630']; let bx = px + T*.1;
+    for (let i = 0; i < 7 && bx < px + T*.86; i++) { const w = T*(.07 + h(3 + i)*.06), bh = T*(.13 + h(11 + i)*.07); ctx.fillStyle = cols[(h(19 + i)*cols.length) | 0]; ctx.fillRect(bx, sy + T*.2 - bh, w, bh); ctx.fillStyle = 'rgba(255,230,180,.22)'; ctx.fillRect(bx + w*.3, sy + T*.2 - bh*.75, w*.4, Math.max(1, bh*.12)); bx += w + T*.012; } }
+  else if (h(4) > .55) { // a lamp on a bracket
+    const cx = px + T*.5, cy = py + T*.42; ctx.fillStyle = '#17110b'; ctx.fillRect(cx - T*.02, cy, T*.04, T*.18); const lg = ctx.createRadialGradient(cx, cy, 0, cx, cy, T*.42); lg.addColorStop(0, 'rgba(250,200,110,.5)'); lg.addColorStop(1, 'rgba(250,200,110,0)'); ctx.fillStyle = lg; ctx.fillRect(px, py, T, T); ctx.fillStyle = '#f6d48a'; ctx.beginPath(); ctx.arc(cx, cy, T*.07, 0, 7); ctx.fill(); } }
+if (typeof TILEX !== 'undefined') TILEX.b7_c7_stair = (ctx, ch, x, y, T, dark) => ch === '#' ? b2Clip(ctx, x, y, T, () => b77StairWall(ctx, x, y, T)) : TILEX.b5_c7_streets(ctx, ch, x, y, T, dark);
+{ const _df = drawFeature; drawFeature = function(ctx, ch, x, y, T, dark, style, map){ return _df(ctx, ch, x, y, T, dark, style === 'b7_c7_stair' ? 'b5_c7_streets' : style, map); }; } // the stair's casks are the street's
