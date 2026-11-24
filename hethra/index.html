@@ -79,7 +79,7 @@
   .wb { padding: 24px 26px; border-radius: 4px; background: var(--bg-2); border: 1px solid rgba(255,255,255,0.06); }
   .wb h3 { margin: 0 0 8px; font: 700 30px/1.05 var(--gothic); }
   .wb p { margin: 0; color: var(--ink-2); font-size: 17px; }
-  .wb.m h3 { color: #d9b06a; } .wb.c h3 { color: #c7675b; } .wb.w h3 { color: #d8c38a; }
+  .wb.m h3 { color: #d9b06a; } .wb.c h3 { color: #c7675b; } .wb.w h3 { color: #d8c38a; } .wb.s h3 { color: #e2dccd; } .wb.a h3 { color: #9fa6d8; }
 
   /* install */
   .install { display: grid; grid-template-columns: 1.2fr 1fr; gap: 34px; align-items: start; }
@@ -109,18 +109,18 @@
 <body>
 
 <header class="hero">
-  <img class="bg" src="shots/fight.jpg" alt="">
+  <img class="bg" src="shots/camp.jpg" alt="">
   <div class="wrap">
     <div class="kicker">A Malazan warband skirmish game · Windows PC</div>
     <h1>Hethra</h1>
     <div class="sub">City of the Fallen</div>
-    <p class="lede">Where the Crippled God's pain fell burning from the sky, Hethra died in a night. Its ruins are thick with godshards, and every faction wants them. Lead your warband through the streets, rooftops and plank bridges, and hold what you can.</p>
+    <p class="lede">Where the Crippled God's pain fell burning from the sky, Hethra died in a night. Its ruins are thick with godshards, and every faction wants them. Lead your warband through the streets, rooftops and plank bridges, bring back what you can, and keep your fighters alive from one battle to the next.</p>
     <div class="cta">
-      <a class="btn" id="dl" href="https://raw.githubusercontent.com/deforddm/from-the-ranks/4bf0902190ee435a14e369da44b63993e228116c/hethra/Hethra-windows.zip">
+      <a class="btn" id="dl" href="https://raw.githubusercontent.com/deforddm/from-the-ranks/dfdf8cc024611ef5dfda96f31b82c1cd6c84a1e8/hethra/Hethra-windows.zip">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.1 10.4 4v7.2H3V5.1Zm8.3-1.2L21 2.5v8.7h-9.7V3.9ZM3 12.8h7.4V20L3 18.9v-6.1Zm8.3 0H21v8.7l-9.7-1.4v-7.3Z"/></svg>
         Download for Windows
       </a>
-      <div class="meta"><b>Version 0.2</b> · 53 MB zip · Windows 10 or 11, 64-bit<br>A dedicated graphics card is recommended.</div>
+      <div class="meta"><b>Version 0.5</b> · 56 MB zip · Windows 10 or 11, 64-bit<br>A dedicated graphics card is recommended.</div>
     </div>
   </div>
 </header>
@@ -130,33 +130,41 @@
   <section>
     <h2>From the ruins<small>Screenshots from the game</small></h2>
     <div class="gallery">
-      <a class="wide" href="shots/fight.jpg"><img src="shots/fight.jpg" alt="Over a cultist's shoulder as she strikes, with the die on screen"><span>Every blow is rolled</span></a>
+      <a class="wide" href="shots/camp.jpg"><img src="shots/camp.jpg" alt="The marines round their fire between battles, with the roster and the camp's orders"><span>The camp between battles</span></a>
+      <a href="shots/causeway.jpg"><img src="shots/causeway-sm.jpg" alt="The Broken Causeway at night, with the ring of witch-fire on the bridge"><span>Hold the ground</span></a>
+      <a href="shots/aftermath.jpg"><img src="shots/aftermath-sm.jpg" alt="The aftermath: each wounded fighter's fate rolled on the dice"><span>Counting the cost</span></a>
+      <a href="shots/fighter.jpg"><img src="shots/fighter-sm.jpg" alt="A sapper's sheet: stats, an advance to choose, kit and the armoury"><span>Advances and kit</span></a>
+      <a href="shots/next.jpg"><img src="shots/next-sm.jpg" alt="Choosing the foe, the battlefield and the purpose of the next fight"><span>Into the ruins</span></a>
+      <a href="shots/tower.jpg"><img src="shots/tower-sm.jpg" alt="The Tower Ward from above, towers joined by ladders and planks"><span>The Tower Ward</span></a>
+      <a href="shots/duel.jpg"><img src="shots/duel-sm.jpg" alt="A Tiste Andii lord charges a masked Seguleh on the causeway"><span>Seguleh against Andii</span></a>
+      <a href="shots/fight.jpg"><img src="shots/fight-sm.jpg" alt="Over a cultist's shoulder as she strikes, with the die on screen"><span>Every blow is rolled</span></a>
       <a href="shots/idol.jpg"><img src="shots/idol-sm.jpg" alt="The chained bronze idol in the square"><span>The Idol Square</span></a>
-      <a href="shots/overview.jpg"><img src="shots/overview-sm.jpg" alt="The ruined city at night from above"><span>Hethra by night</span></a>
-      <a href="shots/orders.jpg"><img src="shots/orders-sm.jpg" alt="Over the sergeant's shoulder, with the ground he can reach glowing"><span>Orders at street level</span></a>
-      <a href="shots/battle.jpg"><img src="shots/battle-sm.jpg" alt="The battle spreads across the rooftops"><span>Rooftops and bridges</span></a>
-      <a href="shots/title.jpg"><img src="shots/title-sm.jpg" alt="The title screen"><span>Choose your warband</span></a>
     </div>
   </section>
 
   <section>
-    <h2>The fight<small>What is in version 0.2</small></h2>
+    <h2>The game<small>What is in version 0.5</small></h2>
     <div class="features">
-      <div class="card"><h3>Down in the streets</h3><p>The camera rides over your fighter's shoulder through torchlit alleys, fog and falling ash, and the enemy's moves play out from their side. V lifts you over the rooftops.</p></div>
+      <div class="card"><h3>A warband that lives on</h3><p>Play a campaign. After each battle the wounded roll for their fate: a scar, an old wound, a missed fight or death. Survivors gain experience and choose their advances.</p></div>
+      <div class="card"><h3>The camp</h3><p>Your fighters gather round a fire between battles. Sell godshards to the dealers, buy weapons and armour, hire new blood and pick your next fight. The campaign saves itself.</p></div>
+      <div class="card"><h3>Three battlefields</h3><p>The Idol Square, the Broken Causeway split by a canal, and the Tower Ward, where the fighting goes up ladders and across planks between towers.</p></div>
+      <div class="card"><h3>Three kinds of battle</h3><p>Hunt godshards, fight a street brawl to the last, or hold the ring of witch-fire when night falls.</p></div>
+      <div class="card"><h3>Sound and music</h3><p>Steel on steel, crossbows, Moranth munitions, warrens tearing open, wind and fire in the ruins, and a score for the title, the camp and the battle. All of it is synthesized in code.</p></div>
       <div class="card"><h3>Blood and dice</h3><p>Each fighter has their own stat line, weapons and armour. Every roll lands on screen, and blows land hard: the view shakes, blood hits the wet stones, fighters go down.</p></div>
-      <div class="card"><h3>Warrens and munitions</h3><p>Mages open their warrens for shadow, storm and healing. Marines carry Moranth sharpers, crackers and the dreaded cusser.</p></div>
       <div class="card"><h3>Hidden in the dark</h3><p>Line of sight is real. Enemies you cannot see stay hidden, and a figure behind a wall shows only as a silhouette.</p></div>
-      <div class="card"><h3>Godshards</h3><p>Shards of the fallen god glow in the ruins. Hold the most when the battle ends, or break the enemy's nerve first.</p></div>
-      <div class="card"><h3>An enemy that plays to win</h3><p>The foe moves, shoots, charges and contests the shards on its own, and you see its moves only when your fighters can see it.</p></div>
+      <div class="card"><h3>Warrens and munitions</h3><p>Mages open warrens of shadow, storm, healing, sand, pain and Darkness. Marines carry Moranth sharpers, crackers and the dreaded cusser.</p></div>
+      <div class="card"><h3>An enemy that plays to win</h3><p>The foe moves, shoots, charges, casts and contests the shards and the ring on its own, and you see its moves only when your fighters can see it.</p></div>
     </div>
   </section>
 
   <section>
-    <h2>Warbands<small>Pick yours and your foe</small></h2>
+    <h2>Warbands<small>Five to choose from</small></h2>
     <div class="warbands">
       <div class="wb m"><h3>Malazan Marines</h3><p>A squad of the Empire's marines with crossbows, Moranth munitions, a sapper and a squad mage who would rather be anywhere else.</p></div>
       <div class="wb c"><h3>Cult of the Chained One</h3><p>Pilgrims of the fallen god, many and unafraid of wounds. Chain-priests, shard-eaters, thrown stones and the Chained One's pain.</p></div>
       <div class="wb w"><h3>Sworn of the Whirlwind</h3><p>Desert rebels who rose in the goddess's name. Dervishes, sand archers and a seer, hunting Malazans as gladly as shards.</p></div>
+      <div class="wb s"><h3>Masked of the Seguleh</h3><p>A handful of unarmoured island swordsmen, ranked by their masks. Few, costly and terribly good: their duellists parry even a tied blow.</p></div>
+      <div class="wb a"><h3>Children of the Dark</h3><p>Tall Tiste Andii with longbows and great blades. Their mage draws on Kurald Galain to sharpen a friend's edge or blind an enemy's bow.</p></div>
     </div>
   </section>
 
@@ -167,8 +175,8 @@
         <ol class="steps">
           <li><b>Download</b> the zip with the button above, then right-click it and choose <b>Extract All</b>.</li>
           <li>Open the <b>Hethra</b> folder and run <b>Hethra.exe</b>. Nothing is installed.</li>
-          <li>Pick your warband and your foe, then press <b>Into the ruins</b>.</li>
-          <li>Slow PC? On the title screen, press <b>Graphics</b> to switch to fast.</li>
+          <li>Pick your warband, then press <b>New campaign</b>, or <b>Skirmish</b> for a single battle. <b>Continue</b> picks up where you left off.</li>
+          <li>Slow PC? On the title screen, open <b>Settings</b> and choose <b>Fast</b>. Volumes and the window are there too.</li>
         </ol>
         <table class="keys">
           <tr><td>Click, or Tab</td><td>Choose a fighter</td></tr>
@@ -186,7 +194,7 @@
           <p>Hethra.exe is not code-signed, so Windows SmartScreen may say it protected your PC from an unrecognised app.</p>
           <p>Choose <b>More info</b>, then <b>Run anyway</b>. Your antivirus may also scan it the first time.</p>
         </div>
-        <p class="meta" style="margin-top:22px">Want to look inside? The full Godot 4.7 project is here too: <a href="https://github.com/deforddm/from-the-ranks/raw/main/hethra/Hethra-godot-project.zip">Hethra-godot-project.zip</a> (12 MB). Import <b>project.godot</b> in Godot and press F5.</p>
+        <p class="meta" style="margin-top:22px">Want to look inside? The full Godot 4.7 project is here too: <a href="https://github.com/deforddm/from-the-ranks/raw/main/hethra/Hethra-godot-project.zip">Hethra-godot-project.zip</a> (17 MB). Import <b>project.godot</b> in Godot and press F5.</p>
       </div>
     </div>
   </section>
@@ -202,7 +210,7 @@
     </div>
     <div>
       <h3>Made with</h3>
-      <p>Godot Engine 4.7 (MIT licence). Fonts: Grenze Gotisch and Alegreya Sans (SIL Open Font Licence). All 3D art is generated in code.</p>
+      <p>Godot Engine 4.7 (MIT licence). Fonts: Grenze Gotisch and Alegreya Sans (SIL Open Font Licence). All 3D art, sound and music are generated in code.</p>
       <p><a href="../">From the Ranks</a></p>
     </div>
   </div>
