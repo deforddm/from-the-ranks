@@ -1,3 +1,26 @@
+/* v13.69.0 (David, Nov 25, 2026: "make moonspawn look consistent across all artwork"): ONE Moon's Spawn. The outline is Book One's title's (019g, the
+   same hash seeds 121 to 126): a crown of basalt spires above the waist, a long ragged cone hanging below. Every drawing of the rock takes it from here:
+   the chapter plates (PK.spawn), the scene backdrops (drawSpawn, 023), the canvas title and Coral's sky (paintTitleSpawn, 022), the visions (036b).
+   Points are in half-widths: x from -1 to 1, y = 0 at the waist, negative up. top runs left to right, bot right to left. */
+function spawnOutline(){ if (spawnOutline.c) return spawnOutline.c; const h = hash, HW = 310, top = [[-1, 0]]; let x = -HW;
+  for (let i = 0; x < HW - 10; i++) { const t = (x + HW) / (2 * HW), env = Math.pow(Math.sin(t * Math.PI), .7), bw = 12 + h(i, 121) * 28, ht = env * (30 + Math.pow(h(i, 122), 2) * 120) + 8, lean = (h(i, 123) - .5) * 10;
+    top.push([(x + bw * .2) / HW, (-10 - ht * .35) / HW], [(x + bw * .45 + lean) / HW, (-14 - ht) / HW], [(x + bw * .62) / HW, (-10 - ht * .55) / HW]); x += bw; }
+  top.push([1, 0]); const bot = [], n = 28;
+  for (let i = n; i >= 0; i--) { const t = i / n, xx = -HW + t * 2 * HW, d = Math.pow(Math.sin(t * Math.PI), 2.2) * 190 * (.7 + h(i, 124) * .6) + 14 + h(i, 125) * 18; bot.push([(xx + (h(i, 126) - .5) * 14) / HW, d / HW]); }
+  return spawnOutline.c = {top, bot}; }
+/* trace it on a canvas: centre x, the waist's y, the half-width */
+function spawnPath(ctx, MX, WY, HW){ const O = spawnOutline(); ctx.beginPath(); O.top.forEach(([x, y], i) => i ? ctx.lineTo(MX + x * HW, WY + y * HW) : ctx.moveTo(MX + x * HW, WY + y * HW)); O.bot.forEach(([x, y]) => ctx.lineTo(MX + x * HW, WY + y * HW)); ctx.closePath(); }
+/* and paint it as the title paints it: rock lit from the left, hanging facets, the light of what lies below on its belly, a faint rim on the crown, blue lamps */
+function spawnPaint(ctx, MX, WY, HW, o = {}){ const O = spawnOutline(), K = HW / 310, h = hash, g = ctx.createLinearGradient(MX - HW, 0, MX + HW, 0); g.addColorStop(0, o.top || '#2a2a3a'); g.addColorStop(.3, '#0c0c14'); g.addColorStop(1, '#040408');
+  spawnPath(ctx, MX, WY, HW); ctx.fillStyle = o.flat || g; ctx.fill(); if (o.flat) return;
+  ctx.save(); spawnPath(ctx, MX, WY, HW); ctx.clip();
+  for (let i = 0; i < 24; i++) { const t = h(i, 131), xx = MX - HW + 24 * K + t * (2 * HW - 48 * K), y0 = WY + (-20 + h(i, 132) * 26) * K, len = (40 + Math.pow(Math.sin(t * Math.PI), 2) * 140 * h(i, 133)) * K, w = (7 + h(i, 134) * 15) * K;
+    ctx.fillStyle = t < .45 ? `rgba(58,60,82,${.32 * (1 - t)})` : 'rgba(0,0,0,.4)'; ctx.beginPath(); ctx.moveTo(xx, y0); ctx.lineTo(xx + w, y0 + 6 * K); ctx.lineTo(xx + w * .4, y0 + len); ctx.closePath(); ctx.fill(); }
+  ctx.restore(); ctx.lineJoin = 'round';
+  if (o.under) { ctx.strokeStyle = o.under; ctx.globalAlpha = o.underA ?? .4; ctx.lineWidth = Math.max(1, 2 * K); ctx.beginPath(); O.bot.forEach(([x, y], i) => i ? ctx.lineTo(MX + x * HW, WY + y * HW) : ctx.moveTo(MX + x * HW, WY + y * HW)); ctx.stroke(); ctx.globalAlpha = 1; }
+  ctx.strokeStyle = o.rim || '#8a90b4'; ctx.globalAlpha = .25; ctx.lineWidth = Math.max(.6, 1.2 * K); ctx.beginPath(); O.top.forEach(([x, y], i) => i ? ctx.lineTo(MX + x * HW, WY + y * HW) : ctx.moveTo(MX + x * HW, WY + y * HW)); ctx.stroke(); ctx.globalAlpha = 1;
+  const n = o.lights ?? 8; for (let i = 0; i < n; i++) { const p = o.t == null ? .6 : (Math.sin(o.t / 900 + i * 1.9) + 1) / 2; ctx.fillStyle = `rgba(168,204,255,${.25 + p * .5})`; const r = Math.max(1.2, 1.6 * K); ctx.fillRect(MX - 220 * K + h(i, 141) * 440 * K, WY + (-20 + h(i, 142) * 60) * K, r, r); } }
+
 /* ============ the plate kit (v13.6): shared pieces for the painted chapter plates of every book (019i files) ============
    A chapter opening shows one painted plate (artPlate, 019d) above the chapter's caption; the plate is the caption drawn. Book One had
    eight simple plates since v1; v13.6 redraws them and adds the other nine books' sixty-three, all from this kit, in the titles' style
@@ -134,11 +157,8 @@ const PK = {
       s += `<g class="pk-fl" style="animation-delay:-${f(hash(i, seed + 2) * 2.6)}s"><circle cx="${f(x)}" cy="${f(y + r + 2)}" r="${f(r * 3.4)}" fill="${P.glow(c)}" opacity=".55"/><ellipse cx="${f(x)}" cy="${f(y + r + 2)}" rx="${f(r)}" ry="${f(r * 1.2)}" fill="${c}"/></g>`; }
     return s; },
   /* Moon's Spawn: a black mountain afloat, crown of basalt spires on top, a long ragged cone beneath; underc lights its belly */
-  spawn(P, MX, MY, HW, o = {}){ const f = PK.f, h = hash, sd = o.seed || 7, K = HW / 310; let x = MX - HW, top = `M${f(MX - HW)} ${f(MY + 40 * K)}`;
-    for (let i = 0; x < MX + HW - 10 * K; i++) { const t = (x - MX + HW) / (2 * HW), env = Math.pow(Math.sin(t * Math.PI), .7), bw = (12 + h(i, sd) * 28) * K, ht = (env * (30 + Math.pow(h(i, sd + 1), 2) * 120) + 8) * K, lean = (h(i, sd + 2) - .5) * 10 * K;
-      top += ` L${f(x + bw * .2)} ${f(MY + 30 * K - ht * .35)} L${f(x + bw * .45 + lean)} ${f(MY + 26 * K - ht)} L${f(x + bw * .62)} ${f(MY + 30 * K - ht * .55)}`; x += bw; }
-    top += ` L${f(MX + HW)} ${f(MY + 40 * K)}`;
-    let bot = ''; for (let i = 28; i >= 0; i--) { const t = i / 28, xx = MX - HW + t * 2 * HW, d = (Math.pow(Math.sin(t * Math.PI), 2.2) * 190 * (.7 + h(i, sd + 3) * .6) + 14 + h(i, sd + 4) * 18) * K; bot += ` L${f(xx + (h(i, sd + 5) - .5) * 14 * K)} ${f(MY + 40 * K + d)}`; }
+  spawn(P, MX, MY, HW, o = {}){ const f = PK.f, h = hash, sd = o.seed || 7, K = HW / 310, O = spawnOutline(), pt = ([x, y]) => `${f(MX + x * HW)} ${f(MY + 40 * K + y * HW)}`;
+    const top = 'M' + O.top.map(pt).join(' L'), bot = O.bot.map(p => ' L' + pt(p)).join(''); // v13.69.0: one outline everywhere (spawnOutline), whatever the seed; the seed still places the facets and lights
     const rock = P.lin([[0, o.top || '#2a2c3a'], [.35, '#121320'], [1, '#040408']]);
     let s = `<path d="${top + bot} Z" fill="#000" opacity=".5" filter="url(#${P.blur(10 * K)})" transform="translate(0 ${f(14 * K)})"/><path d="${top + bot} Z" fill="${rock}"/>`;
     for (let i = 0; i < 18; i++) { const t = h(i, sd + 6), xx = MX - HW + 20 * K + t * (2 * HW - 40 * K), y0 = MY + (20 + h(i, sd + 7) * 26) * K, len = (40 + Math.pow(Math.sin(t * Math.PI), 2) * 140 * h(i, sd + 8)) * K, w = (7 + h(i, sd + 9) * 15) * K;

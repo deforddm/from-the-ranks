@@ -323,12 +323,7 @@ function feteDawn(){ return !!S && (S.chapter >= 7 || !!(S.f && S.f.c6_done) || 
 function vign(ctx, W, H, a, cy = .55){ const v = ctx.createRadialGradient(W/2, H*cy, H*.3, W/2, H*cy, W*.72); v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,`rgba(0,0,0,${a})`); ctx.fillStyle = v; ctx.fillRect(0,0,W,H); }
 function vgrad(ctx, y0, y1, stops){ const g = ctx.createLinearGradient(0, y0, 0, y1); stops.forEach(([k,c]) => g.addColorStop(k, c)); return g; }
 /* Moon's Spawn: a black mountain of basalt hanging over everything, its underside lit faintly by whatever is below */
-function drawSpawn(ctx, mx, my, s, t, under = '#2a2a3a'){ my += Math.sin(t/4000)*2*s; glow(ctx, mx, my + 6*s, 80*s, under, .45);
-  const pts = [[-54,6],[-46,-6],[-38,-10],[-32,-22],[-20,-20],[-12,-31],[2,-27],[12,-35],[22,-22],[34,-21],[46,-8],[54,4],[42,14],[26,17],[12,26],[-4,22],[-18,25],[-34,17]].map(([x,y]) => [mx + x*s, my + y*s]); poly(ctx, pts, '#07070b');
-  poly(ctx, [[mx - 32*s, my - 22*s],[mx - 20*s, my - 20*s],[mx - 12*s, my - 31*s],[mx - 6*s, my - 18*s],[mx - 26*s, my - 12*s]], '#0c0c12'); poly(ctx, [[mx + 12*s, my - 35*s],[mx + 22*s, my - 22*s],[mx + 34*s, my - 21*s],[mx + 20*s, my - 12*s]], '#0b0b11'); // crags catching a little light
-  ctx.strokeStyle = rgba(under, .4); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(mx - 54*s, my + 6*s); ctx.lineTo(mx - 34*s, my + 17*s); ctx.lineTo(mx - 18*s, my + 25*s); ctx.lineTo(mx - 4*s, my + 22*s); ctx.lineTo(mx + 12*s, my + 26*s); ctx.lineTo(mx + 26*s, my + 17*s); ctx.lineTo(mx + 54*s, my + 4*s); ctx.stroke();
-  [[-26,19,7],[-8,23,9],[16,24,6]].forEach(([x,y,h]) => poly(ctx, [[mx + (x - 3)*s, my + y*s],[mx + x*s, my + (y + h)*s],[mx + (x + 3)*s, my + y*s]], '#07070b')); // a few spires hanging from the underside
-  for (let i=0;i<7;i++){ const p = (Math.sin(t/900 + i*1.9) + 1)/2; ctx.fillStyle = `rgba(200,180,120,${.08 + p*.18})`; ctx.fillRect(mx + (-36 + hash(i,10)*72)*s, my + (-18 + hash(i,11)*34)*s, 1.5, 1.5); } }
+function drawSpawn(ctx, mx, my, s, t, under = '#2a2a3a'){ my += Math.sin(t/4000)*2*s; glow(ctx, mx, my + 6*s, 80*s, under, .45); spawnPaint(ctx, mx, my - 8*s, 54*s, {under, t, lights:7}); } // v13.69.0: the one rock (spawnOutline, 019h)
 /* a soft cloud: overlapping glows, squashed */
 function cloud(ctx, x, y, w, h, col, a){ ctx.save(); ctx.translate(x, y); ctx.scale(1, h/w*2.4); for (let i=0;i<7;i++) glow(ctx, (hash(i, Math.round(x))-.5)*w*.8, (hash(i, Math.round(y))-.5)*w*.1, w*(.16 + hash(i,3)*.14), col, a); ctx.restore(); }
 /* Darujhistan's roofline: domes, towers, gables; windows lit warm or blue */

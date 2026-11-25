@@ -2,9 +2,7 @@
 let titleAnim = null;
 /* the floating mountain: basalt, faceted, crags on its back and spires hanging from its underside, lit from below by the burning city */
 function paintTitleSpawn(x, ms){
-  const pts = []; for (let i=0;i<48;i++){ const a = i/48*Math.PI*2, up = Math.sin(a) < 0, n = hash(i,7), r = ms*(up ? .82 + n*.16 + (i%3 === 0 ? .12 : 0) : .72 + n*.1); pts.push([Math.cos(a)*r*1.08, Math.sin(a)*r*(up ? .62 : .5)]);
-    if (!up && i%3 === 1) { const b = a + .04; pts.push([Math.cos(b)*r*1.02, Math.sin(b)*r*.5 + ms*(.06 + n*.14)]); } } // crags above, spires hanging below
-  const path = () => { x.beginPath(); pts.forEach(([px, py], i) => i ? x.lineTo(px, py) : x.moveTo(px, py)); x.closePath(); };
+  const path = () => spawnPath(x, 0, -ms*.15, ms*1.08); // v13.69.0: the one rock (spawnOutline, 019h); the facets, fissures, rim and windows below are this painter's own
   path(); const g = x.createRadialGradient(-ms*.35, -ms*.3, ms*.05, 0, 0, ms*1.1); g.addColorStop(0, '#1d1926'); g.addColorStop(.6, '#0c0a10'); g.addColorStop(1, '#040305'); x.fillStyle = g; x.fill();
   x.save(); path(); x.clip();
   for (let i=0;i<70;i++){ const cx = (hash(i,21) - .5)*ms*2, cy = (hash(i,22) - .5)*ms*1.1, r = ms*(.05 + hash(i,23)*.12), a = hash(i,24)*6; // basalt facets
@@ -13,7 +11,9 @@ function paintTitleSpawn(x, ms){
   const ug = x.createRadialGradient(ms*.2, ms*.7, ms*.1, ms*.1, ms*.5, ms*1.1); ug.addColorStop(0, 'rgba(255,120,50,.15)'); ug.addColorStop(1, 'rgba(255,120,50,0)'); x.fillStyle = ug; x.fillRect(-ms*1.2, -ms, ms*2.4, ms*2); // the fires of the Pale, on its belly
   x.restore();
   x.save(); path(); x.clip(); x.globalCompositeOperation = 'lighter'; x.strokeStyle = 'rgba(154,134,224,.13)'; x.lineWidth = 2; x.translate(ms*.02, ms*.03); path(); x.stroke(); x.restore(); // rim of Kurald Galain
+  x.save(); path(); x.clip();
   for (let i=0;i<16;i++){ const a = hash(i,11)*Math.PI*2, r = hash(i,12)*ms*.7; x.fillStyle = `rgba(201,187,255,${.2 + hash(i,13)*.4})`; x.fillRect(Math.cos(a)*r, Math.sin(a)*r*.45, 1.6, 1.6); } // Andii windows
+  x.restore();
 }
 /* what is left of Pale: walls with the tops knocked off, towers broken off at different heights, a dome stove in */
 function paintTitleSkyline(x, W, H){

@@ -4365,6 +4365,29 @@ const TK = {
 /* the book list's cover: the city, Moon's Spawn and the five */
 BOOKS.gotm.coverPos = '58% 50%';
 
+/* v13.69.0 (David, Nov 25, 2026: "make moonspawn look consistent across all artwork"): ONE Moon's Spawn. The outline is Book One's title's (019g, the
+   same hash seeds 121 to 126): a crown of basalt spires above the waist, a long ragged cone hanging below. Every drawing of the rock takes it from here:
+   the chapter plates (PK.spawn), the scene backdrops (drawSpawn, 023), the canvas title and Coral's sky (paintTitleSpawn, 022), the visions (036b).
+   Points are in half-widths: x from -1 to 1, y = 0 at the waist, negative up. top runs left to right, bot right to left. */
+function spawnOutline(){ if (spawnOutline.c) return spawnOutline.c; const h = hash, HW = 310, top = [[-1, 0]]; let x = -HW;
+  for (let i = 0; x < HW - 10; i++) { const t = (x + HW) / (2 * HW), env = Math.pow(Math.sin(t * Math.PI), .7), bw = 12 + h(i, 121) * 28, ht = env * (30 + Math.pow(h(i, 122), 2) * 120) + 8, lean = (h(i, 123) - .5) * 10;
+    top.push([(x + bw * .2) / HW, (-10 - ht * .35) / HW], [(x + bw * .45 + lean) / HW, (-14 - ht) / HW], [(x + bw * .62) / HW, (-10 - ht * .55) / HW]); x += bw; }
+  top.push([1, 0]); const bot = [], n = 28;
+  for (let i = n; i >= 0; i--) { const t = i / n, xx = -HW + t * 2 * HW, d = Math.pow(Math.sin(t * Math.PI), 2.2) * 190 * (.7 + h(i, 124) * .6) + 14 + h(i, 125) * 18; bot.push([(xx + (h(i, 126) - .5) * 14) / HW, d / HW]); }
+  return spawnOutline.c = {top, bot}; }
+/* trace it on a canvas: centre x, the waist's y, the half-width */
+function spawnPath(ctx, MX, WY, HW){ const O = spawnOutline(); ctx.beginPath(); O.top.forEach(([x, y], i) => i ? ctx.lineTo(MX + x * HW, WY + y * HW) : ctx.moveTo(MX + x * HW, WY + y * HW)); O.bot.forEach(([x, y]) => ctx.lineTo(MX + x * HW, WY + y * HW)); ctx.closePath(); }
+/* and paint it as the title paints it: rock lit from the left, hanging facets, the light of what lies below on its belly, a faint rim on the crown, blue lamps */
+function spawnPaint(ctx, MX, WY, HW, o = {}){ const O = spawnOutline(), K = HW / 310, h = hash, g = ctx.createLinearGradient(MX - HW, 0, MX + HW, 0); g.addColorStop(0, o.top || '#2a2a3a'); g.addColorStop(.3, '#0c0c14'); g.addColorStop(1, '#040408');
+  spawnPath(ctx, MX, WY, HW); ctx.fillStyle = o.flat || g; ctx.fill(); if (o.flat) return;
+  ctx.save(); spawnPath(ctx, MX, WY, HW); ctx.clip();
+  for (let i = 0; i < 24; i++) { const t = h(i, 131), xx = MX - HW + 24 * K + t * (2 * HW - 48 * K), y0 = WY + (-20 + h(i, 132) * 26) * K, len = (40 + Math.pow(Math.sin(t * Math.PI), 2) * 140 * h(i, 133)) * K, w = (7 + h(i, 134) * 15) * K;
+    ctx.fillStyle = t < .45 ? `rgba(58,60,82,${.32 * (1 - t)})` : 'rgba(0,0,0,.4)'; ctx.beginPath(); ctx.moveTo(xx, y0); ctx.lineTo(xx + w, y0 + 6 * K); ctx.lineTo(xx + w * .4, y0 + len); ctx.closePath(); ctx.fill(); }
+  ctx.restore(); ctx.lineJoin = 'round';
+  if (o.under) { ctx.strokeStyle = o.under; ctx.globalAlpha = o.underA ?? .4; ctx.lineWidth = Math.max(1, 2 * K); ctx.beginPath(); O.bot.forEach(([x, y], i) => i ? ctx.lineTo(MX + x * HW, WY + y * HW) : ctx.moveTo(MX + x * HW, WY + y * HW)); ctx.stroke(); ctx.globalAlpha = 1; }
+  ctx.strokeStyle = o.rim || '#8a90b4'; ctx.globalAlpha = .25; ctx.lineWidth = Math.max(.6, 1.2 * K); ctx.beginPath(); O.top.forEach(([x, y], i) => i ? ctx.lineTo(MX + x * HW, WY + y * HW) : ctx.moveTo(MX + x * HW, WY + y * HW)); ctx.stroke(); ctx.globalAlpha = 1;
+  const n = o.lights ?? 8; for (let i = 0; i < n; i++) { const p = o.t == null ? .6 : (Math.sin(o.t / 900 + i * 1.9) + 1) / 2; ctx.fillStyle = `rgba(168,204,255,${.25 + p * .5})`; const r = Math.max(1.2, 1.6 * K); ctx.fillRect(MX - 220 * K + h(i, 141) * 440 * K, WY + (-20 + h(i, 142) * 60) * K, r, r); } }
+
 /* ============ the plate kit (v13.6): shared pieces for the painted chapter plates of every book (019i files) ============
    A chapter opening shows one painted plate (artPlate, 019d) above the chapter's caption; the plate is the caption drawn. Book One had
    eight simple plates since v1; v13.6 redraws them and adds the other nine books' sixty-three, all from this kit, in the titles' style
@@ -4501,11 +4524,8 @@ const PK = {
       s += `<g class="pk-fl" style="animation-delay:-${f(hash(i, seed + 2) * 2.6)}s"><circle cx="${f(x)}" cy="${f(y + r + 2)}" r="${f(r * 3.4)}" fill="${P.glow(c)}" opacity=".55"/><ellipse cx="${f(x)}" cy="${f(y + r + 2)}" rx="${f(r)}" ry="${f(r * 1.2)}" fill="${c}"/></g>`; }
     return s; },
   /* Moon's Spawn: a black mountain afloat, crown of basalt spires on top, a long ragged cone beneath; underc lights its belly */
-  spawn(P, MX, MY, HW, o = {}){ const f = PK.f, h = hash, sd = o.seed || 7, K = HW / 310; let x = MX - HW, top = `M${f(MX - HW)} ${f(MY + 40 * K)}`;
-    for (let i = 0; x < MX + HW - 10 * K; i++) { const t = (x - MX + HW) / (2 * HW), env = Math.pow(Math.sin(t * Math.PI), .7), bw = (12 + h(i, sd) * 28) * K, ht = (env * (30 + Math.pow(h(i, sd + 1), 2) * 120) + 8) * K, lean = (h(i, sd + 2) - .5) * 10 * K;
-      top += ` L${f(x + bw * .2)} ${f(MY + 30 * K - ht * .35)} L${f(x + bw * .45 + lean)} ${f(MY + 26 * K - ht)} L${f(x + bw * .62)} ${f(MY + 30 * K - ht * .55)}`; x += bw; }
-    top += ` L${f(MX + HW)} ${f(MY + 40 * K)}`;
-    let bot = ''; for (let i = 28; i >= 0; i--) { const t = i / 28, xx = MX - HW + t * 2 * HW, d = (Math.pow(Math.sin(t * Math.PI), 2.2) * 190 * (.7 + h(i, sd + 3) * .6) + 14 + h(i, sd + 4) * 18) * K; bot += ` L${f(xx + (h(i, sd + 5) - .5) * 14 * K)} ${f(MY + 40 * K + d)}`; }
+  spawn(P, MX, MY, HW, o = {}){ const f = PK.f, h = hash, sd = o.seed || 7, K = HW / 310, O = spawnOutline(), pt = ([x, y]) => `${f(MX + x * HW)} ${f(MY + 40 * K + y * HW)}`;
+    const top = 'M' + O.top.map(pt).join(' L'), bot = O.bot.map(p => ' L' + pt(p)).join(''); // v13.69.0: one outline everywhere (spawnOutline), whatever the seed; the seed still places the facets and lights
     const rock = P.lin([[0, o.top || '#2a2c3a'], [.35, '#121320'], [1, '#040408']]);
     let s = `<path d="${top + bot} Z" fill="#000" opacity=".5" filter="url(#${P.blur(10 * K)})" transform="translate(0 ${f(14 * K)})"/><path d="${top + bot} Z" fill="${rock}"/>`;
     for (let i = 0; i < 18; i++) { const t = h(i, sd + 6), xx = MX - HW + 20 * K + t * (2 * HW - 40 * K), y0 = MY + (20 + h(i, sd + 7) * 26) * K, len = (40 + Math.pow(Math.sin(t * Math.PI), 2) * 140 * h(i, sd + 8)) * K, w = (7 + h(i, sd + 9) * 15) * K;
@@ -5997,9 +6017,7 @@ function drawReadingTable(ctx, W, H, t, spec, img, st){
 let titleAnim = null;
 /* the floating mountain: basalt, faceted, crags on its back and spires hanging from its underside, lit from below by the burning city */
 function paintTitleSpawn(x, ms){
-  const pts = []; for (let i=0;i<48;i++){ const a = i/48*Math.PI*2, up = Math.sin(a) < 0, n = hash(i,7), r = ms*(up ? .82 + n*.16 + (i%3 === 0 ? .12 : 0) : .72 + n*.1); pts.push([Math.cos(a)*r*1.08, Math.sin(a)*r*(up ? .62 : .5)]);
-    if (!up && i%3 === 1) { const b = a + .04; pts.push([Math.cos(b)*r*1.02, Math.sin(b)*r*.5 + ms*(.06 + n*.14)]); } } // crags above, spires hanging below
-  const path = () => { x.beginPath(); pts.forEach(([px, py], i) => i ? x.lineTo(px, py) : x.moveTo(px, py)); x.closePath(); };
+  const path = () => spawnPath(x, 0, -ms*.15, ms*1.08); // v13.69.0: the one rock (spawnOutline, 019h); the facets, fissures, rim and windows below are this painter's own
   path(); const g = x.createRadialGradient(-ms*.35, -ms*.3, ms*.05, 0, 0, ms*1.1); g.addColorStop(0, '#1d1926'); g.addColorStop(.6, '#0c0a10'); g.addColorStop(1, '#040305'); x.fillStyle = g; x.fill();
   x.save(); path(); x.clip();
   for (let i=0;i<70;i++){ const cx = (hash(i,21) - .5)*ms*2, cy = (hash(i,22) - .5)*ms*1.1, r = ms*(.05 + hash(i,23)*.12), a = hash(i,24)*6; // basalt facets
@@ -6008,7 +6026,9 @@ function paintTitleSpawn(x, ms){
   const ug = x.createRadialGradient(ms*.2, ms*.7, ms*.1, ms*.1, ms*.5, ms*1.1); ug.addColorStop(0, 'rgba(255,120,50,.15)'); ug.addColorStop(1, 'rgba(255,120,50,0)'); x.fillStyle = ug; x.fillRect(-ms*1.2, -ms, ms*2.4, ms*2); // the fires of the Pale, on its belly
   x.restore();
   x.save(); path(); x.clip(); x.globalCompositeOperation = 'lighter'; x.strokeStyle = 'rgba(154,134,224,.13)'; x.lineWidth = 2; x.translate(ms*.02, ms*.03); path(); x.stroke(); x.restore(); // rim of Kurald Galain
+  x.save(); path(); x.clip();
   for (let i=0;i<16;i++){ const a = hash(i,11)*Math.PI*2, r = hash(i,12)*ms*.7; x.fillStyle = `rgba(201,187,255,${.2 + hash(i,13)*.4})`; x.fillRect(Math.cos(a)*r, Math.sin(a)*r*.45, 1.6, 1.6); } // Andii windows
+  x.restore();
 }
 /* what is left of Pale: walls with the tops knocked off, towers broken off at different heights, a dome stove in */
 function paintTitleSkyline(x, W, H){
@@ -6372,12 +6392,7 @@ function feteDawn(){ return !!S && (S.chapter >= 7 || !!(S.f && S.f.c6_done) || 
 function vign(ctx, W, H, a, cy = .55){ const v = ctx.createRadialGradient(W/2, H*cy, H*.3, W/2, H*cy, W*.72); v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,`rgba(0,0,0,${a})`); ctx.fillStyle = v; ctx.fillRect(0,0,W,H); }
 function vgrad(ctx, y0, y1, stops){ const g = ctx.createLinearGradient(0, y0, 0, y1); stops.forEach(([k,c]) => g.addColorStop(k, c)); return g; }
 /* Moon's Spawn: a black mountain of basalt hanging over everything, its underside lit faintly by whatever is below */
-function drawSpawn(ctx, mx, my, s, t, under = '#2a2a3a'){ my += Math.sin(t/4000)*2*s; glow(ctx, mx, my + 6*s, 80*s, under, .45);
-  const pts = [[-54,6],[-46,-6],[-38,-10],[-32,-22],[-20,-20],[-12,-31],[2,-27],[12,-35],[22,-22],[34,-21],[46,-8],[54,4],[42,14],[26,17],[12,26],[-4,22],[-18,25],[-34,17]].map(([x,y]) => [mx + x*s, my + y*s]); poly(ctx, pts, '#07070b');
-  poly(ctx, [[mx - 32*s, my - 22*s],[mx - 20*s, my - 20*s],[mx - 12*s, my - 31*s],[mx - 6*s, my - 18*s],[mx - 26*s, my - 12*s]], '#0c0c12'); poly(ctx, [[mx + 12*s, my - 35*s],[mx + 22*s, my - 22*s],[mx + 34*s, my - 21*s],[mx + 20*s, my - 12*s]], '#0b0b11'); // crags catching a little light
-  ctx.strokeStyle = rgba(under, .4); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(mx - 54*s, my + 6*s); ctx.lineTo(mx - 34*s, my + 17*s); ctx.lineTo(mx - 18*s, my + 25*s); ctx.lineTo(mx - 4*s, my + 22*s); ctx.lineTo(mx + 12*s, my + 26*s); ctx.lineTo(mx + 26*s, my + 17*s); ctx.lineTo(mx + 54*s, my + 4*s); ctx.stroke();
-  [[-26,19,7],[-8,23,9],[16,24,6]].forEach(([x,y,h]) => poly(ctx, [[mx + (x - 3)*s, my + y*s],[mx + x*s, my + (y + h)*s],[mx + (x + 3)*s, my + y*s]], '#07070b')); // a few spires hanging from the underside
-  for (let i=0;i<7;i++){ const p = (Math.sin(t/900 + i*1.9) + 1)/2; ctx.fillStyle = `rgba(200,180,120,${.08 + p*.18})`; ctx.fillRect(mx + (-36 + hash(i,10)*72)*s, my + (-18 + hash(i,11)*34)*s, 1.5, 1.5); } }
+function drawSpawn(ctx, mx, my, s, t, under = '#2a2a3a'){ my += Math.sin(t/4000)*2*s; glow(ctx, mx, my + 6*s, 80*s, under, .45); spawnPaint(ctx, mx, my - 8*s, 54*s, {under, t, lights:7}); } // v13.69.0: the one rock (spawnOutline, 019h)
 /* a soft cloud: overlapping glows, squashed */
 function cloud(ctx, x, y, w, h, col, a){ ctx.save(); ctx.translate(x, y); ctx.scale(1, h/w*2.4); for (let i=0;i<7;i++) glow(ctx, (hash(i, Math.round(x))-.5)*w*.8, (hash(i, Math.round(y))-.5)*w*.1, w*(.16 + hash(i,3)*.14), col, a); ctx.restore(); }
 /* Darujhistan's roofline: domes, towers, gables; windows lit warm or blue */
@@ -10279,6 +10294,7 @@ function glossHTML(){
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
   ['13.69.0', ['The game now counts how many people play it, so we can see whether anyone is out there. It counts each time the game is opened, whether it was installed as an app, and which chapters and finales are reached. No cookies, no names, nothing about you or your saves is sent, and nothing at all when you play offline.']],
+  ['13.69.0', ['Moon\'s Spawn is the same rock everywhere now: the crown of spires and the long hanging cone from Book One\'s title, in the chapter pictures, the Fete\'s streets and garden, the night of the dragons, the visions, and over Coral in Book Three.']],
   ['13.68.3', ['A question you have already asked now stays off the list even after you close the game and come back. It is kept in your save for the chapter you are in. Old saves are fine; anything asked before this version may be offered once more.']],
   ['13.68.2', ['Book Eight: the last night on the grass no longer shows shapes running through it. The picture is the quiet halt the words describe.', 'Book Eight: the peddler\'s cart and mule in the dry wash are redrawn.', 'Every book: a question you have already asked and heard stays off the list when you walk back to the same person, instead of coming back each visit.']],
   ['13.68.1', ['The Stake Line now shows on the battle map: the stakes and their cord stand where they were set, for the rest of the fight. Before, only the word "stakes" floated up once.']],
@@ -11868,7 +11884,7 @@ function drawVision(cv, v, t){
   const stars = n => { ctx.fillStyle = 'rgba(220,210,255,.6)'; for (let i=0;i<n;i++){ const a = .4 + .6*Math.abs(Math.sin(T/900 + i)); ctx.globalAlpha = a; ctx.fillRect(hash(i,1)*W, hash(i,2)*H*.55, 1.2, 1.2); } ctx.globalAlpha = 1; };
   const ground = (y, c, wob = 6, seed = 0) => { ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(0, H); for (let x=0;x<=W;x+=W/24) ctx.lineTo(x, y + Math.sin(x/W*6 + seed)*wob + hash(Math.round(x), seed)*wob*.4); ctx.lineTo(W, H); ctx.fill(); };
   const lamps = (y, n) => { for (let i=0;i<n;i++){ const x = hash(i,7)*W, yy = y + hash(i,8)*(H - y)*.8; glow(ctx, x, yy, 18, '#6aa0ff', .35 + Math.sin(T/400 + i)*.05); ctx.fillStyle = '#bcd6ff'; ctx.fillRect(x - .8, yy - .8, 1.6, 1.6); } };
-  const spawnRock = (x, y, s) => { poly(ctx, [[x - s, y],[x - s*.6, y - s*.25],[x, y - s*.32],[x + s*.7, y - s*.2],[x + s, y],[x + s*.4, y + s*.45],[x - s*.2, y + s*.6],[x - s*.6, y + s*.3]], '#050408'); };
+  const spawnRock = (x, y, s) => spawnPaint(ctx, x, y - s*.1, s, {flat:'#050408'}); // v13.69.0: the one rock, as a silhouette
   let fx = W*.32, fy = H*.86, fs = 2.4, air = false;
   const vbx = VISBG[k] ? VISBG[k](ctx, W, H, T, v, t) : null; if (vbx) { if (vbx.fx != null) fx = vbx.fx; if (vbx.fy != null) fy = vbx.fy; if (vbx.fs != null) fs = vbx.fs; if (vbx.air != null) air = vbx.air; }
   if (VISBG[k]) {}
