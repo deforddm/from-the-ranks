@@ -704,7 +704,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.68.0';
+const VERSION = '13.68.1';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -9031,6 +9031,14 @@ function drawBattle(t){
   ctx.save(); ctx.translate(0, H);
   ctx.drawImage(G.bgc, 0, 0, 8*T, 10*T);
   ctx.drawImage(G.dec, 0, 0, 8*T, 10*T);
+  // v13.68.1 (David, Nov 24, 2026: "The sapper ability picket line has no graphic"): the Stake Line is drawn where it stands, three sharpened stakes a tile leaning toward the enemy's side of the board and a cord strung between them
+  if (B.stakes && B.stakes.length) { const ys = {}; B.stakes.forEach(s => (ys[s.y] ||= []).push(s.x));
+    Object.keys(ys).forEach(yk => { const y = +yk, xs = ys[yk].sort((p, q) => p - q), cy = y*T + T*.72; ctx.strokeStyle = 'rgba(214,190,140,.8)'; ctx.lineWidth = Math.max(1, T*.035); ctx.beginPath();
+      xs.forEach((x, i) => { if (i && xs[i - 1] === x - 1) { ctx.moveTo((x - 1)*T + T*.86, cy - T*.2); ctx.quadraticCurveTo(x*T, cy - T*.1, x*T + T*.14, cy - T*.2); } }); ctx.stroke(); });
+    B.stakes.forEach(s => { const px = s.x*T, by = s.y*T + T*.82; ell(ctx, px + T/2, by + T*.02, T*.42, T*.07, 'rgba(0,0,0,.4)');
+      for (let i=0;i<3;i++){ const bx = px + T*(.2 + i*.3), h = T*(.5 + hash(s.x, s.y, i)*.12), w = T*.055, lx = T*(.05 + hash(s.y, s.x, i)*.05)*(i - 1), tx = bx + lx, ty = by - h;
+        poly(ctx, [[bx - w, by],[bx + w, by],[tx + w*.8, ty + h*.22],[tx, ty],[tx - w*.8, ty + h*.22]], '#5a4026'); poly(ctx, [[bx, by],[bx + w, by],[tx + w*.8, ty + h*.22],[tx, ty]], '#8a6a40');
+        poly(ctx, [[tx - w*.8, ty + h*.22],[tx + w*.8, ty + h*.22],[tx, ty]], '#d9c49a'); ctx.fillStyle = 'rgba(214,190,140,.9)'; ctx.fillRect(tx - w*1.1, by - h*.42, w*2.2, Math.max(1, T*.03)); } }); }
   // burner fires
   B.fires.forEach(f => { const px = f.x*T, py = f.y*T; glow(ctx, px + T/2, py + T/2, T*1.1, '#ff7a3a', .35 + Math.sin(t/90 + f.x*3 + f.y)*.1);
     for (let i=0;i<4;i++){ const h = T*(.35 + hash(f.x,f.y,i)*.4)*(.7 + Math.sin(t/(60 + i*13) + i)*.3), bx = px + T*(.15 + i*.22); poly(ctx, [[bx - T*.08, py + T*.9],[bx + T*.08, py + T*.9],[bx + Math.sin(t/80 + i)*T*.05, py + T*.9 - h]], `rgba(255,${120 + i*25},40,.85)`); poly(ctx, [[bx - T*.04, py + T*.9],[bx + T*.04, py + T*.9],[bx, py + T*.9 - h*.5]], 'rgba(255,240,180,.8)'); }
@@ -10222,6 +10230,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.68.1', ['The Stake Line now shows on the battle map: the stakes and their cord stand where they were set, for the rest of the fight. Before, only the word "stakes" floated up once.']],
   ['13.68.0', ['Bridgeburner has its teeth back. The new falls and munitions had made it too gentle, so 120 fights across all ten books were re-tuned one by one: most now sit between 65% and 85% for a squad using every trick, and none under 60%. One Book Two fight that had turned too hard was eased. Soldier is unchanged.', 'Book One: the picket line, where the Claw come to close their ledger, has its own picture: the row of stakes with two shadows each, and the three in grey between them.']],
   ['13.67.0', ['Moranth munitions are devastating again in every book. The dice are what they always were, and now an enemy also loses a share of its full health: half to a cusser at the centre and beside it, a quarter where a sharper lands, a tenth in a burner\'s fire, less further out. A leader loses half the share. The very heavy lose all of it: two cussers will tear a Hound to shreds. Book Eight\'s Hound of Shadow, which no blade touches, can be torn by munitions until it steps into Shadow and is gone; it does not die. What resists a munition still does. Your own soldiers caught in a blast take the dice and nothing more.']],
   ['13.66.0', ['The canal is a drop. On the Low Walk and the canal bridges in Books Five and Seven, anything driven, dragged or thrown toward the water saves to catch the edge or goes in, the squad included. The footbridge and the bridge in Letheras have water on both sides now.', 'At any drop, in every book: an ordinary enemy forced to the edge goes over two times in three, a leader one time in three. Before, the chance shrank book by book until it was almost nothing in the later ones. Your own soldiers save as they always did.', 'The same for fire: an enemy that goes through burner fire catches two times in three. Burning, bleeding and being driven into a wall now hurt an enemy more as the squad levels, as every skill does; they had stayed at Book One\'s numbers. None of this touches what happens to your own soldiers.', 'The burned wayhouse roof in Book Eight and the landing ledge in Book Three have an edge to go over.', 'The canal is drawn as water again on those boards, and the counting-house stair in Book Seven has walls that look like walls. Saves are untouched.']],

@@ -899,6 +899,14 @@ function drawBattle(t){
   ctx.save(); ctx.translate(0, H);
   ctx.drawImage(G.bgc, 0, 0, 8*T, 10*T);
   ctx.drawImage(G.dec, 0, 0, 8*T, 10*T);
+  // v13.68.1 (David, Nov 24, 2026: "The sapper ability picket line has no graphic"): the Stake Line is drawn where it stands, three sharpened stakes a tile leaning toward the enemy's side of the board and a cord strung between them
+  if (B.stakes && B.stakes.length) { const ys = {}; B.stakes.forEach(s => (ys[s.y] ||= []).push(s.x));
+    Object.keys(ys).forEach(yk => { const y = +yk, xs = ys[yk].sort((p, q) => p - q), cy = y*T + T*.72; ctx.strokeStyle = 'rgba(214,190,140,.8)'; ctx.lineWidth = Math.max(1, T*.035); ctx.beginPath();
+      xs.forEach((x, i) => { if (i && xs[i - 1] === x - 1) { ctx.moveTo((x - 1)*T + T*.86, cy - T*.2); ctx.quadraticCurveTo(x*T, cy - T*.1, x*T + T*.14, cy - T*.2); } }); ctx.stroke(); });
+    B.stakes.forEach(s => { const px = s.x*T, by = s.y*T + T*.82; ell(ctx, px + T/2, by + T*.02, T*.42, T*.07, 'rgba(0,0,0,.4)');
+      for (let i=0;i<3;i++){ const bx = px + T*(.2 + i*.3), h = T*(.5 + hash(s.x, s.y, i)*.12), w = T*.055, lx = T*(.05 + hash(s.y, s.x, i)*.05)*(i - 1), tx = bx + lx, ty = by - h;
+        poly(ctx, [[bx - w, by],[bx + w, by],[tx + w*.8, ty + h*.22],[tx, ty],[tx - w*.8, ty + h*.22]], '#5a4026'); poly(ctx, [[bx, by],[bx + w, by],[tx + w*.8, ty + h*.22],[tx, ty]], '#8a6a40');
+        poly(ctx, [[tx - w*.8, ty + h*.22],[tx + w*.8, ty + h*.22],[tx, ty]], '#d9c49a'); ctx.fillStyle = 'rgba(214,190,140,.9)'; ctx.fillRect(tx - w*1.1, by - h*.42, w*2.2, Math.max(1, T*.03)); } }); }
   // burner fires
   B.fires.forEach(f => { const px = f.x*T, py = f.y*T; glow(ctx, px + T/2, py + T/2, T*1.1, '#ff7a3a', .35 + Math.sin(t/90 + f.x*3 + f.y)*.1);
     for (let i=0;i<4;i++){ const h = T*(.35 + hash(f.x,f.y,i)*.4)*(.7 + Math.sin(t/(60 + i*13) + i)*.3), bx = px + T*(.15 + i*.22); poly(ctx, [[bx - T*.08, py + T*.9],[bx + T*.08, py + T*.9],[bx + Math.sin(t/80 + i)*T*.05, py + T*.9 - h]], `rgba(255,${120 + i*25},40,.85)`); poly(ctx, [[bx - T*.04, py + T*.9],[bx + T*.04, py + T*.9],[bx, py + T*.9 - h*.5]], 'rgba(255,240,180,.8)'); }
