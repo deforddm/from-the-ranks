@@ -148,11 +148,14 @@ let curCh = [];
    "Read it again" under; and a choice that only asks a thing already heard (its node's every way out comes straight back here, and
    its words would be the same) is not offered again, unless it is the only choice left. */
 const saidWords = n => (fmt(n.txt) + (n.after ? fmt(n.after) : '')).replace(/\d+/g, '#'); // a count that moved (silver, a tally) is still the same words
+const wordMark = w => { let h = 5381; for (let i = 0; i < w.length; i++) h = ((h << 5) + h + w.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }; // a node's words as six letters, for the save
 function topicHeard(id, c, offers){ // offers: where this node's other choices go; a heard node whose every way out is one of those, or back here, has nothing left to give
   // v13.68.2 (David, Nov 24, 2026, Mossa's tent: "This conversation keeps repeating"): a topic heard earlier in this run of the page stays dropped when the hub is reopened from the map, not only within one sitting
-  const was = typeof c.go === 'string' ? ((G.said && c.go in G.said) ? G.said[c.go] : (G.heard && c.go in G.heard) ? G.heard[c.go] : null) : null;
-  if (was == null || c.check || c.fx) return false;
-  try { const t = DLG[c.go](); if (saidWords(t) !== was) return false;
+  // v13.68.3 (David, Nov 24, 2026, 10:41 PM PST: "Is there any reason not to have it be included in the save"): S.heardT keeps a short mark of each node's words for the chapter, so the topic also stays dropped after the game is closed and opened again
+  if (typeof c.go !== 'string' || c.check || c.fx) return false;
+  const was = (G.said && c.go in G.said) ? G.said[c.go] : (G.heard && c.go in G.heard) ? G.heard[c.go] : null, mark = S.heardT && S.heardT[c.go];
+  if (was == null && mark == null) return false;
+  try { const t = DLG[c.go](), w = saidWords(t); if (was != null ? w !== was : wordMark(w) !== mark) return false;
     const ways = (t.ch || []).filter(x => !x.req || x.req()); return ways.length > 0 && ways.every(x => typeof x.go === 'string' && !x.check && (x.go === id || offers.has(x.go))); } catch(e) { return false; }
 }
 function talk(id){
@@ -170,6 +173,7 @@ function talk(id){
      is not read out again in full; "Read it again" still opens it. */
   G.said = G.said || {}; G.heard = G.heard || {}; const words = saidWords(n), said = (G.said[id] === words || G.heard[id] === words) && n.again !== false;
   G.heard[id] = words;
+  (S.heardT = S.heardT || {})[id] = wordMark(words);
   if (curCh.length > 1) { const offers = new Set(curCh.map(c => c.go).filter(g => typeof g === 'string')), keep = curCh.filter(c => !topicHeard(id, c, offers)); if (keep.length) curCh = keep; }
   G.said[id] = words;
   let unspoken = ''; try { unspoken = unspokenLine(id, curCh, n); } catch(e) { console.warn('unspoken', e); } // somebody here still has something to say (30)
