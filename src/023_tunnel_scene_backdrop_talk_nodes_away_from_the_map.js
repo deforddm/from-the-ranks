@@ -323,7 +323,7 @@ function feteDawn(){ return !!S && (S.chapter >= 7 || !!(S.f && S.f.c6_done) || 
 function vign(ctx, W, H, a, cy = .55){ const v = ctx.createRadialGradient(W/2, H*cy, H*.3, W/2, H*cy, W*.72); v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,`rgba(0,0,0,${a})`); ctx.fillStyle = v; ctx.fillRect(0,0,W,H); }
 function vgrad(ctx, y0, y1, stops){ const g = ctx.createLinearGradient(0, y0, 0, y1); stops.forEach(([k,c]) => g.addColorStop(k, c)); return g; }
 /* Moon's Spawn: a black mountain of basalt hanging over everything, its underside lit faintly by whatever is below */
-function drawSpawn(ctx, mx, my, s, t, under = '#2a2a3a'){ my += Math.sin(t/4000)*2*s; glow(ctx, mx, my + 6*s, 80*s, under, .45); spawnPaint(ctx, mx, my - 8*s, 54*s, {under, t, lights:7}); } // v13.69.0: the one rock (spawnOutline, 019h)
+function drawSpawn(ctx, mx, my, s, t, under = '#2a2a3a'){ my += Math.sin(t/4000)*2*s; glow(ctx, mx, my + 6*s, 80*s, under, .45); spawnPaint(ctx, mx, my - 8*s, 54*s, {under, t, lights:7}); } // v13.69.1: the one rock (spawnOutline, 019h)
 /* a soft cloud: overlapping glows, squashed */
 function cloud(ctx, x, y, w, h, col, a){ ctx.save(); ctx.translate(x, y); ctx.scale(1, h/w*2.4); for (let i=0;i<7;i++) glow(ctx, (hash(i, Math.round(x))-.5)*w*.8, (hash(i, Math.round(y))-.5)*w*.1, w*(.16 + hash(i,3)*.14), col, a); ctx.restore(); }
 /* Darujhistan's roofline: domes, towers, gables; windows lit warm or blue */

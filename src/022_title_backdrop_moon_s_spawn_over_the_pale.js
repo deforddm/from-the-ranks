@@ -2,7 +2,7 @@
 let titleAnim = null;
 /* the floating mountain: basalt, faceted, crags on its back and spires hanging from its underside, lit from below by the burning city */
 function paintTitleSpawn(x, ms){
-  const path = () => spawnPath(x, 0, -ms*.15, ms*1.08); // v13.69.0: the one rock (spawnOutline, 019h); the facets, fissures, rim and windows below are this painter's own
+  const path = () => spawnPath(x, 0, -ms*.15, ms*1.08); // v13.69.1: the one rock (spawnOutline, 019h); the facets, fissures, rim and windows below are this painter's own
   path(); const g = x.createRadialGradient(-ms*.35, -ms*.3, ms*.05, 0, 0, ms*1.1); g.addColorStop(0, '#1d1926'); g.addColorStop(.6, '#0c0a10'); g.addColorStop(1, '#040305'); x.fillStyle = g; x.fill();
   x.save(); path(); x.clip();
   for (let i=0;i<70;i++){ const cx = (hash(i,21) - .5)*ms*2, cy = (hash(i,22) - .5)*ms*1.1, r = ms*(.05 + hash(i,23)*.12), a = hash(i,24)*6; // basalt facets

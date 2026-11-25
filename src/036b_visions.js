@@ -555,7 +555,7 @@ function drawVision(cv, v, t){
   const stars = n => { ctx.fillStyle = 'rgba(220,210,255,.6)'; for (let i=0;i<n;i++){ const a = .4 + .6*Math.abs(Math.sin(T/900 + i)); ctx.globalAlpha = a; ctx.fillRect(hash(i,1)*W, hash(i,2)*H*.55, 1.2, 1.2); } ctx.globalAlpha = 1; };
   const ground = (y, c, wob = 6, seed = 0) => { ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(0, H); for (let x=0;x<=W;x+=W/24) ctx.lineTo(x, y + Math.sin(x/W*6 + seed)*wob + hash(Math.round(x), seed)*wob*.4); ctx.lineTo(W, H); ctx.fill(); };
   const lamps = (y, n) => { for (let i=0;i<n;i++){ const x = hash(i,7)*W, yy = y + hash(i,8)*(H - y)*.8; glow(ctx, x, yy, 18, '#6aa0ff', .35 + Math.sin(T/400 + i)*.05); ctx.fillStyle = '#bcd6ff'; ctx.fillRect(x - .8, yy - .8, 1.6, 1.6); } };
-  const spawnRock = (x, y, s) => spawnPaint(ctx, x, y - s*.1, s, {flat:'#050408'}); // v13.69.0: the one rock, as a silhouette
+  const spawnRock = (x, y, s) => spawnPaint(ctx, x, y - s*.1, s, {flat:'#050408'}); // v13.69.1: the one rock, as a silhouette
   let fx = W*.32, fy = H*.86, fs = 2.4, air = false;
   const vbx = VISBG[k] ? VISBG[k](ctx, W, H, T, v, t) : null; if (vbx) { if (vbx.fx != null) fx = vbx.fx; if (vbx.fy != null) fy = vbx.fy; if (vbx.fs != null) fs = vbx.fs; if (vbx.air != null) air = vbx.air; }
   if (VISBG[k]) {}

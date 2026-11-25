@@ -1,4 +1,4 @@
-/* v13.69.0 (David, Nov 25, 2026: "make moonspawn look consistent across all artwork"): ONE Moon's Spawn. The outline is Book One's title's (019g, the
+/* v13.69.1 (David, Nov 25, 2026: "make moonspawn look consistent across all artwork"): ONE Moon's Spawn. The outline is Book One's title's (019g, the
    same hash seeds 121 to 126): a crown of basalt spires above the waist, a long ragged cone hanging below. Every drawing of the rock takes it from here:
    the chapter plates (PK.spawn), the scene backdrops (drawSpawn, 023), the canvas title and Coral's sky (paintTitleSpawn, 022), the visions (036b).
    Points are in half-widths: x from -1 to 1, y = 0 at the waist, negative up. top runs left to right, bot right to left. */
@@ -158,7 +158,7 @@ const PK = {
     return s; },
   /* Moon's Spawn: a black mountain afloat, crown of basalt spires on top, a long ragged cone beneath; underc lights its belly */
   spawn(P, MX, MY, HW, o = {}){ const f = PK.f, h = hash, sd = o.seed || 7, K = HW / 310, O = spawnOutline(), pt = ([x, y]) => `${f(MX + x * HW)} ${f(MY + 40 * K + y * HW)}`;
-    const top = 'M' + O.top.map(pt).join(' L'), bot = O.bot.map(p => ' L' + pt(p)).join(''); // v13.69.0: one outline everywhere (spawnOutline), whatever the seed; the seed still places the facets and lights
+    const top = 'M' + O.top.map(pt).join(' L'), bot = O.bot.map(p => ' L' + pt(p)).join(''); // v13.69.1: one outline everywhere (spawnOutline), whatever the seed; the seed still places the facets and lights
     const rock = P.lin([[0, o.top || '#2a2c3a'], [.35, '#121320'], [1, '#040408']]);
     let s = `<path d="${top + bot} Z" fill="#000" opacity=".5" filter="url(#${P.blur(10 * K)})" transform="translate(0 ${f(14 * K)})"/><path d="${top + bot} Z" fill="${rock}"/>`;
     for (let i = 0; i < 18; i++) { const t = h(i, sd + 6), xx = MX - HW + 20 * K + t * (2 * HW - 40 * K), y0 = MY + (20 + h(i, sd + 7) * 26) * K, len = (40 + Math.pow(Math.sin(t * Math.PI), 2) * 140 * h(i, sd + 8)) * K, w = (7 + h(i, sd + 9) * 15) * K;
