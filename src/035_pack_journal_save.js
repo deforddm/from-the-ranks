@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.69.2', ['On a narrow phone the place name now sits under the buttons at the top, on its own line, so a long name like Darujhistan no longer breaks in the middle of the word.']],
   ['13.69.1', ['Moon\'s Spawn is the same rock everywhere now: the crown of spires and the long hanging cone from Book One\'s title, in the chapter pictures, the Fete\'s streets and garden, the night of the dragons, the visions, and over Coral in Book Three.']],
   ['13.69.0', ['The game now counts how many people play it, so we can see whether anyone is out there. It counts each time the game is opened, whether it was installed as an app, and which chapters and finales are reached. No cookies, no names, nothing about you or your saves is sent, and nothing at all when you play offline.']],
   ['13.68.3', ['A question you have already asked now stays off the list even after you close the game and come back. It is kept in your save for the chapter you are in. Old saves are fine; anything asked before this version may be offered once more.']],

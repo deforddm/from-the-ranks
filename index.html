@@ -391,6 +391,7 @@ kbd{display:inline-block;min-width:1.2em;padding:0 4px;margin:0 1px;border:1px s
 .hint.keys{display:none;line-height:1.9}
 @keyframes riseW{from{transform:translateX(18px);opacity:0}to{transform:none;opacity:1}}
 /* v13.47.1: in the wide layout the side column is narrow, so the place name drops under the buttons and takes the full width (it broke mid-word, "Whitefinde/rs'", and battle names showed only "The …") */
+@media (max-width:479px){.hud .kick{align-self:center}.hud .loc{grid-column:1/-1;grid-row:2;margin-top:4px}.hud .hudr{grid-row:1}} /* v13.69.2: on a narrow phone the place name goes under the buttons, full width, so a name like Darujhistan never breaks mid-word beside four buttons */
 @media (min-width:1000px) and (min-height:560px){.hud .kick{grid-column:1;grid-row:1;align-self:center}.hud .loc{grid-column:1/-1;grid-row:2;margin-top:4px}.hud .hudr{grid-row:1}.bhud .loc{display:block;-webkit-line-clamp:unset}}
 @media (min-width:1000px) and (min-height:560px){
   :root{--side:clamp(360px,27vw,560px)}
@@ -704,7 +705,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.69.1';
+const VERSION = '13.69.2';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -10293,6 +10294,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.69.2', ['On a narrow phone the place name now sits under the buttons at the top, on its own line, so a long name like Darujhistan no longer breaks in the middle of the word.']],
   ['13.69.1', ['Moon\'s Spawn is the same rock everywhere now: the crown of spires and the long hanging cone from Book One\'s title, in the chapter pictures, the Fete\'s streets and garden, the night of the dragons, the visions, and over Coral in Book Three.']],
   ['13.69.0', ['The game now counts how many people play it, so we can see whether anyone is out there. It counts each time the game is opened, whether it was installed as an app, and which chapters and finales are reached. No cookies, no names, nothing about you or your saves is sent, and nothing at all when you play offline.']],
   ['13.68.3', ['A question you have already asked now stays off the list even after you close the game and come back. It is kept in your save for the chapter you are in. Old saves are fine; anything asked before this version may be offered once more.']],

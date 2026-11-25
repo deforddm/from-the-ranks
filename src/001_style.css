@@ -364,6 +364,7 @@ kbd{display:inline-block;min-width:1.2em;padding:0 4px;margin:0 1px;border:1px s
 .hint.keys{display:none;line-height:1.9}
 @keyframes riseW{from{transform:translateX(18px);opacity:0}to{transform:none;opacity:1}}
 /* v13.47.1: in the wide layout the side column is narrow, so the place name drops under the buttons and takes the full width (it broke mid-word, "Whitefinde/rs'", and battle names showed only "The …") */
+@media (max-width:479px){.hud .kick{align-self:center}.hud .loc{grid-column:1/-1;grid-row:2;margin-top:4px}.hud .hudr{grid-row:1}} /* v13.69.2: on a narrow phone the place name goes under the buttons, full width, so a name like Darujhistan never breaks mid-word beside four buttons */
 @media (min-width:1000px) and (min-height:560px){.hud .kick{grid-column:1;grid-row:1;align-self:center}.hud .loc{grid-column:1/-1;grid-row:2;margin-top:4px}.hud .hudr{grid-row:1}.bhud .loc{display:block;-webkit-line-clamp:unset}}
 @media (min-width:1000px) and (min-height:560px){
   :root{--side:clamp(360px,27vw,560px)}
