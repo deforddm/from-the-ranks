@@ -1,0 +1,10 @@
+seed 1449105475
+
+Ashes of the Pale · balance · Book Four · bridgeburner · smart 20, naive 0 runs a battle · PATCHED:  · 1.9 min
+
+| battle | ch | lvl | smart win% | naive win% | no-Ellis win% | median rounds | avg HP lost% (smart / no-Ellis / naive) | downs/fight (smart / naive) | fights with a down | notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b4_c1_brawl | 1 | 8 | 75% (20) | — | — | 11.5 | 53% / — / — | 2.40 / — | 70% | survive 4 · 2.0 munitions · 0.9 salves |
+| b4_c3_scavengers | 3 | 10 | 80% (20) | — | — | 11.0 | 59% / — / — | 3.55 / — | 80% | 2.0 munitions · 0.9 salves |
+
+40 runs in 115s · raw results in /tmp/bal67low_hoc.json

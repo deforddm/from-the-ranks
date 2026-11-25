@@ -1,0 +1,32 @@
+seed 2751545344
+
+Ashes of the Pale · balance · Book Six · bridgeburner · smart 8, naive 0 runs a battle · PATCHED:  · 7.7 min
+
+| battle | ch | lvl | smart win% | naive win% | no-Ellis win% | median rounds | avg HP lost% (smart / no-Ellis / naive) | downs/fight (smart / naive) | fights with a down | notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b6_c1_well | 1 | 12 | 75% (8) | — | — | 9.0 | 44% / — / — | 1.63 / — | 50% | 2.0 munitions · 0.5 salves |
+| b6_c1_rearguard | 1 | 12 | 100% (8) | — | — | 15.0 | 38% / — / — | 1.75 / — | 75% | 2.0 munitions · 0.5 salves |
+| b6_c1_edge | 1 | 12 | 100% (8) | — | — | 9.0 | 22% / — / — | 0.13 / — | 13% | 1.1 munitions · 0.6 salves · refused actions 4 |
+| b6_c1_patrol | 1 | 12 | 75% (8) | — | — | 8.5 | 39% / — / — | 1.38 / — | 38% | 1.9 munitions · 0.6 salves |
+| b6_c2_shrine | 2 | 12 | 88% (8) | — | — | 7.0 | 28% / — / — | 0.88 / — | 25% | 2.0 munitions · 0.1 salves |
+| b6_c2_village | 2 | 12 | 100% (8) | — | — | 14.0 | 37% / — / — | 1.13 / — | 63% | 2.0 munitions · 0.8 salves |
+| b6_c2_road | 2 | 12 | 75% (8) | — | — | 8.5 | 40% / — / — | 1.50 / — | 25% | 2.0 munitions · 0.6 salves · 0.1 free swings taken |
+| b6_c3_sally | 3 | 13 | 100% (8) | — | — | 13.5 | 30% / — / — | 1.13 / — | 50% | 2.0 munitions · 0.9 salves |
+| b6_c3_streets | 3 | 13 | 100% (8) | — | — | 12.5 | 25% / — / — | 0.63 / — | 38% | mortal: 0.25 dead/fight · 2.0 munitions · 0.6 salves · refused actions 3 |
+| b6_c3_gate | 3 | 13 | 88% (8) | — | — | 12.0 | 36% / — / — | 2.00 / — | 88% | survive 4 · 2.0 munitions · 0.6 salves |
+| b6_c3_strays | 3 | 13 | 88% (8) | — | — | 8.0 | 28% / — / — | 1.00 / — | 38% | 1.6 munitions · 0.3 salves |
+| b6_c4_carts | 4 | 13 | 100% (8) | — | — | 6.5 | 16% / — / — | 0.38 / — | 38% | 1.6 munitions |
+| b6_c4_cult | 4 | 13 | 100% (8) | — | — | 11.0 | 30% / — / — | 0.63 / — | 63% | 2.0 munitions · 0.6 salves · refused actions 2 |
+| b6_c4_streets | 4 | 13 | 88% (8) | — | — | 7.5 | 26% / — / — | 1.00 / — | 38% | 2.0 munitions · 0.4 salves · refused actions 2 |
+| b6_c5_village | 5 | 15 | 88% (8) | — | — | 6.5 | 27% / — / — | 1.00 / — | 38% | 2.0 munitions · 0.4 salves |
+| b6_c5_deserters | 5 | 15 | 88% (8) | — | — | 13.0 | 39% / — / — | 1.75 / — | 63% | 2.0 munitions · 0.8 salves |
+| b6_c5_boats | 5 | 15 | 100% (8) | — | — | 13.0 | 25% / — / — | 0.88 / — | 50% | 2.0 munitions · 0.5 salves |
+| b6_c6_night | 6 | 15 | 88% (8) | — | — | 13.5 | 47% / — / — | 2.25 / — | 75% | 2.0 munitions · 0.8 salves · refused actions 2 |
+| b6_c6_wells | 6 | 15 | 100% (8) | — | — | 7.5 | 14% / — / — | 0.25 / — | 25% | 1.1 munitions · 0.1 salves · refused actions 7 |
+| b6_c6_cult | 6 | 15 | 100% (8) | — | — | 12.5 | 55% / — / — | 2.00 / — | 75% | 2.0 munitions · 0.9 salves |
+| b6_c7_alley | 7 | 16 | 75% (8) | — | — | 7.5 | 34% / — / — | 1.50 / — | 25% | 2.0 munitions · 0.4 salves |
+| b6_c7_jetty | 7 | 16 | 100% (8) | — | — | 12.5 | 27% / — / — | 1.63 / — | 38% | 2.0 munitions · 0.5 salves |
+| b6_c7_guard | 7 | 16 | 100% (8) | — | — | 7.0 | 22% / — / — | 0.63 / — | 38% | 1.5 munitions · 0.1 salves |
+| b6_c7_streets | 7 | 16 | 88% (8) | — | — | 13.5 | 38% / — / — | 1.38 / — | 38% | 1.9 munitions · 0.6 salves |
+
+192 runs in 464s · raw results in /tmp/bal67_bh.json

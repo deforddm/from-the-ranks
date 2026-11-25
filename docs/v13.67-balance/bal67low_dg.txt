@@ -1,0 +1,9 @@
+seed 3410830660
+
+Ashes of the Pale · balance · Book Two · bridgeburner · smart 20, naive 0 runs a battle · PATCHED:  · 1.3 min
+
+| battle | ch | lvl | smart win% | naive win% | no-Ellis win% | median rounds | avg HP lost% (smart / no-Ellis / naive) | downs/fight (smart / naive) | fights with a down | notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b2_batrol | 1 | 2 | 50% (20) | — | — | 13.5 | 69% / — / — | 3.75 / — | 80% | 1.0 munitions · 0.6 salves |
+
+20 runs in 79s · raw results in /tmp/bal67low_dg.json

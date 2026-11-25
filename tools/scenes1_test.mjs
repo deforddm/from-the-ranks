@@ -68,7 +68,7 @@ const res = await page.evaluate(() => {
   SET.motion = SET0;
   ok.push(`${keys.length} Book One scenes exist and draw`);
   // 3. the figures that were on every backdrop are only where the text has them
-  const ONLY = { andii: ['roof_andii', 'plain_andii'], assassin: [], hairlock: ['hills_puppet', 'hills_rent', 'hills_hounds'], crimson: ['alley_crimson'], raest: ['garden_storm'],
+  const ONLY = { andii: ['roof_andii', 'plain_andii'], assassin: ['c1_picket'], hairlock: ['hills_puppet', 'hills_rent', 'hills_hounds'], crimson: ['alley_crimson'], raest: ['garden_storm'], // v13.68.0: the Claw stand in the picket line's own picture (c1_picket); the row without them is c1_picket_empty
     hound: ['hills_hounds', 'hills_kill', 'hills_rake'], crone: ['plain_grey_crone', 'plain_glass_crone'], trotts: ['fete_crossing'], rake: ['hills_rake'] };
   for (const [fig, where] of Object.entries(ONLY)) { for (const k of keys) { fresh(+(((used[k] || [''])[0].match(/^c(\d)_/) || [0, 0])[1])); const has = figsOf(k).has(fig); delete figs[k];
       if (has && !where.includes(k)) bad.push(`${fig} is drawn in ${k} (${(used[k] || []).slice(0, 4).join(', ')})`);

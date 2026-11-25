@@ -886,7 +886,7 @@ ${S.f.c1_sawHairlock ? `The puppet is where it was. Its head has turned to look 
       ch:[{t:'Find Whiskeyjack.', go:()=>talk(S.f.marked ? 'c1_accounting' : 'c1_wj_last')}]}),
 
     /* ---- the Claw's accounting (marked + line only) ---- */
-    c1_accounting:()=>({sp:'The picket line', scene:'camp_night', fx:()=>{S.f.c1_accounting=1;}, txt:
+    c1_accounting:()=>({sp:'The picket line', scene:'c1_picket', fx:()=>{S.f.c1_accounting=1;}, txt:
 `Halfway to the Bridgeburners' fire, the picket line. The stakes cast two shadows each, which is wrong, and Tuft stops walking.
 
 "Three," she says. "No. Three I can see."
@@ -902,7 +902,7 @@ One of them speaks. It isn't the grey cloak's voice, but it's his phrasing. "Ser
             go:'c1_acc_slip', fail:'c1_acc_named'},
           {t:'Kettle steps forward with the cusser in both hands.', req:()=>S.inv.cusser>0, go:'c1_acc_bluff'},
           {t:'"Brisk. Shield."', go:'c1_acc_fight'}]}),
-    c1_acc_slip:()=>({sp:'The picket line', fx:()=>{S.f.c1_accAvoided=1; loy('tuft',1);}, txt:
+    c1_acc_slip:()=>({sp:'The picket line', scene:'c1_picket_empty', fx:()=>{S.f.c1_accAvoided=1; loy('tuft',1);}, txt:
 `${c1Wrong()}
 
 It's a long silence. Somewhere behind them the cadre row is still burning.
@@ -915,7 +915,7 @@ Tuft lets a breath out. "That won't work twice."
 
 "Didn't need to," says Brisk.`,
       ch:[{t:'Find Whiskeyjack.', go:'c1_wj_last'}]}),
-    c1_acc_bluff:()=>({sp:'The picket line', fx:()=>{S.f.c1_accBluffed=1; loy('kettle',1); loy('brisk',-1);}, txt:
+    c1_acc_bluff:()=>({sp:'The picket line', scene:'c1_picket', fx:()=>{S.f.c1_accBluffed=1; loy('kettle',1); loy('brisk',-1);}, txt:
 `Kettle walks out in front of the shield with the cusser held in both hands, the way she'd carry a bowl too full. She stops at the distance where it would kill all of them and most of you.
 
 "This is ${S.f.c1_cusserSold ? 'Gerrun' : 'Maud'}," she says. "Say hello."
@@ -927,14 +927,14 @@ The hooded ones don't say hello. The one who spoke looks at the cusser, and at K
 Brisk, from very far behind the shield: "Never. Again."`,
       ch:[{t:'Find Whiskeyjack.', go:'c1_wj_last'}]}),
     // the name didn't stop them: it went into the ledger instead (c1_wj_last, the close)
-    c1_acc_named:()=>({sp:'The picket line', fx:()=>{ S.f.c1_accTatNamed = 1; }, txt:
+    c1_acc_named:()=>({sp:'The picket line', scene:'c1_picket', fx:()=>{ S.f.c1_accTatNamed = 1; }, txt:
 `${c1Wrong()}
 
 "Tattersail," the hooded one says, as if tasting it. "Yes. She's in it too, Sergeant. Further down the page." A small movement of the hand. "Thank you for reminding us."
 
 ${SQUAD().includes('brisk') ? `Brisk's shield is already up. The first knife rings off it.` : `The first knife comes out of the dark low and fast.`}`,
       ch:[{t:'Fight', go:()=>startBattle('accounting',{})}]}),
-    c1_acc_fight:()=>({sp:'The picket line', txt:
+    c1_acc_fight:()=>({sp:'The picket line', scene:'c1_picket', txt:
 `"Shield," you say, and Brisk's is already up, and the first knife rings off it.`,
       ch:[{t:'Fight', go:()=>startBattle('accounting',{})}]}),
     c1_after_accounting:()=>({sp:'The picket line', scene:'camp_night', fx:()=>{ note('The ledger stays open. That is not nothing.','good'); S.f.c1_accFought=1; }, txt:

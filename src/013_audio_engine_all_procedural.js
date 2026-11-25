@@ -621,7 +621,7 @@ const AUDIO = (() => {
   /* ---- what to play where ---- */
   /* a talk scene's backdrop, a map's decor and a battle's setting each name a place; PLACE turns the names into an ambience. Unknown names fall to their book's open country */
   const PLACE = {
-    camp:'camp', camp_night:'camp_night', fire:'camp_night', tent:'interior', room:'interior', inn:'inn', plain:'plain', plain_dusk:'dusk', plain_night:'night', plain_andii:'night', plain_glass:'plain', plain_grey:'dusk',
+    camp:'camp', camp_night:'camp_night', c1_picket:'camp_night', c1_picket_empty:'camp_night', fire:'camp_night', tent:'interior', room:'interior', inn:'inn', plain:'plain', plain_dusk:'dusk', plain_night:'night', plain_andii:'night', plain_glass:'plain', plain_grey:'dusk',
     hills:'hills', hills_dusk:'dusk', hills_night:'night', hills_hounds:'night', hills_kill:'hills', hills_puppet:'dusk', hills_rake:'night', hills_rent:'hills', quorl_hill:'hills', road_east:'hills', quorl_sky:'hills', dragon_sky:'storm', rhivi_barrow:'barrow',
     city_street:'city', city_dusk:'city', city_day:'city', alley_night:'daru_night', alley_crimson:'daru_night', roof:'daru_night', roof_night:'daru_night', roof_andii:'daru_night', roof_shapes:'daru_night', cellar:'tunnel', tunnel:'tunnel', dark:'dark',
     fete_garden:'plain', fete_street:'city', fete_street_night:'daru_night', fete_crossing:'city', fete_hall:'interior', ship:'lake', chintro:'camp', vision:'dark', garden_storm:'storm', garden_after:'dusk', lakefront_dawn:'lake', lakefront:'lake', pale:'camp', estate_night:'daru_night', estate_terrace:'daru_night', jaghut:'dark',

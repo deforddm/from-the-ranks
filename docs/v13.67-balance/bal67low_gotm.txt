@@ -1,0 +1,11 @@
+seed 903547776
+
+Ashes of the Pale · balance · smart 20, no-Ellis 0, naive 0 runs a battle · PATCHED:  · 3.1 min
+
+| battle | ch | lvl | smart win% | naive win% | no-Ellis win% | median rounds | avg HP lost% (smart / no-Ellis / naive) | downs/fight (smart / naive) | fights with a down | notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| c1_wagon | 1 | 2 | 75% (20) | — | — | 11.5 | 59% / — / — | 2.35 / — | 70% | 0.3 munitions · 0.7 salves · refused actions 1 |
+| the_mines | 6 | 7 | 80% (20) | — | — | 11.5 | 51% / — / — | 2.30 / — | 70% | no throws · 0.7 salves |
+| c6_bonfire | 6 | 7 | 95% (20) | — | — | 14.0 | 51% / — / — | 1.75 / — | 75% | no throws · 1.0 salves |
+
+60 runs in 186s · raw results in /tmp/bal67low_gotm.json

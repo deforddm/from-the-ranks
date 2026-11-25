@@ -1,0 +1,11 @@
+seed 4186831387
+
+Ashes of the Pale · balance · undefined · bridgeburner · smart 20, naive 0 runs a battle · PATCHED:  · 2.8 min
+
+| battle | ch | lvl | smart win% | naive win% | no-Ellis win% | median rounds | avg HP lost% (smart / no-Ellis / naive) | downs/fight (smart / naive) | fights with a down | notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b9_c2_drill | 2 | 11 | 70% (20) | — | — | 4.0 | 87% / — / — | 4.10 / — | 100% | survive 4 · 0.2 salves |
+| b9_c4_forage | 4 | 12 | 75% (20) | — | — | 8.0 | 50% / — / — | 2.45 / — | 75% | 0.3 salves |
+| b9_c6_line | 6 | 13 | 75% (20) | — | — | 19.5 | 68% / — / — | 4.75 / — | 100% | 0.9 salves |
+
+60 runs in 169s · raw results in /tmp/bal67low_dod.json

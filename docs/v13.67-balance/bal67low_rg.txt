@@ -1,0 +1,9 @@
+seed 2922669220
+
+Ashes of the Pale · balance · Book Seven · bridgeburner · smart 20, naive 0 runs a battle · PATCHED:  · 1.1 min
+
+| battle | ch | lvl | smart win% | naive win% | no-Ellis win% | median rounds | avg HP lost% (smart / no-Ellis / naive) | downs/fight (smart / naive) | fights with a down | notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b7_c4_riot | 4 | 9 | 65% (20) | — | — | 8.0 | 69% / — / — | 3.75 / — | 85% | 0.7 salves |
+
+20 runs in 68s · raw results in /tmp/bal67low_rg.json

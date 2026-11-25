@@ -704,7 +704,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.67.0';
+const VERSION = '13.68.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -1389,7 +1389,7 @@ const AUDIO = (() => {
   /* ---- what to play where ---- */
   /* a talk scene's backdrop, a map's decor and a battle's setting each name a place; PLACE turns the names into an ambience. Unknown names fall to their book's open country */
   const PLACE = {
-    camp:'camp', camp_night:'camp_night', fire:'camp_night', tent:'interior', room:'interior', inn:'inn', plain:'plain', plain_dusk:'dusk', plain_night:'night', plain_andii:'night', plain_glass:'plain', plain_grey:'dusk',
+    camp:'camp', camp_night:'camp_night', c1_picket:'camp_night', c1_picket_empty:'camp_night', fire:'camp_night', tent:'interior', room:'interior', inn:'inn', plain:'plain', plain_dusk:'dusk', plain_night:'night', plain_andii:'night', plain_glass:'plain', plain_grey:'dusk',
     hills:'hills', hills_dusk:'dusk', hills_night:'night', hills_hounds:'night', hills_kill:'hills', hills_puppet:'dusk', hills_rake:'night', hills_rent:'hills', quorl_hill:'hills', road_east:'hills', quorl_sky:'hills', dragon_sky:'storm', rhivi_barrow:'barrow',
     city_street:'city', city_dusk:'city', city_day:'city', alley_night:'daru_night', alley_crimson:'daru_night', roof:'daru_night', roof_night:'daru_night', roof_andii:'daru_night', roof_shapes:'daru_night', cellar:'tunnel', tunnel:'tunnel', dark:'dark',
     fete_garden:'plain', fete_street:'city', fete_street_night:'daru_night', fete_crossing:'city', fete_hall:'interior', ship:'lake', chintro:'camp', vision:'dark', garden_storm:'storm', garden_after:'dusk', lakefront_dawn:'lake', lakefront:'lake', pale:'camp', estate_night:'daru_night', estate_terrace:'daru_night', jaghut:'dark',
@@ -2338,6 +2338,8 @@ const SCENES = {
   tunnel:{loc:'Under the Pale', sub:'North sapper tunnels', cap:'Lantern light, cold air, and the smell of old stone.', amb:'tunnel'},
   dark:{loc:'Under the Pale', sub:'Kurald Galain leaks through the stone', warren:true, cap:'The lantern light has to push through the dark like water.', amb:'dark'},
   camp_night:{loc:'The Pale', sub:'The camp at night', get cap(){ return typeof S !== 'undefined' && S && S.f && S.f.c1_hounds && S.chapter === 1 ? 'Tent lines under a bruised sky, and the cadre row still burning.' : 'Tent lines under a bruised sky. The cadre row has one lamp lit.'; }, amb:'explore'},
+  c1_picket:{loc:'The Pale', sub:'The picket line · night', cap:'A row of stakes between the camp and the Bridgeburners\' fire. Each one casts two shadows. Three in grey stand between them.', amb:'explore'},
+  c1_picket_empty:{loc:'The Pale', sub:'The picket line · night', cap:'A row of stakes between the camp and the Bridgeburners\' fire. Each one casts two shadows, and nobody stands between them.', amb:'explore'},
   tent:{loc:'Tattersail\'s tent', sub:'The cadre row', cap:'Candle smoke, wet canvas, and cards that will not lie still.', amb:'explore'},
   fire:{loc:'The Bridgeburners\' fire', sub:'East picket', cap:'A fire bigger than yours, and soldiers who do not look up when you arrive. They saw you coming a mile off.', amb:'explore'},
   plain:{loc:'The Rhivi Plain', sub:'Grass to every horizon', cap:'The wagon, the guide, and six days of grass.', amb:'explore'},
@@ -6665,6 +6667,35 @@ function drawEstate(cv, kind, t){
   }
 }
 
+/* v13.68.0 (David, Nov 24, 2026: "picket line need a graphic"): Book One's picket line, where the Claw close their ledger. A row of sharpened
+   stakes between the camp and the Bridgeburners' fire, each casting two shadows: one away from the fire, as it should, and one that has no light to
+   cast it. `claw` puts the three hooded ones between the stakes; without them the row stands empty. */
+function drawPicket(cv, t, claw){
+  const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, gy = H*.6, fx = W*.93, fy = H*.57, fl = .8 + (Math.sin(t/120)*.12 + Math.sin(t/47)*.05)*mo;
+  const sky = ctx.createLinearGradient(0, 0, 0, gy); sky.addColorStop(0, '#04040a'); sky.addColorStop(.7, '#0d0b13'); sky.addColorStop(1, '#17110f'); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, gy + 1);
+  ctx.fillStyle = 'rgba(220,220,240,.5)'; for (let i=0;i<46;i++) ctx.fillRect(hash(i,21)*W, hash(i,22)*gy*.85, 1, 1);
+  for (let i=0;i<5;i++){ const x = W*(.04 + i*.075), y = gy - 1, k = .5 + hash(i,3)*.3; poly(ctx, [[x - 13*k, y],[x, y - 22*k],[x + 13*k, y]], i%2 ? '#15110d' : '#1b1611'); } // the camp behind, small and unlit
+  glow(ctx, fx, fy, W*.42, '#e8923a', .3*fl); ell(ctx, fx, fy + 2, 5*fl, 2.4, '#ffb060'); glow(ctx, fx, fy, 22, '#ffc070', .45*fl); // the Bridgeburners' fire, a long way off
+  for (let i=0;i<3;i++) drawFigure(ctx, ['wj','qb','kalam'][i], fx - 20 + i*14, fy + 5, .55, t, {still:true, dir:i ? -1 : 1, phase:i});
+  const g = ctx.createLinearGradient(0, gy, 0, H); g.addColorStop(0, '#1d1813'); g.addColorStop(1, '#0d0b09'); ctx.fillStyle = g; ctx.fillRect(0, gy, W, H - gy);
+  ctx.fillStyle = 'rgba(150,135,110,.1)'; for (let i=0;i<70;i++){ const y = gy + Math.pow(hash(i,51), 1.6)*(H - gy); ctx.fillRect(hash(i,52)*W, y, 1 + (y - gy)/(H - gy)*3, 1); } // trodden mud
+  const N = 8, pulse = .5 + .5*Math.sin(t/1300)*mo, stake = i => { const u = i/(N - 1); return {x: W*(.44 + u*.43), y: gy + H*(.08 + u*.17), k: .7 + u*.6}; };
+  for (let i=0;i<N;i++){ const s = stake(i), h = H*.2*s.k, dx = s.x - fx, dy = s.y - fy, d = Math.hypot(dx, dy) || 1, L = h*1.5;
+    ctx.lineCap = 'round'; ctx.lineWidth = 3.2*s.k; ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x + dx/d*L, s.y + Math.abs(dy/d)*L*.35 + L*.06); ctx.stroke(); // the shadow the fire gives it
+    ctx.strokeStyle = `rgba(96,78,150,${.3 + pulse*.22})`; ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x + L*.3, s.y + L*.62); ctx.stroke(); } // and the one nothing gives it, lying toward the fire
+  const fig = []; if (claw) [[1.5, 0], [3.5, 0], [5.5, 0]].forEach(([u, off], i) => { const a = stake(Math.floor(u)), b = stake(Math.ceil(u)), f = u - Math.floor(u); fig.push({y: lerp(a.y, b.y, f) - 2, draw: () => drawFigure(ctx, 'assassin', lerp(a.x, b.x, f) + off*4, lerp(a.y, b.y, f) - 2, 1.5*lerp(a.k, b.k, f), t, {still:true, dir:-1, phase:i})}); });
+  for (let i=0;i<N;i++){ const s = stake(i), h = H*.2*s.k, w = 3.4*s.k, lean = -h*.3; fig.push({y: s.y, draw: () => { // each stake leans out toward whoever is coming
+    poly(ctx, [[s.x - w, s.y],[s.x + w, s.y],[s.x + lean + w*.55, s.y - h*.8],[s.x + lean - w*.2, s.y - h],[s.x + lean - w*.75, s.y - h*.8]], '#2a1e13');
+    poly(ctx, [[s.x + w*.2, s.y],[s.x + w, s.y],[s.x + lean + w*.55, s.y - h*.8],[s.x + lean - w*.2, s.y - h]], `rgba(232,146,58,${.3*fl})`); // firelit on the far side
+    ell(ctx, s.x, s.y + 1, w*1.7, w*.55, '#0a0806'); }}); }
+  fig.sort((a, b) => a.y - b.y).forEach(f => f.draw());
+  squadLine(sceneSquad(), 1, (id, i) => drawFigure(ctx, id, W*.07 + i*Math.min(28, W*.075), H*.86 - (i%2)*3, 2, t, {phase:i, dir:1}));
+  ctx.fillStyle = 'rgba(200,190,175,.25)'; for (let i=0;i<24;i++) ctx.fillRect(hash(i,9)*W + Math.sin(t/1400 + i)*5*mo, (hash(i,10)*H + t*.02*mo) % H, 1.4, 1.4);
+  vign(ctx, W, H, .8, .5);
+}
+SCENEX.c1_picket ??= (cv, t) => drawPicket(cv, t, true);
+SCENEX.c1_picket_empty ??= (cv, t) => drawPicket(cv, t, false);
+
 /* ============ canvas setup ============ */
 /* The battle grid always fits the width. The explore map has two modes (Settings · Map, or the button under it):
    whole: the entire area fits the width, as it always did; close: bigger tiles filling the height the screen has,
@@ -10191,6 +10222,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.68.0', ['Bridgeburner has its teeth back. The new falls and munitions had made it too gentle, so 120 fights across all ten books were re-tuned one by one: most now sit between 65% and 85% for a squad using every trick, and none under 60%. One Book Two fight that had turned too hard was eased. Soldier is unchanged.', 'Book One: the picket line, where the Claw come to close their ledger, has its own picture: the row of stakes with two shadows each, and the three in grey between them.']],
   ['13.67.0', ['Moranth munitions are devastating again in every book. The dice are what they always were, and now an enemy also loses a share of its full health: half to a cusser at the centre and beside it, a quarter where a sharper lands, a tenth in a burner\'s fire, less further out. A leader loses half the share. The very heavy lose all of it: two cussers will tear a Hound to shreds. Book Eight\'s Hound of Shadow, which no blade touches, can be torn by munitions until it steps into Shadow and is gone; it does not die. What resists a munition still does. Your own soldiers caught in a blast take the dice and nothing more.']],
   ['13.66.0', ['The canal is a drop. On the Low Walk and the canal bridges in Books Five and Seven, anything driven, dragged or thrown toward the water saves to catch the edge or goes in, the squad included. The footbridge and the bridge in Letheras have water on both sides now.', 'At any drop, in every book: an ordinary enemy forced to the edge goes over two times in three, a leader one time in three. Before, the chance shrank book by book until it was almost nothing in the later ones. Your own soldiers save as they always did.', 'The same for fire: an enemy that goes through burner fire catches two times in three. Burning, bleeding and being driven into a wall now hurt an enemy more as the squad levels, as every skill does; they had stayed at Book One\'s numbers. None of this touches what happens to your own soldiers.', 'The burned wayhouse roof in Book Eight and the landing ledge in Book Three have an edge to go over.', 'The canal is drawn as water again on those boards, and the counting-house stair in Book Seven has walls that look like walls. Saves are untouched.']],
   ['13.65.3', ['Housekeeping so search engines can find the game at playfromtheranks.com. Nothing changes in play.']],
@@ -13808,7 +13840,7 @@ ${S.f.c1_sawHairlock ? `The puppet is where it was. Its head has turned to look 
       ch:[{t:'Find Whiskeyjack.', go:()=>talk(S.f.marked ? 'c1_accounting' : 'c1_wj_last')}]}),
 
     /* ---- the Claw's accounting (marked + line only) ---- */
-    c1_accounting:()=>({sp:'The picket line', scene:'camp_night', fx:()=>{S.f.c1_accounting=1;}, txt:
+    c1_accounting:()=>({sp:'The picket line', scene:'c1_picket', fx:()=>{S.f.c1_accounting=1;}, txt:
 `Halfway to the Bridgeburners' fire, the picket line. The stakes cast two shadows each, which is wrong, and Tuft stops walking.
 
 "Three," she says. "No. Three I can see."
@@ -13824,7 +13856,7 @@ One of them speaks. It isn't the grey cloak's voice, but it's his phrasing. "Ser
             go:'c1_acc_slip', fail:'c1_acc_named'},
           {t:'Kettle steps forward with the cusser in both hands.', req:()=>S.inv.cusser>0, go:'c1_acc_bluff'},
           {t:'"Brisk. Shield."', go:'c1_acc_fight'}]}),
-    c1_acc_slip:()=>({sp:'The picket line', fx:()=>{S.f.c1_accAvoided=1; loy('tuft',1);}, txt:
+    c1_acc_slip:()=>({sp:'The picket line', scene:'c1_picket_empty', fx:()=>{S.f.c1_accAvoided=1; loy('tuft',1);}, txt:
 `${c1Wrong()}
 
 It's a long silence. Somewhere behind them the cadre row is still burning.
@@ -13837,7 +13869,7 @@ Tuft lets a breath out. "That won't work twice."
 
 "Didn't need to," says Brisk.`,
       ch:[{t:'Find Whiskeyjack.', go:'c1_wj_last'}]}),
-    c1_acc_bluff:()=>({sp:'The picket line', fx:()=>{S.f.c1_accBluffed=1; loy('kettle',1); loy('brisk',-1);}, txt:
+    c1_acc_bluff:()=>({sp:'The picket line', scene:'c1_picket', fx:()=>{S.f.c1_accBluffed=1; loy('kettle',1); loy('brisk',-1);}, txt:
 `Kettle walks out in front of the shield with the cusser held in both hands, the way she'd carry a bowl too full. She stops at the distance where it would kill all of them and most of you.
 
 "This is ${S.f.c1_cusserSold ? 'Gerrun' : 'Maud'}," she says. "Say hello."
@@ -13849,14 +13881,14 @@ The hooded ones don't say hello. The one who spoke looks at the cusser, and at K
 Brisk, from very far behind the shield: "Never. Again."`,
       ch:[{t:'Find Whiskeyjack.', go:'c1_wj_last'}]}),
     // the name didn't stop them: it went into the ledger instead (c1_wj_last, the close)
-    c1_acc_named:()=>({sp:'The picket line', fx:()=>{ S.f.c1_accTatNamed = 1; }, txt:
+    c1_acc_named:()=>({sp:'The picket line', scene:'c1_picket', fx:()=>{ S.f.c1_accTatNamed = 1; }, txt:
 `${c1Wrong()}
 
 "Tattersail," the hooded one says, as if tasting it. "Yes. She's in it too, Sergeant. Further down the page." A small movement of the hand. "Thank you for reminding us."
 
 ${SQUAD().includes('brisk') ? `Brisk's shield is already up. The first knife rings off it.` : `The first knife comes out of the dark low and fast.`}`,
       ch:[{t:'Fight', go:()=>startBattle('accounting',{})}]}),
-    c1_acc_fight:()=>({sp:'The picket line', txt:
+    c1_acc_fight:()=>({sp:'The picket line', scene:'c1_picket', txt:
 `"Shield," you say, and Brisk's is already up, and the first knife rings off it.`,
       ch:[{t:'Fight', go:()=>startBattle('accounting',{})}]}),
     c1_after_accounting:()=>({sp:'The picket line', scene:'camp_night', fx:()=>{ note('The ledger stays open. That is not nothing.','good'); S.f.c1_accFought=1; }, txt:
@@ -123328,8 +123360,8 @@ const TOUGH = {   // calibrated Nov 13, 2026 with the Whisper bot, 10 runs a fig
 };
 /* TFIGHT[id] = {s: k, b: k}: a fight's own step on Soldier (s) and Bridgeburner (b), after TOUGH. Each step is +1 to hit, and every
    third step +1 damage; a negative step eases. Health is left alone so the fight keeps its length. Set by the per-fight pass. */
-const TFIGHT = { // Nov 22, 2026 (David: "2", then "Yes and yes"): Bridgeburner raised on 101 fights of Books One, Three, Four, Six, Seven, Eight, Nine (docs/v13.63-balance/). per-fight pass, Nov 13, 2026 (Whisper bot, 20 runs a step; the won% is at the chosen step) Re-tuned Nov 18, 2026 (David: "fix both"): the fights under the floors eased, Bridgeburner in Books Seven to Ten brought toward 75-80%; taught bot, 20 runs a step (docs/v13.49-balance/).
-  b8_c2_fields:{b: 2}, // v13.53.0
+const TFIGHT = { // Nov 24, 2026 (David: "do it"): after the forced-movement and munition rules of v13.66-67, Bridgeburner raised on 119 fights of all ten books and b2_batrol eased (docs/v13.67-balance/). Nov 22, 2026 (David: "2", then "Yes and yes"): Bridgeburner raised on 101 fights of Books One, Three, Four, Six, Seven, Eight, Nine (docs/v13.63-balance/). per-fight pass, Nov 13, 2026 (Whisper bot, 20 runs a step; the won% is at the chosen step) Re-tuned Nov 18, 2026 (David: "fix both"): the fights under the floors eased, Bridgeburner in Books Seven to Ten brought toward 75-80%; taught bot, 20 runs a step (docs/v13.49-balance/).
+  b8_c2_fields:{b: 6}, // v13.53.0 | Nov 24: b+6 (every trick 80%, none 90%)
   b10_c7_morning:{b: 4}, // v13.53.0
   b10_c6_open:{b: 4}, // v13.53.0
   b10_c3_traces:{b: 4}, // v13.53.0
@@ -123337,172 +123369,200 @@ const TFIGHT = { // Nov 22, 2026 (David: "2", then "Yes and yes"): Bridgeburner 
   b9_c7_dark:{b: 4}, // v13.53.0
   b9_c6_dusk:{b: 4}, // v13.53.0
   b9_c6_train:{b: 4}, // v13.53.0
-  b9_c5_dogs:{b: 8}, // v13.53.0 | Nov 22: b+8 (every trick 85%, none 85%)
+  b9_c5_dogs:{b: 17}, // v13.53.0 | Nov 22: b+8 (every trick 85%, none 85%) | Nov 24: b+17 (every trick 85%, none 90%)
   b9_c2_bout:{b: 5}, // v13.53.0 | Nov 22: b+5 (every trick 70%, none 70%)
   b9_c1_looters:{b: 2}, // v13.53.0
   b8_c5_knives:{b: 1}, // v13.53.0
   b8_c3_sellers:{b: 7}, // v13.53.0 | Nov 22: b+7 (every trick 85%, none 85%)
-  b8_c3_road:{b: 3}, // v13.53.0 | Nov 22: b+3 (every trick 85%, none 80%)
-  b10_c1_graves:{b: 0}, // b-5 65% | Nov 18: b-2
+  b8_c3_road:{b: 9}, // v13.53.0 | Nov 22: b+3 (every trick 85%, none 80%) | Nov 24: b+9 (every trick 85%, none 75%)
+  b10_c1_graves:{b: 2}, // b-5 65% | Nov 18: b-2 | Nov 24: b+2 (every trick 80%, none 85%)
   b10_c1_strippers:{b: -6}, // b-10 80% | Nov 18: b-9
-  b10_c2_deserters:{s: -3, b: -2}, // s-3 90%, b-3 80% | Nov 18: b-1 (floor: b:-2)
+  b10_c2_deserters:{s: -3, b: 0}, // s-3 90%, b-3 80% | Nov 18: b-1 (floor: b:-2) | Nov 24: b+0 (every trick 70%, none 70%)
   b10_c2_dogs:{b: 7}, // b+4 70% | Nov 18: b+7
   b10_c3_wagon:{s: -8, b: -3}, // s-8 90%, b-3 65%
-  b10_c4_dogs:{b: 5}, // | Nov 18: b+4
+  b10_c4_dogs:{b: 7}, // | Nov 18: b+4 | Nov 24: b+7 (every trick 75%, none 90%)
   b10_c4_foragers:{b: -1}, // b-2 65%
-  b10_c4_night:{b: -1}, // b-2 65%
-  b10_c5_outriders:{s: -11, b: -8}, // s at b's step: Soldier's foe never stronger than Bridgeburner's (fightrow_test); b -11 70% | Nov 18: b-8
+  b10_c4_night:{b: 0}, // b-2 65% | Nov 24: b+0 (every trick 75%, none 80%)
+  b10_c5_outriders:{s: -11, b: -6}, // s at b's step: Soldier's foe never stronger than Bridgeburner's (fightrow_test); b -11 70% | Nov 18: b-8 | Nov 24: b-6 (every trick 75%, none 90%)
   b10_c5_stragglers:{b: 4}, // | Nov 18: b+4
-  b10_c6_beach:{b: -3}, // b-5 75% | Nov 18: b-3
+  b10_c6_beach:{b: -2}, // b-5 75% | Nov 18: b-3 | Nov 24: b-2 (every trick 85%, none 85%)
   b10_c7_picket:{b: -4}, // b-4 85%
   b2_barrow:{b: 6}, // b+6 85%
-  b2_batrol:{s: -3}, // | Nov 18: s-3
+  b2_batrol:{s: -3, b: -1}, // | Nov 18: s-3 | Nov 24: b-1 (every trick 70%, none 80%)
   b2_dryraid:{s: -2}, // s-2 90%
-  b2_envoy:{b: -1}, // b-1 75%
-  b2_postern:{b: -2}, // | Nov 18: b-2
-  b2_pull:{s: -3, b: -2}, // s-3 95%, b-2 85%
-  b2_ring:{b: -2}, // b-2 70%
-  b2_silver:{b: -2}, // b-2 70%
+  b2_envoy:{b: 1}, // b-1 75% | Nov 24: b+1 (every trick 75%, none 65%)
+  b2_postern:{b: -1}, // | Nov 18: b-2 | Nov 24: b-1 (every trick 100%, none 95%)
+  b2_pull:{s: -3, b: 0}, // s-3 95%, b-2 85% | Nov 24: b+0 (every trick 65%, none 75%)
+  b2_ring:{b: -1}, // b-2 70% | Nov 24: b-1 (every trick 80%, none 75%)
+  b2_silver:{b: 1}, // b-2 70% | Nov 24: b+1 (every trick 60%, none 80%)
   b3_c3_hold:{b: 2}, // b+2 70%
-  b3_c3_picket:{b: 5}, // b+2 85% | Nov 22: b+5 (every trick 85%, none 80%)
-  b3_c4_brawl:{b: 10}, // b+6 85% | Nov 22: b+10 (every trick 90%, none 90%)
+  b3_c3_picket:{b: 8}, // b+2 85% | Nov 22: b+5 (every trick 85%, none 80%) | Nov 24: b+8 (every trick 70%, none 95%)
+  b3_c4_brawl:{b: 12}, // b+6 85% | Nov 22: b+10 (every trick 90%, none 90%) | Nov 24: b+12 (every trick 85%, none 90%)
   b3_c4_breakout:{b: 3}, // b+3 75%
-  b3_c5_wellfight:{b: 5}, // b+1 90% | Nov 22: b+5 (every trick 90%, none 70%)
-  b3_c6_ambush:{b: 2}, // b-1 80% | Nov 22: b+2 (every trick 70%, none 80%)
-  b3_c6_field:{b: 4}, // b+1 85% | Nov 22: b+4 (every trick 90%, none 70%)
-  b3_c6_landing:{s: -2, b: 1}, // s-2 90% | Nov 22: b+1 (every trick 70%, none 60%)
-  b3_c7_herds:{s: -2, b: 1}, // s-2 90%, b-2 90% | Nov 22: b+1 (every trick 100%, none 95%)
+  b3_c5_wellfight:{b: 8}, // b+1 90% | Nov 22: b+5 (every trick 90%, none 70%) | Nov 24: b+8 (every trick 80%, none 85%)
+  b3_c6_ambush:{b: 3}, // b-1 80% | Nov 22: b+2 (every trick 70%, none 80%) | Nov 24: b+3 (every trick 80%, none 85%)
+  b3_c6_field:{b: 6}, // b+1 85% | Nov 22: b+4 (every trick 90%, none 70%) | Nov 24: b+6 (every trick 70%, none 65%)
+  b3_c6_landing:{s: -2, b: 3}, // s-2 90% | Nov 22: b+1 (every trick 70%, none 60%) | Nov 24: b+3 (every trick 70%, none 75%)
+  b3_c7_herds:{s: -2, b: 3}, // s-2 90%, b-2 90% | Nov 22: b+1 (every trick 100%, none 95%) | Nov 24: b+3 (every trick 85%, none 85%)
   b3_c7_hunt:{b: 2}, // b+2 85%
-  b3_c7_stairs:{b: 3}, // b+3 80%
+  b3_c7_stairs:{b: 10}, // b+3 80% | Nov 24: b+10 (every trick 85%, none 85%)
   b3_c7_stakes:{b: 5}, // b+5 80%
-  b4_c1_dig:{b: -1}, // b-1 85%
+  b4_c1_dig:{b: 0}, // b-1 85% | Nov 24: b+0 (every trick 80%, none 85%)
   b4_c1_watch:{b: 2}, // b+1 90% | Nov 22: b+2 (every trick 70%, none 70%)
   b4_c2_probe:{s: -1}, // s-1 90%
-  b4_c3_poles:{s: -2, b: 5}, // s-2 95%, b+2 80% | Nov 22: b+5 (every trick 60%, none 70%)
+  b4_c3_poles:{s: -2, b: 7}, // s-2 95%, b+2 80% | Nov 22: b+5 (every trick 60%, none 70%) | Nov 24: b+7 (every trick 65%, none 70%)
   b4_c3_scavengers:{b: 6}, // b+3 65% | Nov 22: b+6 (every trick 75%, none 65%)
-  b4_c4_picket:{b: 5}, // b+2 60% | Nov 22: b+5 (every trick 75%, none 65%)
+  b4_c4_picket:{b: 7}, // b+2 60% | Nov 22: b+5 (every trick 75%, none 65%) | Nov 24: b+7 (every trick 85%, none 80%)
   b4_c5_rearguard:{b: 6}, // b+3 80% | Nov 22: b+6 (every trick 90%, none 75%)
-  b4_c5_wallriders:{b: 2}, // b+2 75%
-  b4_c6_nest:{b: 5}, // b+2 90% | Nov 22: b+5 (every trick 80%, none 80%)
-  b4_c6_patrol:{b: 3}, // b+2 85% | Nov 22: b+3 (every trick 90%, none 70%)
-  b4_c7_outriders:{b: 6}, // b+4 85% | Nov 22: b+6 (every trick 85%, none 60%)
-  b5_c1_lowwalk:{b: -1}, // | Nov 18: b-1
+  b4_c5_wallriders:{b: 6}, // b+2 75% | Nov 24: b+6 (every trick 75%, none 80%)
+  b4_c6_nest:{b: 7}, // b+2 90% | Nov 22: b+5 (every trick 80%, none 80%) | Nov 24: b+7 (every trick 75%, none 60%)
+  b4_c6_patrol:{b: 7}, // b+2 85% | Nov 22: b+3 (every trick 90%, none 70%) | Nov 24: b+7 (every trick 70%, none 80%)
+  b4_c7_outriders:{b: 11}, // b+4 85% | Nov 22: b+6 (every trick 85%, none 60%) | Nov 24: b+11 (every trick 80%, none 85%)
+  b5_c1_lowwalk:{b: 0}, // | Nov 18: b-1 | Nov 24: b+0 (every trick 80%, none 80%)
   b5_c2_hulk:{b: 3}, // b+4 75% | Nov 18: b+3
   b5_c2_looters:{b: -2}, // b-2 65%
-  b5_c3_deserters:{b: -2}, // b-2 95%
+  b5_c3_deserters:{b: 2}, // b-2 95% | Nov 24: b+2 (every trick 80%, none 75%)
   b5_c4_wraiths:{b: 2}, // b+2 70%
   b5_c5_factor:{b: 4}, // b+4 75%
-  b5_c5_farm:{b: -1}, // b-1 85%
+  b5_c5_farm:{b: 0}, // b-1 85% | Nov 24: b+0 (every trick 85%, none 75%)
   b5_c6_channel:{b: -1}, // | Nov 18: b-1
   b5_c7_court:{b: 10}, // b+10 90%
-  b5_c7_looters:{b: 2}, // b+2 80%
-  b6_c1_rearguard:{b: -2}, // b-2 80%
+  b5_c7_looters:{b: 3}, // b+2 80% | Nov 24: b+3 (every trick 85%, none 70%)
+  b6_c1_rearguard:{b: 2}, // b-2 80% | Nov 24: b+2 (every trick 75%, none 65%)
   b6_c1_well:{b: 1}, // b+1 65%
   b6_c2_road:{s: -3, b: -1}, // s-3 100%, b-3 70% | Nov 22: b-1 (every trick 80%, none 75%)
-  b6_c3_sally:{b: 3}, // b-1 90% | Nov 22: b+3 (every trick 90%, none 65%)
+  b6_c3_sally:{b: 5}, // b-1 90% | Nov 22: b+3 (every trick 90%, none 65%) | Nov 24: b+5 (every trick 80%, none 85%)
   b6_c3_streets:{b: 2}, // b+2 65%
-  b6_c4_streets:{b: 8}, // b-1 75% | Nov 22: b+8 (every trick 75%, none 85%)
-  b6_c5_village:{b: 13}, // b+4 85% | Nov 22: b+13 (every trick 85%, none 65%)
-  b6_c6_night:{b: 8}, // b+2 75% | Nov 22: b+8 (every trick 80%, none 85%)
+  b6_c4_streets:{b: 14}, // b-1 75% | Nov 22: b+8 (every trick 75%, none 85%) | Nov 24: b+14 (every trick 85%, none 90%)
+  b6_c5_village:{b: 15}, // b+4 85% | Nov 22: b+13 (every trick 85%, none 65%) | Nov 24: b+15 (every trick 75%, none 85%)
+  b6_c6_night:{b: 9}, // b+2 75% | Nov 22: b+8 (every trick 80%, none 85%) | Nov 24: b+9 (every trick 85%, none 95%)
   b6_c6_wells:{b: 6}, // b+6 85%
   b7_c1_dunes:{b: -1}, // b-3 75% | Nov 18: b-1
   b7_c2_alley:{b: 1}, // b+2 65% | Nov 22: b+1 (at +2 it read 50% over 40 runs; at +1 every trick 70%, none 80%; David: "yes")
-  b7_c2_bridge:{b: 2}, // | Nov 18: b+2
+  b7_c2_bridge:{b: 5}, // | Nov 18: b+2 | Nov 24: b+5 (every trick 80%, none 65%)
   b7_c2_gate:{b: 3}, // | Nov 18: b+2 | Nov 22: b+3 (every trick 100%, none 70%)
   b7_c3_factor:{b: 4}, // | Nov 18: b+3 | Nov 22: b+4 (every trick 75%, none 70%)
-  b7_c3_farm:{s: -2, b: 1}, // s-2 95% | Nov 18: b+1
+  b7_c3_farm:{s: -2, b: 4}, // s-2 95% | Nov 18: b+1 | Nov 24: b+4 (every trick 70%, none 60%)
   b7_c3_road:{b: 3}, // | Nov 18: b+2 | Nov 22: b+3 (every trick 62%, none 70%)
   b7_c4_edurcamp:{b: 3}, // | Nov 18: b+3
   b7_c4_patriots:{b: 5}, // | Nov 18: b+2 | Nov 22: b+5 (every trick 62%, none 70%)
   b7_c4_riot:{b: 4}, // b+3 70% (floor: b:1) | Nov 22: b+4 (every trick 38%, none 65%)
-  b7_c5_bailiff:{b: 8}, // | Nov 18: b+2 | Nov 22: b+8 (every trick 75%, none 75%)
+  b7_c5_bailiff:{b: 9}, // | Nov 18: b+2 | Nov 22: b+8 (every trick 75%, none 75%) | Nov 24: b+9 (every trick 85%, none 95%)
   b7_c5_road:{b: 5}, // | Nov 18: b+4 | Nov 22: b+5 (every trick 65%, none 75%)
   b7_c5_village:{b: -2}, // b-2 70%
   b7_c6_break:{b: -2}, // b-2 90%
-  b7_c6_landing:{b: 1}, // b+1 80% | Nov 22: b+1 (every trick 88%, none 60%)
-  b7_c7_bridge:{b: 2}, // | Nov 18: b+3 (floor: b:2)
-  b7_c7_gate:{b: 3}, // b-1 85% | Nov 18: b+2 | Nov 22: b+3 (every trick 85%, none 70%)
-  b7_c7_streets:{b: 3}, // b-2 65% | Nov 18: b+1 | Nov 22: b+3 (every trick 100%, none 70%)
+  b7_c6_landing:{b: 2}, // b+1 80% | Nov 22: b+1 (every trick 88%, none 60%) | Nov 24: b+2 (every trick 85%, none 75%)
+  b7_c7_bridge:{b: 6}, // | Nov 18: b+3 (floor: b:2) | Nov 24: b+6 (every trick 85%, none 80%)
+  b7_c7_gate:{b: 4}, // b-1 85% | Nov 18: b+2 | Nov 22: b+3 (every trick 85%, none 70%) | Nov 24: b+4 (every trick 65%, none 80%)
+  b7_c7_streets:{b: 5}, // b-2 65% | Nov 18: b+1 | Nov 22: b+3 (every trick 100%, none 70%) | Nov 24: b+5 (every trick 85%, none 65%)
   b8_c1_alley:{b: 4}, // | Nov 18: b+4
   b8_c1_chancers:{b: 5}, // | Nov 18: b+2 | Nov 22: b+5 (every trick 90%, none 95%)
   b8_c1_den:{b: 7}, // | Nov 18: b+4 | Nov 22: b+7 (every trick 80%, none 65%)
   b8_c2_raid:{b: 11}, // b+2 85% | Nov 22: b+11 (every trick 90%, none 95%)
-  b8_c2_town:{b: 12}, // | Nov 18: b+6 | Nov 22: b+12 (every trick 80%, none 80%)
+  b8_c2_town:{b: 15}, // | Nov 18: b+6 | Nov 22: b+12 (every trick 80%, none 80%) | Nov 24: b+15 (every trick 85%, none 90%)
   b8_c3_ridge:{b: 10}, // | Nov 18: b+2 | Nov 22: b+10 (every trick 75%, none 60%)
-  b8_c4_drunk:{s: -5, b: 2}, // s-5 95%, b-3 70% | Nov 22: b+2 (every trick 70%, none 80%)
+  b8_c4_drunk:{s: -5, b: 9}, // s-5 95%, b-3 70% | Nov 22: b+2 (every trick 70%, none 80%) | Nov 24: b+9 (every trick 85%, none 70%)
   b8_c4_edge:{b: -3}, // b-5 80%
-  b8_c4_stores:{b: 11}, // | Nov 18: b+4 | Nov 22: b+11 (every trick 90%, none 85%)
+  b8_c4_stores:{b: 14}, // | Nov 18: b+4 | Nov 22: b+11 (every trick 90%, none 85%) | Nov 24: b+14 (every trick 80%, none 90%)
   b8_c4_water:{b: 10}, // | Nov 18: b+4 | Nov 22: b+10 (every trick 80%, none 80%)
   b8_c5_grass:{b: 7}, // | Nov 18: b+3
   b8_c5_peddler:{b: 21}, // b+4 85% | Nov 18: b+10 | Nov 22: b+21 (every trick 90%, none 80%)
   b8_c6_masks:{b: 10}, // b+4 85% | Nov 18: b+7
   b8_c6_street:{b: -4}, // b-6 80%
-  b8_c6_wall:{b: 3}, // | Nov 18: b+3
+  b8_c6_wall:{b: 9}, // | Nov 18: b+3 | Nov 24: b+9 (every trick 85%, none 80%)
   b8_c7_doorway:{b: 15}, // | Nov 18: b+3 | Nov 22: b+15 (every trick 90%, none 85%)
-  b8_c7_looters:{s: -5, b: 2}, // s-5 85%, b-6 75% | Nov 18: b-4 | Nov 22: b+2 (every trick 95%, none 85%)
+  b8_c7_looters:{s: -5, b: 11}, // s-5 85%, b-6 75% | Nov 18: b-4 | Nov 22: b+2 (every trick 95%, none 85%) | Nov 24: b+11 (every trick 85%, none 80%)
   b8_c7_roofs:{b: 6}, // | Nov 18: b+2
-  b9_c1_brawl:{s: -2, b: 3}, // s-2 90% | Nov 18: b+2
+  b9_c1_brawl:{s: -2, b: 11}, // s-2 90% | Nov 18: b+2 | Nov 24: b+11 (every trick 70%, none 75%)
   b9_c1_stores:{b: 5}, // | Nov 18: b+3 | Nov 22: b+5 (every trick 95%, none 95%)
   b9_c2_drill:{b: -3}, // b-3 65%
   b9_c3_dogs:{b: 15}, // | Nov 18: b+4 | Nov 22: b+15 (every trick 80%, none 70%)
-  b9_c3_farm:{b: 11}, // | Nov 18: b+6 | Nov 22: b+11 (every trick 85%, none 95%)
+  b9_c3_farm:{b: 12}, // | Nov 18: b+6 | Nov 22: b+11 (every trick 85%, none 95%) | Nov 24: b+12 (every trick 80%, none 80%)
   b9_c4_forage:{b: 10}, // | Nov 18: b+5 | Nov 22: b+10 (every trick 75%, none 65%)
-  b9_c4_raid:{b: 2}, // b-2 85% | Nov 18: b+1 | Nov 22: b+2 (every trick 85%, none 65%)
-  b9_c5_bull:{b: 6}, // | Nov 18: b+3 | Nov 22: b+6 (every trick 75%, none 80%)
-  b9_c5_cache:{b: 19}, // b+2 80% | Nov 18: b+8 | Nov 22: b+19 (every trick 70%, none 65%)
-  b9_c6_gap:{b: 13}, // b+6 80% | Nov 18: b+9 | Nov 22: b+13 (every trick 75%, none 75%)
+  b9_c4_raid:{b: 4}, // b-2 85% | Nov 18: b+1 | Nov 22: b+2 (every trick 85%, none 65%) | Nov 24: b+4 (every trick 80%, none 75%)
+  b9_c5_bull:{b: 7}, // | Nov 18: b+3 | Nov 22: b+6 (every trick 75%, none 80%) | Nov 24: b+7 (every trick 85%, none 90%)
+  b9_c5_cache:{b: 21}, // b+2 80% | Nov 18: b+8 | Nov 22: b+19 (every trick 70%, none 65%) | Nov 24: b+21 (every trick 80%, none 90%)
+  b9_c6_gap:{b: 14}, // b+6 80% | Nov 18: b+9 | Nov 22: b+13 (every trick 75%, none 75%) | Nov 24: b+14 (every trick 85%, none 85%)
   b9_c6_line:{b: 6}, // b+4 80%
   b9_c7_trail:{b: 8}, // b+2 85% | Nov 18: b+6
   c1_wagon:{b: 2}, // b+2 65%
-  c3_toughs:{b: 0}, // b+2 65% | Nov 18: b-1 | Nov 22: b+0 (every trick 65%, none 70%)
-  c5_dig:{b: 0}, // b-2 85% | Nov 22: b+0 (every trick 75%, none 70%)
-  c7_worrygate:{b: -1}, // b-2 65% | Nov 22: b-1 (every trick 90%, none 75%)
-  last_accounting:{s: -2, b: -1}, // s-2 95%, b-1 75%
-  reprisal:{b: 0}, // | Nov 18: b-1 | Nov 22: b+0 (every trick 80%, none 70%)
-  terrace_knives_2:{b: 2}, // b-2 80% | Nov 22: b+2 (every trick 75%, none 60%)
+  c3_toughs:{b: 2}, // b+2 65% | Nov 18: b-1 | Nov 22: b+0 (every trick 65%, none 70%) | Nov 24: b+2 (every trick 90%, none 90%)
+  c5_dig:{b: 2}, // b-2 85% | Nov 22: b+0 (every trick 75%, none 70%) | Nov 24: b+2 (every trick 80%, none 60%)
+  c7_worrygate:{b: 0}, // b-2 65% | Nov 22: b-1 (every trick 90%, none 75%) | Nov 24: b+0 (every trick 80%, none 70%)
+  last_accounting:{s: -2, b: 1}, // s-2 95%, b-1 75% | Nov 24: b+1 (every trick 80%, none 70%)
+  reprisal:{b: 2}, // | Nov 18: b-1 | Nov 22: b+0 (every trick 80%, none 70%) | Nov 24: b+2 (every trick 70%, none 65%)
+  terrace_knives_2:{b: 3}, // b-2 80% | Nov 22: b+2 (every trick 75%, none 60%) | Nov 24: b+3 (every trick 85%, none 65%)
   the_mines:{b: 1}, // b-1 80% | Nov 22: b+1 (every trick 80%, none 80%)
   accounting:{b: 1}, // v13.63.0 | Nov 22: b+1 (every trick 55%, none 70%)
   outriders:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 65%, none 70%)
-  c2_deserters:{b: 1}, // v13.63.0 | Nov 22: b+1 (every trick 85%, none 70%)
+  c2_deserters:{b: 2}, // v13.63.0 | Nov 22: b+1 (every trick 85%, none 70%) | Nov 24: b+2 (every trick 80%, none 80%)
   cutpurses:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 80%, none 70%)
   guild_roofs_2:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 85%, none 85%)
-  c4_clan:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 85%, none 70%)
-  terrace_knives:{b: 5}, // v13.63.0 | Nov 22: b+5 (every trick 75%, none 70%)
+  c4_clan:{b: 3}, // v13.63.0 | Nov 22: b+2 (every trick 85%, none 70%) | Nov 24: b+3 (every trick 85%, none 80%)
+  terrace_knives:{b: 7}, // v13.63.0 | Nov 22: b+5 (every trick 75%, none 70%) | Nov 24: b+7 (every trick 65%, none 65%)
   c6_bonfire:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 95%, none 85%)
-  b3_c1_brawl:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 75%, none 85%)
+  b3_c1_brawl:{b: 4}, // v13.63.0 | Nov 22: b+2 (every trick 75%, none 85%) | Nov 24: b+4 (every trick 75%, none 95%)
   b3_c1_herds:{b: 1}, // v13.63.0 | Nov 22: b+1 (every trick 85%, none 90%)
   b3_c2_hill:{b: 3}, // v13.63.0 | Nov 22: b+3 (every trick 80%, none 95%)
-  b3_c2_herdfight:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 95%, none 75%)
-  b3_c2_wagonfight:{b: 5}, // v13.63.0 | Nov 22: b+5 (every trick 95%, none 95%)
+  b3_c2_herdfight:{b: 3}, // v13.63.0 | Nov 22: b+2 (every trick 95%, none 75%) | Nov 24: b+3 (every trick 80%, none 85%)
+  b3_c2_wagonfight:{b: 8}, // v13.63.0 | Nov 22: b+5 (every trick 95%, none 95%) | Nov 24: b+8 (every trick 80%, none 90%)
   b3_c3_camps:{b: 5}, // v13.63.0 | Nov 22: b+5 (every trick 80%, none 80%)
-  b3_c3_granary:{b: 7}, // v13.63.0 | Nov 22: b+7 (every trick 80%, none 75%)
-  b3_c6_condors:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 100%, none 85%)
-  b3_c6_raid:{b: 3}, // v13.63.0 | Nov 22: b+3 (every trick 85%, none 65%)
+  b3_c3_granary:{b: 9}, // v13.63.0 | Nov 22: b+7 (every trick 80%, none 75%) | Nov 24: b+9 (every trick 85%, none 60%)
+  b3_c6_condors:{b: 5}, // v13.63.0 | Nov 22: b+2 (every trick 100%, none 85%) | Nov 24: b+5 (every trick 85%, none 85%)
+  b3_c6_raid:{b: 5}, // v13.63.0 | Nov 22: b+3 (every trick 85%, none 65%) | Nov 24: b+5 (every trick 95%, none 75%)
   b3_c7_trenchfight:{b: 6}, // v13.63.0 | Nov 22: b+6 (every trick 75%, none 70%)
-  b3_c7_side:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 90%, none 75%)
-  b3_c7_probe:{b: 8}, // v13.63.0 | Nov 22: b+8 (every trick 90%, none 70%)
+  b3_c7_side:{b: 4}, // v13.63.0 | Nov 22: b+2 (every trick 90%, none 75%) | Nov 24: b+4 (every trick 75%, none 70%)
+  b3_c7_probe:{b: 9}, // v13.63.0 | Nov 22: b+8 (every trick 90%, none 70%) | Nov 24: b+9 (every trick 75%, none 90%)
   b3_c7_gully:{b: 8}, // v13.63.0 | Nov 22: b+8 (every trick 90%, none 75%)
-  b4_c2_hill:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 90%, none 65%)
-  b4_c3_raiders:{b: 4}, // v13.63.0 | Nov 22: b+4 (every trick 80%, none 75%)
-  b4_c5_seep:{b: 5}, // v13.63.0 | Nov 22: b+5 (every trick 90%, none 85%)
-  b4_c5_deserters:{b: 7}, // v13.63.0 | Nov 22: b+7 (every trick 70%, none 80%)
-  b4_c6_dusk:{b: 5}, // v13.63.0 | Nov 22: b+5 (every trick 70%, none 70%)
+  b4_c2_hill:{b: 3}, // v13.63.0 | Nov 22: b+2 (every trick 90%, none 65%) | Nov 24: b+3 (every trick 65%, none 70%)
+  b4_c3_raiders:{b: 5}, // v13.63.0 | Nov 22: b+4 (every trick 80%, none 75%) | Nov 24: b+5 (every trick 75%, none 80%)
+  b4_c5_seep:{b: 6}, // v13.63.0 | Nov 22: b+5 (every trick 90%, none 85%) | Nov 24: b+6 (every trick 75%, none 85%)
+  b4_c5_deserters:{b: 9}, // v13.63.0 | Nov 22: b+7 (every trick 70%, none 80%) | Nov 24: b+9 (every trick 85%, none 90%)
+  b4_c6_dusk:{b: 7}, // v13.63.0 | Nov 22: b+5 (every trick 70%, none 70%) | Nov 24: b+7 (every trick 75%, none 85%)
   b4_c6_outpost:{b: 8}, // v13.63.0 | Nov 22: b+8 (every trick 60%, none 70%)
-  b4_c7_spur:{b: 3}, // v13.63.0 | Nov 22: b+3 (every trick 80%, none 80%)
-  b6_c2_shrine:{b: 5}, // v13.63.0 | Nov 22: b+5 (every trick 80%, none 90%)
-  b6_c2_village:{b: 1}, // v13.63.0 | Nov 22: b+1 (every trick 80%, none 75%)
-  b6_c3_strays:{b: 5}, // v13.63.0 | Nov 22: b+5 (every trick 95%, none 90%)
-  b6_c4_cult:{b: 9}, // v13.63.0 | Nov 22: b+9 (every trick 90%, none 90%)
-  b6_c5_deserters:{b: 6}, // v13.63.0 | Nov 22: b+6 (every trick 70%, none 60%)
-  b6_c6_cult:{b: 8}, // v13.63.0 | Nov 22: b+8 (every trick 70%, none 90%)
-  b6_c7_jetty:{b: 3}, // v13.63.0 | Nov 22: b+3 (every trick 85%, none 90%)
-  b6_c7_guard:{b: 9}, // v13.63.0 | Nov 22: b+9 (every trick 65%, none 80%)
-  b6_c7_streets:{b: 7}, // v13.63.0 | Nov 22: b+7 (every trick 75%, none 95%)
-  b6_c5_boats:{b: 3}, // v13.63.0 | Nov 22: b+3 (every trick 100%, none 80%)
+  b4_c7_spur:{b: 4}, // v13.63.0 | Nov 22: b+3 (every trick 80%, none 80%) | Nov 24: b+4 (every trick 85%, none 90%)
+  b6_c2_shrine:{b: 7}, // v13.63.0 | Nov 22: b+5 (every trick 80%, none 90%) | Nov 24: b+7 (every trick 80%, none 85%)
+  b6_c2_village:{b: 3}, // v13.63.0 | Nov 22: b+1 (every trick 80%, none 75%) | Nov 24: b+3 (every trick 75%, none 70%)
+  b6_c3_strays:{b: 6}, // v13.63.0 | Nov 22: b+5 (every trick 95%, none 90%) | Nov 24: b+6 (every trick 80%, none 85%)
+  b6_c4_cult:{b: 13}, // v13.63.0 | Nov 22: b+9 (every trick 90%, none 90%) | Nov 24: b+13 (every trick 70%, none 85%)
+  b6_c5_deserters:{b: 7}, // v13.63.0 | Nov 22: b+6 (every trick 70%, none 60%) | Nov 24: b+7 (every trick 80%, none 60%)
+  b6_c6_cult:{b: 12}, // v13.63.0 | Nov 22: b+8 (every trick 70%, none 90%) | Nov 24: b+12 (every trick 85%, none 80%)
+  b6_c7_jetty:{b: 6}, // v13.63.0 | Nov 22: b+3 (every trick 85%, none 90%) | Nov 24: b+6 (every trick 80%, none 75%)
+  b6_c7_guard:{b: 11}, // v13.63.0 | Nov 22: b+9 (every trick 65%, none 80%) | Nov 24: b+11 (every trick 85%, none 85%)
+  b6_c7_streets:{b: 10}, // v13.63.0 | Nov 22: b+7 (every trick 75%, none 95%) | Nov 24: b+10 (every trick 85%, none 90%)
+  b6_c5_boats:{b: 7}, // v13.63.0 | Nov 22: b+3 (every trick 100%, none 80%) | Nov 24: b+7 (every trick 85%, none 85%)
   b6_c7_alley:{b: 6}, // v13.63.0 | Nov 22: b+6 (every trick 90%, none 75%)
   b7_c1_riders:{b: 3}, // v13.63.0 | Nov 22: b+3 (every trick 38%, none 65%)
-  b7_c6_stand:{b: 5}, // v13.63.0 | Nov 22: b+5 (every trick 100%, none 90%)
-  b8_c1_hunt:{b: 2}, // v13.63.0 | Nov 22: b+2 (every trick 90%, none 70%)
+  b7_c6_stand:{b: 8}, // v13.63.0 | Nov 22: b+5 (every trick 100%, none 90%) | Nov 24: b+8 (every trick 90%, none 90%)
+  b8_c1_hunt:{b: 6}, // v13.63.0 | Nov 22: b+2 (every trick 90%, none 70%) | Nov 24: b+6 (every trick 85%, none 95%)
+  knives:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 90%, none 65%)
+  guild_roofs:{b: 1}, // v13.68.0 | Nov 24: b+1 (every trick 80%, none 60%)
+  barrow_wards:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 75%, none 80%)
+  house_guards:{b: 3}, // v13.68.0 | Nov 24: b+3 (every trick 85%, none 65%)
+  b2_cistern:{b: 1}, // v13.68.0 | Nov 24: b+1 (every trick 65%, none 75%)
+  b2_spring:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 70%, none 85%)
+  b2_tithwell:{b: 1}, // v13.68.0 | Nov 24: b+1 (every trick 80%, none 80%)
+  b2_ropes:{b: 4}, // v13.68.0 | Nov 24: b+4 (every trick 75%, none 80%)
+  b2_mounds:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 80%, none 90%)
+  b2_herd:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 85%, none 90%)
+  b2_sanimon:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 60%, none 75%)
+  b2_runway:{b: 1}, // v13.68.0 | Nov 24: b+1 (every trick 70%, none 90%)
+  b3_c5_ford:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 80%, none 75%)
+  b3_c5_town:{b: 3}, // v13.68.0 | Nov 24: b+3 (every trick 85%, none 80%)
+  b4_c2_robbers:{b: 1}, // v13.68.0 | Nov 24: b+1 (every trick 80%, none 75%)
+  b5_c3_bank:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 85%, none 75%)
+  b5_c4_gully:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 85%, none 75%)
+  b5_c4_wolves:{b: 6}, // v13.68.0 | Nov 24: b+6 (every trick 80%, none 70%)
+  b5_c6_shore:{b: 8}, // v13.68.0 | Nov 24: b+8 (every trick 75%, none 65%)
+  b5_c6_hills:{b: 4}, // v13.68.0 | Nov 24: b+4 (every trick 80%, none 60%)
+  b5_c6_flight:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 80%, none 90%)
+  b5_c7_wolves:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 85%, none 95%)
+  b5_c7_barricade:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 85%, none 80%)
+  b6_c1_edge:{b: 2}, // v13.68.0 | Nov 24: b+2 (every trick 75%, none 100%)
+  b7_c1_tally:{b: 1}, // v13.68.0 | Nov 24: b+1 (every trick 85%, none 85%)
+  b7_c6_deserters:{b: 4}, // v13.68.0 | Nov 24: b+4 (every trick 85%, none 60%)
+  b9_c2_wagons:{b: 3}, // v13.68.0 | Nov 24: b+3 (every trick 75%, none 75%)
+  b9_c3_road:{b: 9}, // v13.68.0 | Nov 24: b+9 (every trick 85%, none 85%)
 };
 { const _mkFoe = mkFoe;
   mkFoe = function(k, x, y, extra){ const u = _mkFoe(k, x, y, extra);

@@ -665,3 +665,32 @@ function drawEstate(cv, kind, t){
     vign(ctx, W, H, .55);
   }
 }
+
+/* v13.68.0 (David, Nov 24, 2026: "picket line need a graphic"): Book One's picket line, where the Claw close their ledger. A row of sharpened
+   stakes between the camp and the Bridgeburners' fire, each casting two shadows: one away from the fire, as it should, and one that has no light to
+   cast it. `claw` puts the three hooded ones between the stakes; without them the row stands empty. */
+function drawPicket(cv, t, claw){
+  const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, gy = H*.6, fx = W*.93, fy = H*.57, fl = .8 + (Math.sin(t/120)*.12 + Math.sin(t/47)*.05)*mo;
+  const sky = ctx.createLinearGradient(0, 0, 0, gy); sky.addColorStop(0, '#04040a'); sky.addColorStop(.7, '#0d0b13'); sky.addColorStop(1, '#17110f'); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, gy + 1);
+  ctx.fillStyle = 'rgba(220,220,240,.5)'; for (let i=0;i<46;i++) ctx.fillRect(hash(i,21)*W, hash(i,22)*gy*.85, 1, 1);
+  for (let i=0;i<5;i++){ const x = W*(.04 + i*.075), y = gy - 1, k = .5 + hash(i,3)*.3; poly(ctx, [[x - 13*k, y],[x, y - 22*k],[x + 13*k, y]], i%2 ? '#15110d' : '#1b1611'); } // the camp behind, small and unlit
+  glow(ctx, fx, fy, W*.42, '#e8923a', .3*fl); ell(ctx, fx, fy + 2, 5*fl, 2.4, '#ffb060'); glow(ctx, fx, fy, 22, '#ffc070', .45*fl); // the Bridgeburners' fire, a long way off
+  for (let i=0;i<3;i++) drawFigure(ctx, ['wj','qb','kalam'][i], fx - 20 + i*14, fy + 5, .55, t, {still:true, dir:i ? -1 : 1, phase:i});
+  const g = ctx.createLinearGradient(0, gy, 0, H); g.addColorStop(0, '#1d1813'); g.addColorStop(1, '#0d0b09'); ctx.fillStyle = g; ctx.fillRect(0, gy, W, H - gy);
+  ctx.fillStyle = 'rgba(150,135,110,.1)'; for (let i=0;i<70;i++){ const y = gy + Math.pow(hash(i,51), 1.6)*(H - gy); ctx.fillRect(hash(i,52)*W, y, 1 + (y - gy)/(H - gy)*3, 1); } // trodden mud
+  const N = 8, pulse = .5 + .5*Math.sin(t/1300)*mo, stake = i => { const u = i/(N - 1); return {x: W*(.44 + u*.43), y: gy + H*(.08 + u*.17), k: .7 + u*.6}; };
+  for (let i=0;i<N;i++){ const s = stake(i), h = H*.2*s.k, dx = s.x - fx, dy = s.y - fy, d = Math.hypot(dx, dy) || 1, L = h*1.5;
+    ctx.lineCap = 'round'; ctx.lineWidth = 3.2*s.k; ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x + dx/d*L, s.y + Math.abs(dy/d)*L*.35 + L*.06); ctx.stroke(); // the shadow the fire gives it
+    ctx.strokeStyle = `rgba(96,78,150,${.3 + pulse*.22})`; ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x + L*.3, s.y + L*.62); ctx.stroke(); } // and the one nothing gives it, lying toward the fire
+  const fig = []; if (claw) [[1.5, 0], [3.5, 0], [5.5, 0]].forEach(([u, off], i) => { const a = stake(Math.floor(u)), b = stake(Math.ceil(u)), f = u - Math.floor(u); fig.push({y: lerp(a.y, b.y, f) - 2, draw: () => drawFigure(ctx, 'assassin', lerp(a.x, b.x, f) + off*4, lerp(a.y, b.y, f) - 2, 1.5*lerp(a.k, b.k, f), t, {still:true, dir:-1, phase:i})}); });
+  for (let i=0;i<N;i++){ const s = stake(i), h = H*.2*s.k, w = 3.4*s.k, lean = -h*.3; fig.push({y: s.y, draw: () => { // each stake leans out toward whoever is coming
+    poly(ctx, [[s.x - w, s.y],[s.x + w, s.y],[s.x + lean + w*.55, s.y - h*.8],[s.x + lean - w*.2, s.y - h],[s.x + lean - w*.75, s.y - h*.8]], '#2a1e13');
+    poly(ctx, [[s.x + w*.2, s.y],[s.x + w, s.y],[s.x + lean + w*.55, s.y - h*.8],[s.x + lean - w*.2, s.y - h]], `rgba(232,146,58,${.3*fl})`); // firelit on the far side
+    ell(ctx, s.x, s.y + 1, w*1.7, w*.55, '#0a0806'); }}); }
+  fig.sort((a, b) => a.y - b.y).forEach(f => f.draw());
+  squadLine(sceneSquad(), 1, (id, i) => drawFigure(ctx, id, W*.07 + i*Math.min(28, W*.075), H*.86 - (i%2)*3, 2, t, {phase:i, dir:1}));
+  ctx.fillStyle = 'rgba(200,190,175,.25)'; for (let i=0;i<24;i++) ctx.fillRect(hash(i,9)*W + Math.sin(t/1400 + i)*5*mo, (hash(i,10)*H + t*.02*mo) % H, 1.4, 1.4);
+  vign(ctx, W, H, .8, .5);
+}
+SCENEX.c1_picket ??= (cv, t) => drawPicket(cv, t, true);
+SCENEX.c1_picket_empty ??= (cv, t) => drawPicket(cv, t, false);

@@ -1,0 +1,32 @@
+seed 158101730
+
+Ashes of the Pale · balance · undefined · bridgeburner · smart 8, naive 0 runs a battle · PATCHED:  · 8.1 min
+
+| battle | ch | lvl | smart win% | naive win% | no-Ellis win% | median rounds | avg HP lost% (smart / no-Ellis / naive) | downs/fight (smart / naive) | fights with a down | notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b8_c1_alley | 1 | 16 | 100% (8) | — | — | 11.0 | 13% / — / — | 0.25 / — | 25% | 1.6 munitions · 0.1 salves |
+| b8_c1_den | 1 | 16 | 75% (8) | — | — | 9.0 | 43% / — / — | 1.50 / — | 50% | 2.0 munitions · 0.4 salves |
+| b8_c1_hunt | 1 | 16 | 100% (8) | — | — | 13.5 | 12% / — / — | 0.75 / — | 50% | 2.0 munitions · 0.4 salves |
+| b8_c1_chancers | 1 | 16 | 88% (8) | — | — | 8.0 | 30% / — / — | 1.13 / — | 38% | 2.0 munitions · 0.3 salves |
+| b8_c2_raid | 2 | 16 | 100% (8) | — | — | 8.5 | 21% / — / — | 0.63 / — | 25% | 1.8 munitions · 0.5 salves |
+| b8_c2_town | 2 | 16 | 100% (8) | — | — | 14.5 | 14% / — / — | 1.38 / — | 63% | 1.9 munitions · 0.6 salves · refused actions 4 · IDLE: priest idle 41% of turns |
+| b8_c2_fields | 2 | 16 | 100% (8) | — | — | 12.5 | 32% / — / — | 1.50 / — | 63% | 1.9 munitions · 0.5 salves · refused actions 2 |
+| b8_c3_road | 3 | 17 | 100% (8) | — | — | 13.0 | 26% / — / — | 0.88 / — | 63% | 2.0 munitions · 0.6 salves |
+| b8_c3_ridge | 3 | 17 | 75% (8) | — | — | 8.0 | 46% / — / — | 2.00 / — | 50% | 1.9 munitions · 0.6 salves |
+| b8_c3_sellers | 3 | 17 | 88% (8) | — | — | 9.0 | 43% / — / — | 2.13 / — | 75% | 2.0 munitions · 0.5 salves |
+| b8_c4_water | 4 | 17 | 100% (8) | — | — | 6.5 | 24% / — / — | 0.88 / — | 63% | 2.0 munitions · 0.5 salves |
+| b8_c4_drunk | 4 | 17 | 88% (8) | — | — | 10.5 | 43% / — / — | 2.13 / — | 75% | 1.9 munitions · 0.6 salves |
+| b8_c4_edge | 4 | 17 | 100% (8) | — | — | 12.5 | 37% / — / — | 2.25 / — | 88% | survive 5 · 2.0 munitions · 1.0 salves |
+| b8_c4_stores | 4 | 17 | 100% (8) | — | — | 16.0 | 33% / — / — | 0.88 / — | 63% | 2.0 munitions · 0.6 salves · IDLE: priest idle 36% of turns |
+| b8_c5_grass | 5 | 18 | 100% (8) | — | — | 7.5 | 9% / — / — | 0.13 / — | 13% | 1.9 munitions · 0.4 salves |
+| b8_c5_peddler | 5 | 18 | 100% (8) | — | — | 17.0 | 36% / — / — | 1.13 / — | 75% | 2.0 munitions · 0.6 salves |
+| b8_c5_knives | 5 | 18 | 100% (8) | — | — | 11.0 | 22% / — / — | 1.13 / — | 50% | 1.9 munitions · 0.6 salves |
+| b8_c6_masks | 6 | 19 | 100% (8) | — | — | 7.0 | 16% / — / — | 0.50 / — | 38% | 2.0 munitions · 0.3 salves |
+| b8_c6_wall | 6 | 19 | 100% (8) | — | — | 13.0 | 37% / — / — | 1.00 / — | 75% | 2.0 munitions · 0.9 salves |
+| b8_c6_street | 6 | 19 | 88% (8) | — | — | 17.0 | 48% / — / — | 3.00 / — | 100% | survive 4 · 2.0 munitions · 1.0 salves · IDLE: hound idle 100% of turns |
+| b8_c6_knives | 6 | 19 | 100% (8) | — | — | 5.0 | 8% / — / — | 0.00 / — | 0% | mortal: 0.00 dead/fight · 1.6 munitions · 0.1 salves |
+| b8_c7_looters | 7 | 19 | 88% (8) | — | — | 13.5 | 36% / — / — | 2.38 / — | 75% | 2.0 munitions · 0.5 salves |
+| b8_c7_roofs | 7 | 19 | 100% (8) | — | — | 6.0 | 15% / — / — | 0.25 / — | 25% | 1.5 munitions · 0.1 salves |
+| b8_c7_doorway | 7 | 19 | 100% (8) | — | — | 6.0 | 12% / — / — | 0.25 / — | 25% | 2.0 munitions · 0.3 salves |
+
+192 runs in 485s · raw results in /tmp/bal67_tth.json
