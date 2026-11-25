@@ -705,7 +705,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.69.2';
+const VERSION = '13.69.3';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -6348,8 +6348,7 @@ function drawCity(cv, kind, t){
     if (day) { glow(ctx, W*.12, H*.12, W*.42, '#fff2d8', .2); cloud(ctx, W*.32, H*.12, W*.36, 9, '#ece8e2', .12); cloud(ctx, W*.66, H*.42, W*.6, 8, '#6a6260', .2); } // a thin morning, and last night's smoke lying over the city
     else { // Moon's Spawn, hanging (by the morning after the Fete it has gone)
     const mx = W*.74, my = H*.2 + Math.sin(t/4000)*2; glow(ctx, mx, my, 70, dawn ? '#6a4a5a' : dusk ? '#5a2a3a' : '#2a2a3a', .5);
-    poly(ctx, [[mx-38,my+14],[mx-30,my-22],[mx-8,my-34],[mx+20,my-30],[mx+40,my-8],[mx+34,my+18],[mx+8,my+28],[mx-22,my+24]], dawn ? '#14101a' : dusk ? '#0c0810' : '#08080c');
-    ctx.fillStyle = 'rgba(0,0,0,.6)'; ell(ctx, mx-6, my+4, 30, 22, 'rgba(0,0,0,.35)'); for (let i=0;i<6;i++){ ctx.fillStyle = `rgba(200,180,120,${.15 + hash(i,9)*.2})`; ctx.fillRect(mx - 24 + hash(i,10)*44, my - 12 + hash(i,11)*28, 1.5, 1.5); } }
+    spawnPaint(ctx, mx, my - 6, 40, {under: dawn ? '#6a4a5a' : dusk ? '#5a2a3a' : '#2a2a3a', t, lights:6}); } // v13.69.3: the one rock (spawnOutline, 019h), as everywhere else; the street and roof scenes still drew their own
     // the lake, a line of it, and the far shore
     ctx.fillStyle = dawn ? '#3a3a4a' : dusk ? '#2c1e28' : day ? '#6a707e' : '#0c1018'; ctx.fillRect(0, H*.52, W, H*.1); ctx.fillStyle = dawn ? 'rgba(200,140,120,.15)' : dusk ? 'rgba(240,150,90,.2)' : day ? 'rgba(235,238,242,.22)' : 'rgba(90,140,210,.12)'; for (let i=0;i<20;i++) ctx.fillRect(hash(i,12)*W, H*.53 + hash(i,13)*H*.08, 10 + hash(i,14)*20, 1);
     // roofs, stepped, then the street or the near roof
@@ -10294,6 +10293,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.69.3', ['Book One: the streets and roofs of Darujhistan now show the same Moon\'s Spawn as everywhere else. Their backdrops still had the old plain rock.']],
   ['13.69.2', ['On a narrow phone the place name now sits under the buttons at the top, on its own line, so a long name like Darujhistan no longer breaks in the middle of the word.']],
   ['13.69.1', ['Moon\'s Spawn is the same rock everywhere now: the crown of spires and the long hanging cone from Book One\'s title, in the chapter pictures, the Fete\'s streets and garden, the night of the dragons, the visions, and over Coral in Book Three.']],
   ['13.69.0', ['The game now counts how many people play it, so we can see whether anyone is out there. It counts each time the game is opened, whether it was installed as an app, and which chapters and finales are reached. No cookies, no names, nothing about you or your saves is sent, and nothing at all when you play offline.']],
