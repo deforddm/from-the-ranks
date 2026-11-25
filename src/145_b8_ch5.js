@@ -253,6 +253,7 @@ const B8CH5 = {
       line:'A long single-edged blade with a curve in it for cutting from the saddle, the grip wrapped in rawhide gone black with hands. The plains riders carry them low along the arm so the light will not find the steel. It is heavier at the point than a Malazan blade and it wants to be swung, not thrust. It will learn.'} },
 
   scenes:{
+    b8_c5_night_quiet:{loc:'The Lamatath', sub:'The halt · the last night', cap:'The grass under the stars, the wagons drawn up dark, the fire down to embers. Nothing moves out there tonight.', amb:'explore'},
     b8_c5_night:{loc:'The Lamatath', sub:'The halt · night', cap:'The grass under the stars, the wagons drawn up dark, and far off, long lines in the grass bending westward where something is running through it.', amb:'explore'},
     b8_c5_wash:{loc:'The Lamatath', sub:'A dry wash on the road west · day', cap:'A dry wash with grey stone banks, the road dipping down into it and up, and a peddler\'s cart stopped on the stones with a mule in the shafts.', amb:'explore'},
     b8_c5_wayhouse:{loc:'The Lamatath', sub:'A burned wayhouse · the last day', cap:'Three black walls and a roof beam on a rise above the road, the grass gone copper in the last of the light, and the city\'s glow on the sky ahead.', amb:'explore'},
@@ -572,7 +573,7 @@ It runs between the stones and is gone. You set the empty jug on his cart with t
       ch:[{t:'To the fire.', go:'b8_c5_fire'}]}),
 
     /* the second night, and the last morning */
-    b8_c5_sleep2:()=>({sp:'The halt · the last night on the grass', scene:'b8_c5_night', txt:
+    b8_c5_sleep2:()=>({sp:'The halt · the last night on the grass', scene:'b8_c5_night_quiet', txt:
 `The last night on the grass. Nothing runs through it. The horses sleep. The carters sleep. Even Kettle sleeps on her watch, a little, and is ashamed of it in the morning.
 
 Before dawn there is a glow low in the west, very faint: the city's blue fire, under the edge of the sky.${S.f.b8_c5_peddler === 'let' ? `\n\nAnd in the night, a long way ahead on the road, one sound: a mule screaming, and then not.` : ''}`,

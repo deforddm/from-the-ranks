@@ -149,8 +149,10 @@ let curCh = [];
    its words would be the same) is not offered again, unless it is the only choice left. */
 const saidWords = n => (fmt(n.txt) + (n.after ? fmt(n.after) : '')).replace(/\d+/g, '#'); // a count that moved (silver, a tally) is still the same words
 function topicHeard(id, c, offers){ // offers: where this node's other choices go; a heard node whose every way out is one of those, or back here, has nothing left to give
-  if (!G.said || typeof c.go !== 'string' || c.check || c.fx || !(c.go in G.said)) return false;
-  try { const t = DLG[c.go](); if (saidWords(t) !== G.said[c.go]) return false;
+  // v13.68.2 (David, Nov 24, 2026, Mossa's tent: "This conversation keeps repeating"): a topic heard earlier in this run of the page stays dropped when the hub is reopened from the map, not only within one sitting
+  const was = typeof c.go === 'string' ? ((G.said && c.go in G.said) ? G.said[c.go] : (G.heard && c.go in G.heard) ? G.heard[c.go] : null) : null;
+  if (was == null || c.check || c.fx) return false;
+  try { const t = DLG[c.go](); if (saidWords(t) !== was) return false;
     const ways = (t.ch || []).filter(x => !x.req || x.req()); return ways.length > 0 && ways.every(x => typeof x.go === 'string' && !x.check && (x.go === id || offers.has(x.go))); } catch(e) { return false; }
 }
 function talk(id){

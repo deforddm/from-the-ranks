@@ -123,7 +123,10 @@ SCENEX.b8_lamatath = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
 
 /* the halt at night: thick stars, the wagons dark in their ring; far off the grass bending in long lines westward (left) and small dark
    running shapes at the edge of it, never near, never turned toward the wagons */
-SCENEX.b8_c5_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.52;
+/* v13.68.2 (David, Nov 24, 2026: "This picture shows the hounds running but should not"): the last night on the grass uses b8_c5_night_quiet, the same halt with nothing running through it */
+SCENEX.b8_c5_night_quiet = (cv, t) => b85Night(cv, t, false);
+SCENEX.b8_c5_night = (cv, t) => b85Night(cv, t, true);
+function b85Night(cv, t, running){ const {ctx, W, H} = sceneFit(cv), mo = REDUCE() ? 0 : 1, hz = H*.52;
   ctx.drawImage(sceneLayer('b85:night', W, H, (x, W, H) => {
     b85Sky(x, W, hz, 'night');
     for (let i = 0; i < 260; i++) { const sx = hash(i, 8520)*W, sy = Math.pow(hash(i, 8521), 1.3)*hz*.96, b = hash(i, 8522); x.fillStyle = `rgba(230,236,255,${(.25 + b*.65).toFixed(2)})`; x.fillRect(sx, sy, b > .9 ? 1.6 : 1, b > .9 ? 1.6 : 1); }
@@ -131,7 +134,7 @@ SCENEX.b8_c5_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   }), 0, 0, W, H);
   b85Grass(ctx, W, H, hz, mo ? t : 0, 'night');
   // the long lines: grass laid over flat in bands, westward, a little nearer each breath
-  for (let k = 0; k < 4; k++) { const y = hz + H*(.04 + k*.03), run = mo ? ((t/1400 + k*.27) % 1) : .25 + k*.17, x0 = W*(1 - run*1.2);
+  for (let k = 0; running && k < 4; k++) { const y = hz + H*(.04 + k*.03), run = mo ? ((t/1400 + k*.27) % 1) : .25 + k*.17, x0 = W*(1 - run*1.2);
     ctx.strokeStyle = 'rgba(150,170,200,.16)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + W*.3, y + 1); ctx.stroke();
     // the shape at the head of the line: low, long, dark, head down; far off
     const sx = x0, s = H/260*(1 + k*.12); ctx.fillStyle = '#020304'; ctx.beginPath(); ctx.ellipse(sx, y - 3*s, 9*s, 3*s, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(sx - 9*s, y - 2*s, 3.4*s, 2.4*s, .2, 0, 7); ctx.fill();
@@ -141,6 +144,49 @@ SCENEX.b8_c5_night = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE(
   b85Stems(ctx, W, H, H*.76, t, mo, 'night', 60, 8530);
   const sq = marchOrder(sceneSquad()); squadLine(sq, 1, (id, i) => drawFigure(ctx, id, W*(.2 + i*Math.min(.06, .34/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:-1}));
   vign(ctx, W, H, .7, .5); };
+
+/* v13.68.2 (David, Nov 24, 2026: "Improve the art for the mule and the cart"): the peddler's cart and its mule, side on, the mule to the right.
+   A two-wheeled cart: a far wheel in shadow, a planked bed with corner posts and a tailboard, one big spoked wheel with an iron tyre, a prop leg
+   under the tail, two shafts running forward. Loaded: stoneware jugs bedded in straw and roped down; emptied: wet straw and the stain under it.
+   The mule is the shared horse shape let down at the neck (017b), with a mule's long ears, pale muzzle and belly, a thin tufted tail and harness. */
+function b85Cart(ctx, cx, by, s, loaded){
+  const L = cx - 24*s, R = cx + 20*s, floor = by - 9*s, top = by - 16*s, wx = cx - 2*s, wy = by - 6*s, wr = 8*s;
+  ell(ctx, cx + 8*s, by + 2.4*s, 44*s, 3.6*s, 'rgba(0,0,0,.28)');
+  const wheel = (x, y, r, rim, spoke, hub) => { ctx.lineCap = 'round'; ctx.strokeStyle = spoke; ctx.lineWidth = Math.max(1, .9*s); for (let i = 0; i < 8; i++) { const a = i*Math.PI/4 + .2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a)*r*.9, y + Math.sin(a)*r*.9); ctx.stroke(); }
+    ctx.strokeStyle = rim; ctx.lineWidth = Math.max(1.5, 1.7*s); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke(); ctx.strokeStyle = 'rgba(30,26,22,.9)'; ctx.lineWidth = Math.max(.6, .5*s); ctx.beginPath(); ctx.arc(x, y, r + .8*s, 0, 7); ctx.stroke(); ell(ctx, x, y, 1.9*s, 1.9*s, hub); ell(ctx, x, y, .8*s, .8*s, '#1c140c'); };
+  wheel(wx + 3*s, wy - .6*s, wr*.94, '#2c2016', '#2c2016', '#241a10'); // the far wheel
+  if (!loaded) ell(ctx, cx - 6*s, by + 3*s, 24*s, 3.4*s, 'rgba(80,30,40,.32)'); // what was poured out, on the stones
+  ctx.strokeStyle = '#3a2a18'; ctx.lineWidth = Math.max(1, 1.2*s); ctx.beginPath(); ctx.moveTo(L + 3*s, floor + 1.5*s); ctx.lineTo(L + 1*s, by + 1.5*s); ctx.stroke(); // the prop leg under the tail
+  // the shafts, the far one first
+  ctx.lineCap = 'round'; ctx.strokeStyle = '#3a2a18'; ctx.lineWidth = Math.max(1, 1.1*s); ctx.beginPath(); ctx.moveTo(R - 2*s, floor - 1.6*s); ctx.lineTo(R + 27*s, floor - 3.4*s); ctx.stroke();
+  // the load, behind the near side-boards
+  if (loaded) { ctx.strokeStyle = 'rgba(214,186,110,.9)'; ctx.lineWidth = Math.max(.6, .5*s); for (let i = 0; i < 26; i++) { const sx = L + 2*s + hash(i, 8551)*(R - L - 4*s), sy = top - 1*s + hash(i, 8552)*4*s; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + (hash(i, 8553) - .5)*5*s, sy - 2*s - hash(i, 8554)*3*s); ctx.stroke(); }
+    for (let r = 1; r >= 0; r--) for (let i = 0; i < 7; i++) { const jx = L + 5*s + i*5.7*s + (r ? 2.6*s : 0), jy = top - 2.6*s - r*4.2*s, c = r ? '#5c3527' : '#7a4632';
+      ell(ctx, jx, jy, 2.5*s, 3.3*s, c); ell(ctx, jx - .8*s, jy - .9*s, .8*s, 1.5*s, 'rgba(255,220,190,.22)'); ctx.fillStyle = c; ctx.fillRect(jx - 1.1*s, jy - 4.6*s, 2.2*s, 1.8*s); ctx.fillStyle = '#c9a877'; ctx.fillRect(jx - .9*s, jy - 5.5*s, 1.8*s, 1.1*s); // body, shine, neck, stopper
+      ctx.strokeStyle = 'rgba(30,20,14,.5)'; ctx.lineWidth = Math.max(.5, .4*s); ctx.beginPath(); ctx.arc(jx + 1.9*s, jy - 2.4*s, 1.2*s, -1.6, 1.2); ctx.stroke(); } // the handle
+    ctx.strokeStyle = '#cbb894'; ctx.lineWidth = Math.max(.7, .55*s); [[L + 1*s, top + 1*s, cx - 4*s, top - 10.4*s, R - 1*s, top + 1*s], [L + 9*s, top + 1*s, cx + 5*s, top - 9.6*s, R - 8*s, top + 1*s]].forEach(q => { ctx.beginPath(); ctx.moveTo(q[0], q[1]); ctx.quadraticCurveTo(q[2], q[3], q[4], q[5]); ctx.stroke(); }); } // roped down
+  else { ctx.strokeStyle = 'rgba(150,128,74,.9)'; ctx.lineWidth = Math.max(.6, .5*s); for (let i = 0; i < 22; i++) { const sx = L + 2*s + hash(i, 8551)*(R - L - 4*s); ctx.beginPath(); ctx.moveTo(sx, top + 1*s); ctx.lineTo(sx + (hash(i, 8553) - .5)*5*s, top - 1*s - hash(i, 8554)*2*s); ctx.stroke(); } } // wet straw, flat
+  // the bed: three planks a side, corner posts, the tailboard, iron straps
+  { const g = ctx.createLinearGradient(0, top, 0, floor + 2*s); g.addColorStop(0, '#6e4e2e'); g.addColorStop(1, '#4a3420'); ctx.fillStyle = g; ctx.fillRect(L, top, R - L, floor - top + 2*s);
+    ctx.fillStyle = 'rgba(0,0,0,.28)'; for (let k = 1; k < 3; k++) ctx.fillRect(L, top + k*(floor - top + 2*s)/3 - .3*s, R - L, Math.max(.6, .5*s));
+    ctx.fillStyle = 'rgba(255,225,170,.14)'; ctx.fillRect(L, top, R - L, Math.max(.6, .6*s));
+    ctx.fillStyle = '#3a2a18'; [L, L + (R - L)*.5 - .8*s, R - 1.6*s].forEach(px => ctx.fillRect(px, top - 1.6*s, 1.6*s, floor - top + 3.6*s));
+    ctx.fillStyle = '#2a241e'; [L + (R - L)*.25, L + (R - L)*.75].forEach(px => ctx.fillRect(px, top + .4*s, Math.max(.6, .6*s), floor - top + 1.4*s));
+    ctx.fillStyle = '#35281a'; ctx.fillRect(L - 1*s, floor + 1.4*s, R - L + 2*s, 1.4*s); } // the bed frame
+  ctx.strokeStyle = '#4a3622'; ctx.lineWidth = Math.max(1, 1.3*s); ctx.beginPath(); ctx.moveTo(R - 2*s, floor - .4*s); ctx.lineTo(R + 28*s, floor - 2.6*s); ctx.stroke(); // the near shaft
+  wheel(wx, wy, wr, '#5c4226', '#6a4c2c', '#4a3622');
+  // the mule in the shafts, head down
+  { const mx = cx + 37*s, k = 2*s, col = '#6f5d4c'; ctx.save(); ctx.translate(mx, by + 1.6*s); ctx.scale(k, k); ctx.lineCap = 'round';
+    ctx.strokeStyle = col; ctx.lineWidth = .75; ctx.beginPath(); ctx.moveTo(7.3, -5.1); ctx.lineTo(6.1, -7.9); ctx.stroke(); ctx.beginPath(); ctx.moveTo(7.8, -5.3); ctx.lineTo(7.5, -8.3); ctx.stroke(); // the long ears
+    beastHorse(ctx, col, {down:true, tail:false, g:.15});
+    ell(ctx, 0, -4.35, 3.6, .55, 'rgba(214,198,170,.5)'); ell(ctx, 8.25, -1.25, .75, .6, '#cfc0a6'); ell(ctx, 7.55, -4.35, .22, .22, '#120e0a'); // the pale belly and muzzle, the eye
+    ctx.strokeStyle = 'rgba(40,32,26,.85)'; ctx.lineWidth = .45; ctx.beginPath(); ctx.moveTo(-.4, -8.2); ctx.quadraticCurveTo(1.2, -8.9, 2.7, -8.8); ctx.stroke(); // the dark stripe down the back
+    ctx.strokeStyle = col; ctx.lineWidth = .45; ctx.beginPath(); ctx.moveTo(-5.5, -8.2); ctx.quadraticCurveTo(-7.2, -6.6, -6.9, -3.4); ctx.stroke(); ctx.strokeStyle = '#2a2018'; ctx.lineWidth = .9; ctx.beginPath(); ctx.moveTo(-6.9, -3.6); ctx.lineTo(-6.8, -2.3); ctx.stroke(); // the thin tail and its tuft
+    ctx.strokeStyle = '#2a1c10'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(4.3, -8.6); ctx.quadraticCurveTo(5.5, -6.6, 5, -4.5); ctx.stroke(); // the collar
+    ctx.lineWidth = .5; ctx.beginPath(); ctx.moveTo(1.4, -8.6); ctx.lineTo(1.5, -4); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-5.7, -6.6); ctx.quadraticCurveTo(-2, -6, 1.4, -6.4); ctx.stroke(); // the girth and the breeching
+    ctx.fillStyle = '#7a3a2a'; ctx.fillRect(.6, -9.1, 1.7, .9); // a folded blanket under the pad
+    ctx.restore(); }
+}
 
 /* the dry wash by day: grey stone banks, the road down and up; the cart on the stones with its mule (empty once the peddler is settled,
    gone on west if he was let go), the peddler by it, the drinker sitting behind */
@@ -153,12 +199,7 @@ SCENEX.b8_c5_wash = (cv, t) => { const {ctx, W, H} = sceneFit(cv), mo = REDUCE()
     for (let i = 0; i < 60; i++) { const sx = W*(.24 + hash(i, 8543)*.52), sy = H*(.72 + hash(i, 8544)*.26); ell(x, sx, sy, 2 + hash(i, 8545)*5, 1 + hash(i, 8545)*2, i % 3 ? 'rgba(80,76,68,.35)' : 'rgba(220,214,200,.4)'); }
     for (let i = 0; i < 14; i++) { const sx = hash(i, 8546)*W, sy = H*(.6 + hash(i, 8547)*.3); if (sx > W*.3 && sx < W*.7) continue; ell(x, sx, sy, 6 + hash(i, 8548)*10, 3 + hash(i, 8548)*4, 'rgba(60,58,52,.35)'); } // boulders on the banks
   }), 0, 0, W, H);
-  if (pd !== 'let') { const cx = W*.38, by = H*.84, s = H/150; ell(ctx, cx, by + 2*s, 30*s, 4*s, 'rgba(0,0,0,.3)'); // the cart
-    ctx.fillStyle = '#4a3420'; ctx.fillRect(cx - 24*s, by - 14*s, 44*s, 8*s); [[-14], [12]].forEach(([d]) => { ctx.strokeStyle = '#2a1c10'; ctx.lineWidth = 2*s; ctx.beginPath(); ctx.arc(cx + d*s, by - 4*s, 6*s, 0, 7); ctx.stroke(); });
-    if (!pd) for (let r = 0; r < 2; r++) for (let i = 0; i < 8; i++) { const jx = cx - 20*s + i*5.4*s, jy = by - 17*s - r*6*s; ell(ctx, jx, jy, 2.4*s, 3*s, r ? '#5a3226' : '#6a3a2a'); ctx.fillStyle = '#a07a50'; ctx.fillRect(jx - .8*s, jy - 4.4*s, 1.6*s, 1.2*s); }
-    else { ctx.fillStyle = '#7a6a48'; ctx.fillRect(cx - 22*s, by - 16*s, 40*s, 2*s); ell(ctx, cx - 6*s, by + 4*s, 26*s, 4*s, 'rgba(80,30,40,.3)'); } // wet straw; the stain on the stones
-    // the mule in the shafts, head down
-    { const mx = cx + 34*s, my = by - 6*s; ctx.fillStyle = '#5a4a3e'; ctx.beginPath(); ctx.ellipse(mx, my, 10*s, 5*s, 0, 0, 7); ctx.fill(); ctx.fillRect(mx - 7*s, my, 2*s, 9*s); ctx.fillRect(mx + 5*s, my, 2*s, 9*s); ctx.beginPath(); ctx.ellipse(mx + 12*s, my + 3*s, 3*s, 2.4*s, .6, 0, 7); ctx.fill(); ctx.fillRect(mx + 11*s, my - 3*s, 1*s, 3*s); }
+  if (pd !== 'let') { const cx = W*.38, by = H*.84, s = H/150; b85Cart(ctx, cx, by, s, !pd);
     if (!pd) { drawFigure(ctx, 'b8_c5_peddler', W*.2, H*.92, 1.5, t, {dir:1, still:true}); drawFigure(ctx, 'b4_c2_pilgrim', W*.1, H*.86, 1.2, t, {dir:1, phase:1}); } }
   else { ctx.strokeStyle = 'rgba(90,70,44,.5)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W*.36, H*.96); ctx.quadraticCurveTo(W*.3, H*.72, W*.12, H*.6); ctx.stroke(); } // the cart's ruts, going on west
   const sq = marchOrder(sceneSquad()); squadLine(sq, -1, (id, i) => drawFigure(ctx, id, W*(.72 + i*Math.min(.05, .26/sq.length)), H*.97 - (i % 2)*2, 1.7, t, {phase:i, dir:-1}));
