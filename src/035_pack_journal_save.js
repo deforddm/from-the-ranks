@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.69.0', ['The game now counts how many people play it, so we can see whether anyone is out there. It counts each time the game is opened, whether it was installed as an app, and which chapters and finales are reached. No cookies, no names, nothing about you or your saves is sent, and nothing at all when you play offline.']],
   ['13.68.3', ['A question you have already asked now stays off the list even after you close the game and come back. It is kept in your save for the chapter you are in. Old saves are fine; anything asked before this version may be offered once more.']],
   ['13.68.2', ['Book Eight: the last night on the grass no longer shows shapes running through it. The picture is the quiet halt the words describe.', 'Book Eight: the peddler\'s cart and mule in the dry wash are redrawn.', 'Every book: a question you have already asked and heard stays off the list when you walk back to the same person, instead of coming back each visit.']],
   ['13.68.1', ['The Stake Line now shows on the battle map: the stakes and their cord stand where they were set, for the rest of the fight. Before, only the word "stakes" floated up once.']],

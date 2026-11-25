@@ -127,7 +127,7 @@ function startChapter(n){
   S.chapter = n; S.card = null; S.cardPool = null; refillTricks(); S.wounds = null; S.injury = null; S.gods = {ch:n, used:[]}; S.boons = null; S.rolled = null; S.heardT = null; S.scene = 'chintro'; S.node = null; S.bg = null; S.battle = null; S.bopt = null;
   if (n >= 1) { const c = JSON.parse(JSON.stringify(S)); delete c.chsnap; c.log = []; S.chsnap ??= {}; S.chsnap[n] = c; } // replays start from here
   S.area = CH.area.id; S.pos = {...CH.area.start}; S.trail = [[-1,0],[1,0],[-1,1],[0,1],[1,1],[0,-1]].map(([dx,dy]) => ({x:S.pos.x+dx, y:S.pos.y+dy})); S.log = [];
-  save(); showChapterIntro();
+  save(); ftrCount('/book/' + countBook() + '/ch' + n, 'Book ' + countBook() + ', chapter ' + n, true); showChapterIntro(); // v13.69.0 (011b)
 }
 function showChapterIntro(){
   const CH = CHAPTERS[S.chapter]; if (!CH) return showTitle();
@@ -167,6 +167,7 @@ function finPages(){
 }
 function showFinale(i = 0){
   const P = finPages(); i = clamp(i|0, 0, P.length - 1); const pg = P[i], key = finKey(), F = (CHAPTERS[7] && CHAPTERS[7].finale) || {};
+  if (i === 0 && S.scene !== 'finale') ftrCount('/book/' + countBook() + '/finale', 'Book ' + countBook() + ', finale reached', true); // v13.69.0 (011b)
   S.scene = 'finale'; S.finPage = i; S.node = null; save();
   view = 'finale'; $('#sheet').hidden = true; B = null; titleAnim = null; finAnim = null; AUDIO.setScene('end');
   const E7 = (CHEND[7] || {})[key] || ['The road', ''], L = finL();

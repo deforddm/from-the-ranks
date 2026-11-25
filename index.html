@@ -704,7 +704,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.68.3';
+const VERSION = '13.69.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -742,6 +742,48 @@ const fullBtn = id => fullOK() ? `<button class="btn icon" id="${id}" data-full 
 function toTop(){ const go = () => { try { window.scrollTo(0, 0); } catch(e) {} if (document.scrollingElement) document.scrollingElement.scrollTop = 0; }; go(); requestAnimationFrame(go); }
 /* a squadmate who is in the squad but not here (Book Two: Tangle in the ramp's bank with Mincer's sappers): not on the map, not in the roll, not heard */
 const AWAY = []; const mateAway = k => AWAY.some(f => { try { return f(k); } catch(e) { return false; } });
+
+/* v13.69.0: counting players (David, Tue Nov 24, 2026, 11:23 PM PST: "is our counter working to show installs etc"; 11:26 PM: "yes let's do both").
+   Two counters. Neither sets a cookie or keeps anything about the player; both run only at the game's real addresses, never in a
+   test browser (navigator.webdriver), and send nothing offline.
+   - Cloudflare Web Analytics (playfromtheranks.com only): the beacon is loaded by the page itself. The zone's automatic setup never
+     reached the game, because a launch is answered from the service worker's cache and Cloudflare's edge never sees the page.
+   - GoatCounter (fromtheranks.goatcounter.com): a hit for each launch, split by how the game was opened (/launch/app for the
+     installed app, /launch/browser for a tab); an event when it is installed (/installed: Chrome's appinstalled, or the first launch
+     as an app on a device, which is how an iPhone's Add to Home Screen shows); an event for each chapter started
+     (/book/<key>/ch<n>) and each finale reached (/book/<key>/finale). The old github.io address counts under /old/....
+   One device stops counting when the game is opened once with ?nocount=1 (David's own plays); ?nocount=0 turns it back on. */
+const COUNT = { gc:'https://fromtheranks.goatcounter.com/count', cf:'f8ac4028f56848d8b7bb6f47d2d3099a', off:'from-the-ranks-nocount', app:'from-the-ranks-counted-app' };
+const countHost = (() => { try { return location.hostname.replace(/^www\./, ''); } catch(e) { return ''; } })();
+const countOn = (() => { try {
+  const q = /[?&]nocount=([01])\b/.exec(location.search);
+  if (q) { if (q[1] === '1') localStorage.setItem(COUNT.off, '1'); else localStorage.removeItem(COUNT.off); }
+  if (localStorage.getItem(COUNT.off) === '1' || navigator.webdriver) return false;
+  return countHost === 'playfromtheranks.com' || countHost === 'deforddm.github.io';
+} catch(e) { return false; } })();
+function ftrCount(path, title, ev){
+  if (!countOn) return;
+  try {
+    const p = (countHost === 'deforddm.github.io' ? '/old' : '') + path;
+    const u = COUNT.gc + '?p=' + encodeURIComponent(p) + '&t=' + encodeURIComponent(title || path) + (ev ? '&e=true' : '')
+      + '&s=' + encodeURIComponent((screen.width || 0) + ',' + (screen.height || 0) + ',' + (window.devicePixelRatio || 1)) + '&rnd=' + Date.now().toString(36);
+    if (navigator.sendBeacon && navigator.sendBeacon(u)) return;
+    fetch(u, {mode:'no-cors', keepalive:true, credentials:'omit'}).catch(() => {});
+  } catch(e) {}
+}
+const countAsApp = () => { try { return window.matchMedia('(display-mode: standalone), (display-mode: window-controls-overlay), (display-mode: minimal-ui)').matches || navigator.standalone === true; } catch(e) { return false; } };
+const countInstalled = how => { try { if (localStorage.getItem(COUNT.app)) return; localStorage.setItem(COUNT.app, how); } catch(e) {} ftrCount('/installed', 'Installed (' + how + ')', true); };
+if (countOn) {
+  window.addEventListener('load', () => {
+    if (countHost === 'playfromtheranks.com') { try { const s = document.createElement('script'); s.defer = true; s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+      s.setAttribute('data-cf-beacon', JSON.stringify({token: COUNT.cf})); document.head.appendChild(s); } catch(e) {} }
+    const app = countAsApp();
+    ftrCount(app ? '/launch/app' : '/launch/browser', app ? 'Launch: installed app' : 'Launch: browser');
+    if (app) countInstalled('first launch as an app');
+  });
+  window.addEventListener('appinstalled', () => countInstalled('install prompt'));
+}
+const countBook = () => { try { return (S && S.book) || 'gotm'; } catch(e) { return 'gotm'; } };
 
 /* ============ settings ============ */
 /* From the Ranks keeps its own saved data ('from-the-ranks-*'). The two games share this site, so on the first run on a device every
@@ -10236,6 +10278,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.69.0', ['The game now counts how many people play it, so we can see whether anyone is out there. It counts each time the game is opened, whether it was installed as an app, and which chapters and finales are reached. No cookies, no names, nothing about you or your saves is sent, and nothing at all when you play offline.']],
   ['13.68.3', ['A question you have already asked now stays off the list even after you close the game and come back. It is kept in your save for the chapter you are in. Old saves are fine; anything asked before this version may be offered once more.']],
   ['13.68.2', ['Book Eight: the last night on the grass no longer shows shapes running through it. The picture is the quiet halt the words describe.', 'Book Eight: the peddler\'s cart and mule in the dry wash are redrawn.', 'Every book: a question you have already asked and heard stays off the list when you walk back to the same person, instead of coming back each visit.']],
   ['13.68.1', ['The Stake Line now shows on the battle map: the stakes and their cord stand where they were set, for the rest of the fight. Before, only the word "stakes" floated up once.']],
@@ -12003,7 +12046,7 @@ function startChapter(n){
   S.chapter = n; S.card = null; S.cardPool = null; refillTricks(); S.wounds = null; S.injury = null; S.gods = {ch:n, used:[]}; S.boons = null; S.rolled = null; S.heardT = null; S.scene = 'chintro'; S.node = null; S.bg = null; S.battle = null; S.bopt = null;
   if (n >= 1) { const c = JSON.parse(JSON.stringify(S)); delete c.chsnap; c.log = []; S.chsnap ??= {}; S.chsnap[n] = c; } // replays start from here
   S.area = CH.area.id; S.pos = {...CH.area.start}; S.trail = [[-1,0],[1,0],[-1,1],[0,1],[1,1],[0,-1]].map(([dx,dy]) => ({x:S.pos.x+dx, y:S.pos.y+dy})); S.log = [];
-  save(); showChapterIntro();
+  save(); ftrCount('/book/' + countBook() + '/ch' + n, 'Book ' + countBook() + ', chapter ' + n, true); showChapterIntro(); // v13.69.0 (011b)
 }
 function showChapterIntro(){
   const CH = CHAPTERS[S.chapter]; if (!CH) return showTitle();
@@ -12043,6 +12086,7 @@ function finPages(){
 }
 function showFinale(i = 0){
   const P = finPages(); i = clamp(i|0, 0, P.length - 1); const pg = P[i], key = finKey(), F = (CHAPTERS[7] && CHAPTERS[7].finale) || {};
+  if (i === 0 && S.scene !== 'finale') ftrCount('/book/' + countBook() + '/finale', 'Book ' + countBook() + ', finale reached', true); // v13.69.0 (011b)
   S.scene = 'finale'; S.finPage = i; S.node = null; save();
   view = 'finale'; $('#sheet').hidden = true; B = null; titleAnim = null; finAnim = null; AUDIO.setScene('end');
   const E7 = (CHEND[7] || {})[key] || ['The road', ''], L = finL();
