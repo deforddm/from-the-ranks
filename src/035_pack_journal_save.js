@@ -196,6 +196,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.70.0', ['Pictures: Book One\'s chapter-end and road pictures are repainted. The horses, mules, wagons and people are proper shapes now, and the cart ruts stop at the hilltop instead of running into the sky. The far marchers, wagons and riders in every book\'s chapter pictures are redrawn the same way.']],
   ['13.69.3', ['Book One: the streets and roofs of Darujhistan now show the same Moon\'s Spawn as everywhere else. Their backdrops still had the old plain rock.']],
   ['13.69.2', ['On a narrow phone the place name now sits under the buttons at the top, on its own line, so a long name like Darujhistan no longer breaks in the middle of the word.']],
   ['13.69.1', ['Moon\'s Spawn is the same rock everywhere now: the crown of spires and the long hanging cone from Book One\'s title, in the chapter pictures, the Fete\'s streets and garden, the night of the dragons, the visions, and over Coral in Book Three.']],

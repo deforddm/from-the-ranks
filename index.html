@@ -705,7 +705,7 @@ body.vision #sheet .choice{border-left-color:rgba(154,134,224,.6)}
 <div class="flash" id="flash"></div>
 <div class="red" id="red"></div>
 <script>
-const VERSION = '13.69.3';
+const VERSION = '13.70.0';
 
 /* ============ utilities ============ */
 const $ = s => document.querySelector(s);
@@ -5361,6 +5361,356 @@ const PK = {
     for (const [x, y, k] of [[420, 236, .7], [500, 232, .6], [120, 244, .9]]) s += `<g transform="translate(${x} ${y}) scale(${k})" fill="#0e0a08"><path d="M-22 0 L-22 -34 Q0 -56 22 -34 L22 0 Z"/><rect x="-6" y="-18" width="12" height="18" fill="#1e140c"/></g>`;
     for (let r = 0; r < 3; r++) for (let i = 0; i < 8 + r * 2; i++) s += PK.fire(P, 30 + (i + .5) * (600 / (8 + r * 2)), 262 + r * 30, .4 + r * .25, '#ff8a3a', i + r * 20);
     s += PK.back(560, 404, .5, M({flip: true, rim: '#ffa070', kit: 'spear'}));
+    return s; });
+}
+
+/* ============ silhouettes (v13.70.0, David, Nov 25, 2026: "make this much better, the animals the people the weird lines going into the sky.
+   also improve other paintings with similar issues. they become super obvious on a PC monitor") ============
+   One set of far figures for every painted picture: a person walking or standing, a horse or a mule (ridden or not), a covered wagon with
+   its team, a quorl with its rider. They replace the old block figures (a bar with a ball on top, an oval on four sticks, a box on two discs).
+   Each returns SVG drawn at (x, y) = the feet or the wheels on the ground, h = the figure's height in the picture's units, dir 1 faces right.
+   Shapes are in units of 100 = a man's height (a horse's withers stand at 92) and scaled by the group's transform. Seeds vary the stride,
+   the lean and the kit, so no two in a line are the same. TK.walker, PK.wagon and PK.rider (019f, 019h) are rebuilt on these at the end of
+   the file, so every chapter plate takes them too. */
+const SIL = {
+  f: n => Math.round(n * 10) / 10,
+  pts: a => a.map(p => `${SIL.f(p[0])} ${SIL.f(p[1])}`).join(' L'),
+  g(x, y, k, dir, fill, body, op){ const f = SIL.f; return `<g transform="translate(${f(x)} ${f(y)}) scale(${f(dir * k * 1000) / 1000} ${f(k * 1000) / 1000})" fill="${fill}" stroke="${fill}"${op != null ? ` opacity="${op}"` : ''}>${body}</g>`; },
+  limb(a, b, c, w0, w1){ const f = SIL.f; return `<path d="M${f(a[0])} ${f(a[1])} Q${f(b[0])} ${f(b[1])} ${f(c[0])} ${f(c[1])}" fill="none" stroke-width="${f((w0 + w1) / 2)}" stroke-linecap="round"/>`; },
+
+  /* a person. o: seed, walk (0 standing, 1 striding), kit 'spear'|'staff'|'bow'|'none', pack, cloak, head 'helm'|'hood'|'bare'|'wrap', lean */
+  man(x, y, h, dir = 1, fill = '#14100c', o = {}){
+    const f = SIL.f, sd = o.seed || 0, r = (k) => hash(sd, 700 + k), walk = o.walk == null ? 1 : o.walk, ph = o.phase != null ? o.phase : (r(1) * 2 - 1),
+      s = walk * ph, lean = (o.lean != null ? o.lean : 1 + r(2) * 3) * walk, kit = o.kit || (r(3) < .4 ? 'spear' : 'none'), pack = o.pack != null ? o.pack : r(4) < .7,
+      cloak = o.cloak != null ? o.cloak : r(5) < .5, head = o.head || (['helm', 'helm', 'hood', 'bare', 'wrap'][Math.floor(r(6) * 5)]), wide = .9 + r(7) * .22;
+    const L = lean, sh = -80, hip = -48;
+    let b = '';
+    // legs: the front one reaching with the stride, the back one pushing off, heel up
+    const fk = [3 + 7 * s + L * .3, -24], ff = [6 + 12 * s, -1.5], bk = [-2 - 6 * s + L * .3, -24], bf = [-4 - 12 * s, s > .2 ? -4 : -1.5];
+    b += SIL.taper([[-1 + L * .5, hip], bk, bf], [9.5 * wide, 6.5, 5.5]) + SIL.taper([[2 + L * .5, hip], fk, ff], [9.5 * wide, 6.5, 5.5]);
+    b += `<path d="M${f(bf[0] - 2)} ${f(bf[1] + 1.5)} L${f(bf[0] + 7)} ${f(bf[1] + 1.5)} L${f(bf[0] + 6)} ${f(bf[1] - 3)} Z M${f(ff[0] - 3)} 0 L${f(ff[0] + 7)} 0 L${f(ff[0] + 5)} -4.5 L${f(ff[0] - 2)} -4.5 Z"/>`;
+    // the body: shoulders, chest, the coat's skirt or the cloak falling behind
+    const S0 = -10 * wide + L, S1 = 10 * wide + L, W0 = -7 * wide + L * .6, W1 = 7 * wide + L * .6;
+    b += `<path d="M${f(S0)} ${f(sh + 3)} Q${f(S0 + 1)} ${f(sh - 2)} ${f(L)} ${f(sh - 2)} Q${f(S1 - 1)} ${f(sh - 2)} ${f(S1)} ${f(sh + 3)} Q${f(S1)} ${f(-64)} ${f(W1)} ${f(hip + 2)} L${f(W1 + 2.5)} ${f(hip + 10)} L${f(W0 - 2.5)} ${f(hip + 10)} L${f(W0)} ${f(hip + 2)} Q${f(S0)} ${f(-64)} ${f(S0)} ${f(sh + 3)} Z" stroke="none"/>`;
+    if (cloak) b += `<path d="M${f(S0 + 1)} ${f(sh)} Q${f(S0 - 7 - 4 * walk)} ${f(sh + 30)} ${f(S0 - 6 - 7 * walk)} ${f(-26)} L${f(S0 - 1)} ${f(-30)} L${f(W1)} ${f(-36)} L${f(W1)} ${f(hip)} Z" stroke="none"/>`;
+    // arms: swinging against the stride, or the front hand on a spear or staff
+    const held = kit === 'spear' || kit === 'staff', hand = held ? [S1 + 4, -58] : [S1 + 2 + 7 * s, -50 + Math.abs(s) * 3];
+    b += SIL.taper([[S0 + 3, sh + 2], [S0 - 2 - 4 * s, -64], [S0 - 1 - 8 * s, -48]], [7 * wide, 5.5, 4.5]);
+    b += SIL.taper([[S1 - 3, sh + 2], [S1 + 3, -66], hand], [7 * wide, 5.5, 4.5]);
+    if (held) { const top = [hand[0] - 6 + L * .5, kit === 'spear' ? -132 : -118], foot = [hand[0] + 5, 0];
+      b += `<path d="M${f(foot[0])} ${f(foot[1])} L${f(top[0])} ${f(top[1])}" fill="none" stroke-width="2.6"/>`;
+      if (kit === 'spear') { const dx = (top[0] - foot[0]) / 132, dy = -1; b += `<path d="M${f(top[0] - 3)} ${f(top[1] + 2)} L${f(top[0] + dx * 14)} ${f(top[1] + dy * 14)} L${f(top[0] + 3)} ${f(top[1] + 2)} Z" stroke="none"/>`; } }
+    if (kit === 'bow') b += `<path d="M${f(S0 + 4)} ${f(sh - 6)} Q${f(S0 - 10)} ${f(sh + 20)} ${f(S0 + 2)} ${f(hip + 10)}" fill="none" stroke-width="2.4"/>`;
+    if (pack) b += `<rect x="${f(S0 - 9)}" y="${f(sh + 1)}" width="12" height="22" rx="3" stroke="none"/><rect x="${f(S0 - 10)}" y="${f(sh - 4)}" width="16" height="6.5" rx="3.2" stroke="none"/>`;
+    // the neck and head
+    const hx = L + 1.5, hy = -91;
+    b += `<rect x="${f(hx - 3.6)}" y="${f(sh - 6)}" width="7" height="8" stroke="none"/><ellipse cx="${f(hx + 1)}" cy="${f(hy)}" rx="6.8" ry="7.8" stroke="none"/><path d="M${f(hx + 6)} ${f(hy + 1)} L${f(hx + 9)} ${f(hy + 4)} L${f(hx + 5.5)} ${f(hy + 5)} Z" stroke="none"/>`;
+    if (head === 'helm') b += `<path d="M${f(hx - 8.5)} ${f(hy - 1)} Q${f(hx - 8)} ${f(hy - 13)} ${f(hx + 1)} ${f(hy - 13.5)} Q${f(hx + 10)} ${f(hy - 13)} ${f(hx + 10.5)} ${f(hy - 1)} Z M${f(hx - 10)} ${f(hy - 2.5)} L${f(hx + 12)} ${f(hy - 2.5)} L${f(hx + 12)} ${f(hy)} L${f(hx - 10)} ${f(hy)} Z" stroke="none"/>`;
+    if (head === 'hood') b += `<path d="M${f(hx - 9)} ${f(hy + 8)} Q${f(hx - 12)} ${f(hy - 12)} ${f(hx - 1)} ${f(hy - 14)} Q${f(hx + 9)} ${f(hy - 12)} ${f(hx + 8)} ${f(hy - 3)} L${f(hx + 3)} ${f(hy + 2)} Z" stroke="none"/>`;
+    if (head === 'wrap') b += `<path d="M${f(hx - 8)} ${f(hy - 1)} Q${f(hx - 7)} ${f(hy - 14)} ${f(hx + 2)} ${f(hy - 13)} Q${f(hx + 10)} ${f(hy - 11)} ${f(hx + 8)} ${f(hy - 2)} Z M${f(hx - 7)} ${f(hy - 2)} Q${f(hx - 15)} ${f(hy + 4)} ${f(hx - 13)} ${f(hy + 14)} L${f(hx - 9)} ${f(hy + 12)} Z" stroke="none"/>`;
+    return SIL.g(x, y, h / 100, dir, fill, b, o.op);
+  },
+
+  /* a tapered limb: a polyline with a width at each point, closed into one shape (joints read, unlike a round-capped stroke) */
+  taper(pts, ws){ const f = SIL.f, L = [], R = [];
+    for (let i = 0; i < pts.length; i++) { const a = pts[Math.max(0, i - 1)], c = pts[Math.min(pts.length - 1, i + 1)], dx = c[0] - a[0], dy = c[1] - a[1], d = Math.hypot(dx, dy) || 1, nx = -dy / d, ny = dx / d, w = ws[i] / 2;
+      L.push([pts[i][0] + nx * w, pts[i][1] + ny * w]); R.push([pts[i][0] - nx * w, pts[i][1] - ny * w]); }
+    return `<path d="M${SIL.pts(L)} L${SIL.pts(R.reverse())} Z" stroke="none"/>`; },
+
+  /* a horse or a mule, side on, facing right, withers 100 high. o: seed, mule, walk, phase, rider (true, or a fill), lance, pennon, head 'up'|'down'|'graze', pack */
+  horse(x, y, h, dir = 1, fill = '#14100c', o = {}){
+    const f = SIL.f, sd = o.seed || 0, r = (k) => hash(sd, 740 + k), mule = !!o.mule, walk = o.walk == null ? 1 : o.walk, ph = o.phase != null ? o.phase : r(1) * 2 - 1, s = walk * ph;
+    let b = '';
+    const hoof = (x0) => `<path d="M${f(x0 - 4.5)} 0 L${f(x0 + 5)} 0 L${f(x0 + 3.5)} -5 L${f(x0 - 3.5)} -5 Z" stroke="none"/>`, lw = mule ? .82 : 1;
+    // forelegs: elbow, knee, fetlock; the far one swung the other way
+    const fore = (dx, sw) => { const kx = 50 + dx + sw * 8, fx = 52 + dx + sw * 16; return SIL.taper([[46 + dx, -60], [kx - 1, -30], [fx - 2, -9], [fx, -3]], [15 * lw, 8.5 * lw, 6 * lw, 6.5 * lw]) + hoof(fx + 1); };
+    // hind legs: the gaskin running back to the hock, the cannon straight down
+    const hind = (dx, sw) => { const hx = -44 + dx - sw * 4, fx = -38 + dx - sw * 14; return SIL.taper([[-32 + dx, -66], [-38 + dx - sw * 2, -48], [hx, -32], [fx - 1, -9], [fx, -3]], [20 * lw, 12 * lw, 8 * lw, 6 * lw, 6.5 * lw]) + hoof(fx + 1); };
+    b += fore(-6, -s) + hind(6, -s) + fore(0, s) + hind(0, s);
+    // the body: chest, belly, quarters, the back with its dip, the croup
+    b += `<path d="M62 -74 Q66 -60 54 -56 Q30 -50 0 -52 Q-26 -50 -40 -58 Q-58 -64 -60 -82 Q-60 -96 -48 -100 Q-28 -104 -6 -96 Q14 -94 34 -102 Q52 -98 62 -74 Z" stroke="none"/>`;
+    // the neck and head, drawn raised and turned down about the withers for a mule in the shafts or a horse grazing
+    const ang = o.head === 'down' ? 28 : o.head === 'graze' ? 62 : 0, el = mule ? 20 : 10;
+    let nh = `<path d="M30 -100 Q40 -128 60 -142 Q70 -146 74 -140 Q86 -128 98 -110 Q102 -104 98 -100 Q92 -98 84 -104 Q76 -110 72 -112 Q66 -96 62 -74 Z" stroke="none"/>`;
+    nh += `<path d="M62 -140 L${f(56 - (mule ? 4 : 0))} ${f(-140 - el)} L67 -142 Z M67 -141 L${f(66 + (mule ? 2 : 0))} ${f(-142 - el)} L71 -139 Z" stroke="none"/>`;
+    if (!mule) nh += `<path d="M30 -100 Q40 -130 62 -144 L60 -134 Q46 -122 38 -100 Z" stroke="none"/>`;
+    else nh += `<path d="M34 -102 Q44 -126 60 -140" fill="none" stroke-width="3"/>`;
+    b += ang ? `<g transform="rotate(${ang} 40 -92)">${nh}</g>` : nh;
+    // the tail: a horse's full tail, or a mule's rope with a tuft
+    b += mule ? `<path d="M-58 -90 Q-66 -72 -64 -46" fill="none" stroke-width="2.6"/><path d="M-67 -50 Q-64 -34 -60 -48 Z" stroke-width="3"/>`
+      : `<path d="M-56 -94 Q-74 -88 -74 -60 Q-74 -40 -66 -28 Q-64 -48 -62 -64 Q-60 -82 -52 -90 Z" stroke="none"/>`;
+    // a pack load, or the rider
+    if (o.pack) b += `<path d="M-34 -98 Q-36 -124 -10 -126 Q14 -126 18 -98 Z" stroke="none"/><path d="M-38 -104 L-38 -78 L-22 -78 L-22 -104 Z M6 -102 L6 -78 L22 -78 L22 -102 Z" stroke="none"/>`;
+    if (o.rider) { const rf = typeof o.rider === 'string' ? ` fill="${o.rider}" stroke="${o.rider}"` : '';
+      b += `<g${rf}><path d="M-12 -98 Q-14 -130 -6 -146 L8 -146 Q14 -126 12 -98 Z" stroke="none"/>${SIL.taper([[2, -102], [14, -86], [12, -64], [16, -60]], [12, 9, 7, 6])}${SIL.taper([[6, -140], [18, -124], [30, -114]], [8, 6.5, 5])}`
+        + `<rect x="-3" y="-154" width="7" height="9" stroke="none"/><ellipse cx="1" cy="-160" rx="7" ry="8" stroke="none"/><path d="M-8 -161 Q-8 -173 1 -173 Q10 -173 11 -161 Z M-9 -163 L13 -163 L13 -160 L-9 -160 Z" stroke="none"/>`
+        + (o.cloak !== false ? `<path d="M-8 -144 Q-22 -124 -28 -98 L-12 -100 Z" stroke="none"/>` : '')
+        + (o.lance ? `<path d="M26 -100 L44 -236" fill="none" stroke-width="2.6"/><path d="M42 -230 L47 -256 L48 -228 Z" stroke="none"/>${o.pennon ? `<path d="M45 -240 L64 -234 L44 -228 Z" fill="${o.pennon}" stroke="none"/>` : ''}` : '') + `</g>`; }
+    return SIL.g(x, y, h / 100, dir, fill, b, o.op);
+  },
+
+  /* a wagon with its team, facing right: w = the bed's length. o: hood (true, or a colour for the canvas), team 'mule'|'horse'|'none', n (1 or 2 in the traces), driver, load, seed */
+  wagon(x, y, w, dir = 1, fill = '#14100c', o = {}){
+    const f = SIL.f, k = w / 100, sd = o.seed || 0, r = (j) => hash(sd, 780 + j);
+    let b = '';
+    // the team first, ahead of the wagon, then the tongue joining them
+    const team = o.team == null ? 'mule' : o.team, nt = o.n || 2;
+    if (team !== 'none') for (let i = nt - 1; i >= 0; i--) b += SIL.horse(98 + i * 5, i ? -1.5 : 0, 50, 1, fill, {mule: team === 'mule', seed: sd * 3 + i, phase: i ? -.6 : .5, head: o.down ? 'down' : 'up'});
+    if (team !== 'none') b += `<path d="M46 -20 L94 -30" fill="none" stroke-width="2.6"/><path d="M50 -36 Q72 -44 96 -40" fill="none" stroke-width="1.4"/>`;
+    // the bed: planked sides, a raised end, the axles
+    b += `<path d="M-52 -20 L-54 -46 L46 -46 L50 -20 Z" stroke="none"/><path d="M-56 -48 L48 -48 L48 -44 L-56 -44 Z" stroke="none"/>`;
+    // the wheels: a big one behind, a smaller one forward; rims, spokes, hubs
+    const wheel = (cx, cy, rr, n) => { let s = `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(rr - 1.6)}" fill="none" stroke-width="3.2"/><circle cx="${f(cx)}" cy="${f(cy)}" r="${f(rr * .2)}" stroke="none"/>`;
+      for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2 + r(i) * .2; s += `<path d="M${f(cx)} ${f(cy)} L${f(cx + Math.cos(a) * rr * .9)} ${f(cy + Math.sin(a) * rr * .9)}" stroke-width="1.6"/>`; } return s; };
+    b += wheel(-30, -17, 17, 12) + wheel(30, -14, 14, 10);
+    // the tilt: canvas over hoops, the hoops showing as ribs, or a load roped down
+    if (o.hood !== false) { const hc = typeof o.hood === 'string' ? o.hood : fill;
+      b += `<path d="M-54 -46 L-56 -70 Q-50 -98 -2 -100 Q46 -98 50 -72 L48 -46 Z" fill="${hc}" stroke="none"/>`;
+      if (typeof o.hood === 'string') b += `<path d="M-30 -48 Q-34 -76 -30 -98 M-4 -48 L-4 -100 M22 -48 Q26 -76 24 -98" fill="none" stroke="${fill}" stroke-width="1.6" opacity=".5"/><path d="M-56 -70 Q-50 -98 -2 -100 Q46 -98 50 -72" fill="none" stroke="${fill}" stroke-width="2" opacity=".6"/>`; }
+    else if (o.load) b += `<path d="M-48 -46 Q-46 -66 -20 -68 Q10 -72 36 -64 Q44 -58 44 -46 Z" fill="${typeof o.load === 'string' ? o.load : fill}" stroke="none"/><path d="M-40 -46 Q-10 -76 30 -46" fill="none" stroke-width="1.4"/>`;
+    if (o.driver) b += SIL.man(52, -44, 42, 1, fill, {walk: 0, kit: 'none', pack: false, cloak: true, seed: sd + 5});
+    return SIL.g(x, y, k, dir, fill, b, o.op);
+  },
+
+  /* a quorl of the Black Moranth, flying right: a long segmented body, four clear wings, a rider astride behind the head. w = the body's length */
+  quorl(x, y, w, dir = 1, fill = '#0c0a0e', o = {}){
+    const f = SIL.f, k = w / 100, t = o.tilt || 0, wing = o.wing || '#cfd6e0', beat = o.beat == null ? hash(o.seed || 0, 820) : o.beat;
+    let b = `<g transform="rotate(${f(t)})">`;
+    // the wings, two pairs, thin and bright, the far pair higher
+    const up = -14 - beat * 16;
+    for (const [cx, sp] of [[14, 1], [2, .86]]) b += `<path d="M${cx} -3 Q${f(cx - 14 * sp)} ${f(up - 10)} ${f(cx - 44 * sp)} ${f(up - 2)} Q${f(cx - 24 * sp)} ${f(up + 12)} ${cx} -1 Z" fill="${wing}" stroke="${wing}" stroke-width=".6" fill-opacity=".38" stroke-opacity=".7"/>`
+      + `<path d="M${cx} -1 Q${f(cx + 12 * sp)} ${f(10 + beat * 6)} ${f(cx + 38 * sp)} ${f(14 + beat * 8)} Q${f(cx + 22 * sp)} ${f(2)} ${cx} -2 Z" fill="${wing}" stroke="${wing}" stroke-width=".6" fill-opacity=".3" stroke-opacity=".6"/>`;
+    // the body: head, thorax, a long tail in segments tapering away
+    b += `<ellipse cx="34" cy="0" rx="6" ry="5" stroke="none"/><ellipse cx="22" cy="0" rx="10" ry="5.5" stroke="none"/><path d="M14 -3 L-60 -.8 L-62 0 L-60 .8 L14 3 Z" stroke="none"/>`;
+    for (let i = 0; i < 7; i++) b += `<path d="M${-4 - i * 8} -2.8 L${-4 - i * 8} 2.8" stroke="${wing}" stroke-width=".7" opacity=".35"/>`;
+    b += `<path d="M30 3 L26 10 M20 4 L18 11 M12 3 L12 10" fill="none" stroke-width="1.2"/>`;
+    // the rider, astride, leaning forward
+    if (o.rider !== false) b += `<path d="M14 -4 Q12 -16 16 -24 L24 -24 Q26 -14 22 -4 Z" stroke="none"/><ellipse cx="21" cy="-28" rx="4.2" ry="4.6" stroke="none"/>${SIL.limb([22, -20], [30, -14], [32, -6], 3.4, 3)}`;
+    return SIL.g(x, y, k, dir, fill, b + '</g>', o.op);
+  },
+
+  /* a cart with two wheels and a mule in the shafts (a single animal), facing right */
+  cart(x, y, w, dir = 1, fill = '#14100c', o = {}){
+    const f = SIL.f, k = w / 100;
+    let b = SIL.horse(86, 0, 56, 1, fill, {mule: o.team !== 'horse', seed: o.seed || 0, phase: .3, head: o.down ? 'down' : 'up'});
+    b += `<path d="M30 -34 L78 -42" fill="none" stroke-width="2.4"/><path d="M-40 -28 L-42 -50 L34 -50 L36 -28 Z" stroke="none"/>`;
+    b += `<circle cx="-4" cy="-18" r="17" fill="none" stroke-width="3"/><circle cx="-4" cy="-18" r="3.6" stroke="none"/>`;
+    for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; b += `<path d="M-4 -18 L${f(-4 + Math.cos(a) * 15)} ${f(-18 + Math.sin(a) * 15)}" stroke-width="1.5"/>`; }
+    if (o.load) b += `<path d="M-38 -50 Q-34 -70 -6 -72 Q24 -72 32 -50 Z" fill="${typeof o.load === 'string' ? o.load : fill}" stroke="none"/>`;
+    return SIL.g(x, y, k, dir, fill, b, o.op);
+  },
+};
+
+/* the old kit's far figures, rebuilt on these (same calls, same places in every plate) */
+TK.walker = (x, y, k, i, fill, o = {}) => SIL.man(x, y, 26 * k, o.dir || 1, fill, {seed: i, walk: o.walk == null ? 1 : o.walk, kit: hash(i, 83) < (o.spears != null ? o.spears : .4) ? 'spear' : 'none', lean: o.lean});
+PK.wagon = (x, y, k, fill, hood = true, i = 0) => SIL.wagon(x, y, 40 * k, 1, fill, {hood: hood === true ? fill : hood, seed: i + Math.round(x), team: 'mule', n: 2});
+PK.rider = (x, y, k, fill, lance = false, flip = false, bare = false) => SIL.horse(x, y, 19 * k, flip ? -1 : 1, fill, {rider: !bare, lance, seed: Math.round(x * 7 + y), phase: .4, cloak: true});
+
+/* ============ Book One's end pictures and roads, repainted (v13.70.0) ============
+   David, Nov 25, 2026, 11:56 PM PST, with a PC screenshot of the plain at the end of Chapter Two: "make this much better, the animals the people
+   the weird lines going into the sky. also improve other paintings with similar issues. they become super obvious on a PC monitor".
+   The twelve pictures drawn for the first version of Book One (019c: vistas/* under each chapter's end, roads/* at the finale) were flat shapes:
+   bars with a ball for a head, an oval on four sticks for a horse, a box on two discs, ruts drawn on past the hill into the sky. They are painted
+   again here with the plate kit (019h) and the silhouettes (019k), each one still saying what its caption says (v13.31, the picture-versus-text
+   pass): 0 the Fourth up out of the sap at night, all five; 1 dawn below Pale, the cadre row black frames and smoke, the wagon loaded; 2 the last
+   morning on the plain, the ruts going up into the Gadrobi Hills and over, Sethand riding west; 3 sunrise on the chandler's roof, the Spawn over
+   the lake; 4 grey dawn on the same roof, one kitchen fire; 5 grey dawn on the long ridge, the barrow, the Fourth going west; 6 dawn in a garden
+   with a house in it, the Spawn moving; 7 noon on a brown hill, the quorls going up. Roads: outlaw (flying north on the quorls), empire (the
+   long road to Genabaris and the sea), city (back in at the gate, blue lamps), disband (standing down on the brown hill).
+   Everything that matters sits between y 70 and 330: the picture is cut to the screen's shape (a phone shows about y 60 to 340). */
+{
+  const f = PK.f, M = SIL.man, H = SIL.horse;
+  /* the Fourth as five far figures, in a line or a knot: x, y feet, h height, dir, fill; o.walk, o.gap */
+  const five = (x, y, h, dir, fill, o = {}) => { let s = ''; const kits = ['spear', 'none', 'staff', 'none', 'bow'], heads = ['helm', 'helm', 'hood', 'bare', 'hood'];
+    for (let i = 0; i < 5; i++) { const dx = (o.gap || h * .42) * i * (o.line === false ? 0 : 1) + (o.jit ? (hash(i, o.jit) - .5) * h * .5 : 0), dy = o.dy ? o.dy * i : (o.jit ? (hash(i, o.jit + 1) - .5) * h * .08 : 0);
+      s += M(x + dx * dir * -1, y + dy, h * (.94 + hash(i, 717) * .1), o.face ? o.face[i] : dir, fill, {seed: 31 + i * 7 + (o.seed || 0), kit: kits[i], head: heads[i], walk: o.walk == null ? 1 : o.walk, pack: i !== 2, cloak: i > 1}); }
+    return s; };
+  /* a smooth hill: a crest as a function of x, so a road on it can stop at the top */
+  const hillY = (x, cx, top, w, base) => base - (base - top) * Math.exp(-Math.pow((x - cx) / w, 2));
+  const hillD = (cx, top, w, base, x0 = -10, x1 = 670) => { let d = `M${x0} 400 L${x0} ${f(hillY(x0, cx, top, w, base))}`; for (let x = x0; x <= x1; x += 6) d += ` L${x} ${f(hillY(x, cx, top, w, base))}`; return d + ` L${x1} 400 Z`; };
+  /* a road of two ruts from a near point up a hill to its crest, never past it */
+  const ruts = (pts, col, w, op) => { let s = ''; for (const off of [-1, 1]) { const q = pts.map(([x, y, sp]) => [x + off * sp, y]); s += `<path d="M${q.map(p => `${f(p[0])} ${f(p[1])}`).join(' L')}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="${op}"/>`; } return s; };
+  const roadPts = (x0, y0, x1, y1, bend, sp0, sp1, crest) => { const pts = []; for (let i = 0; i <= 24; i++) { const t = i / 24, e = 1 - Math.pow(1 - t, 1.6), x = x0 + (x1 - x0) * e + Math.sin(t * Math.PI) * bend, y = y0 + (y1 - y0) * e; pts.push([x, crest ? Math.max(y, crest(x) + 1.5) : y, sp0 + (sp1 - sp0) * e]); } return pts; };
+  /* Darujhistan across the water: the skyline, a few blue lamps, the lake */
+  const daru = (P, base, o = {}) => PK.skyline(P, o.x0 ?? 120, o.x1 ?? 560, base, o.seed || 41, {fill: o.fill || '#1c2230', lit: '#9ad0ff', p: o.p ?? .06, h: o.h || 46, wide: 20, domes: .22, towers: .16, spires: true});
+  /* a pitched roof seen along its ridge, with chimney pots, from x0 to x1 (the chandler's roof and its neighbours) */
+  const roofs = (P, y, col, lip, o = {}) => { let s = `<path d="M-10 400 L-10 ${y + 18} L120 ${y} L300 ${y + 6} L420 ${y - 2} L670 ${y + 14} L670 400 Z" fill="${col}"/>`;
+    s += `<path d="M-10 ${y + 18} L120 ${y} L300 ${y + 6} L420 ${y - 2} L670 ${y + 14}" stroke="${lip}" stroke-width="1.4" fill="none" opacity=".6"/>`;
+    let sl = ''; for (let i = 0; i < 26; i++) { const yy = y + 26 + i * 6 + i * i * .3; sl += `M-10 ${f(yy)} L670 ${f(yy + 10)}`; } s += `<path d="${sl}" stroke="${lip}" stroke-width=".8" opacity=".14"/>`;
+    for (const [cx, w, hh] of o.pots || [[86, 16, 26], [350, 20, 30], [560, 14, 22]]) { const by = y + 4; s += `<path d="M${cx - w / 2} ${by + 6} L${cx - w / 2} ${by - hh} L${cx + w / 2} ${by - hh} L${cx + w / 2} ${by + 6} Z" fill="${col}"/><path d="M${cx - w / 2 - 2} ${by - hh} L${cx + w / 2 + 2} ${by - hh}" stroke="${lip}" stroke-width="2.4"/>`
+      + `<rect x="${cx - w / 2 + 2}" y="${by - hh - 6}" width="${f(w * .3)}" height="6" fill="${col}"/><rect x="${f(cx + w * .1)}" y="${by - hh - 8}" width="${f(w * .3)}" height="8" fill="${col}"/>`; }
+    return s; };
+
+  /* 0 the prologue: before dawn below Pale, the Fourth coming up out of the sap's mouth into the lantern light, all five */
+  PK.plate('vistas/prologue', 'Before dawn below Pale: the Fourth coming up out of the sap into the lantern light, all five', P => {
+    let s = PK.sky(P, [[0, '#06080e'], [.55, '#141a28'], [.8, '#2a2630'], [1, '#18120e']]) + PK.stars(110, 61, 0, 210);
+    s += PK.pale(P, {fill: '#0a0708', ridge: '#0c0909', hill: '#0e0a0a', city: '#090607', lit: .04, smoke: '#2a2428', sop: .3});
+    s += `<path d="M-10 400 L-10 300 Q120 280 260 286 Q420 292 520 276 Q600 266 670 270 L670 400 Z" fill="#100c0a"/>`;
+    for (let i = 0; i < 9; i++) { const x = 30 + i * 74 + hash(i, 63) * 30, y = 300 + hash(i, 64) * 50; s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(22 + hash(i, 65) * 20)}" ry="${f(4 + hash(i, 66) * 3)}" fill="#060404"/><path d="M${f(x - 24)} ${f(y - 2)} Q${f(x)} ${f(y - 9)} ${f(x + 24)} ${f(y - 2)}" stroke="#2a201a" stroke-width="1.2" fill="none" opacity=".7"/>`; } // the old pits
+    s += PK.fires(P, [[96, 292, .5], [600, 278, .45], [470, 286, .35]], .55, '#ff8a3a');
+    // the sap's mouth: a timbered hole in the bank, lantern light pouring out of it
+    s += `<path d="M230 330 Q236 286 300 282 Q364 286 372 330 Z" fill="#0c0806"/><circle cx="300" cy="318" r="120" fill="${P.glow('#ffb060')}" opacity=".55"/>`;
+    s += `<path d="M262 330 L264 300 Q300 292 338 300 L340 330 Z" fill="#ffb868" opacity=".55"/><path d="M262 330 L264 300 Q300 292 338 300 L340 330" stroke="#2a1a0e" stroke-width="5" fill="none"/>`;
+    s += PK.lamp(P, 268, 304, 2.2, '#ffd08a', 3);
+    // all five, up and out, the last one still climbing: dark against the light
+    s += M(286, 330, 38, 1, '#080504', {seed: 2, walk: .4, kit: 'none', head: 'bare', pack: false, lean: 6}) + M(318, 326, 42, 1, '#080504', {seed: 3, kit: 'spear', head: 'helm'});
+    s += M(352, 322, 44, 1, '#080504', {seed: 4, kit: 'none', head: 'hood', cloak: true}) + M(388, 320, 43, 1, '#080504', {seed: 5, kit: 'staff', head: 'hood', cloak: true}) + M(240, 326, 41, -1, '#080504', {seed: 6, walk: .3, kit: 'none', head: 'helm'});
+    s += `<rect y="330" width="660" height="70" fill="#0a0706"/>` + PK.grass(160, 67, 326, 400, '#1a140e', .8, 3);
+    return s; });
+
+  /* 1 dawn below Pale: the cadre row burned to black frames, smoke, the wagon loaded for the south */
+  PK.plate('vistas/pale', 'Dawn below Pale: the cadre row black frames and smoke, and the wagon loaded for the south', P => {
+    let s = PK.sky(P, [[0, '#2a2430'], [.45, '#5a4448'], [.72, '#b07a5a'], [.86, '#e0a46a'], [1, '#6a4a36']]);
+    s += PK.sun(P, 150, 232, 10, '#ffd8a0', .5) + PK.haze(P, 226, 40, '#f0b880', .25, 200, 260);
+    s += PK.pale(P, {fill: '#24181a', ridge: '#251a1a', hill: '#2a1e1c', city: '#20161a', lit: .03, smoke: '#4a3a3a', sop: .4});
+    s += `<rect y="262" width="660" height="138" fill="${P.lin([[0, '#3a2c24'], [1, '#1a120e']])}"/>`;
+    // the cadre row: tent frames and a hut's ribs, burned black, still smoking
+    let fr = ''; for (let i = 0; i < 9; i++) { const x = 300 + i * 38 + hash(i, 101) * 10, y = 286 + (i % 2) * 4, w = 22 + hash(i, 102) * 8, h2 = 20 + hash(i, 103) * 10, broke = hash(i, 104) < .45;
+      fr += `M${f(x - w / 2)} ${y} L${f(x)} ${f(y - h2)} L${f(x + w / 2 - (broke ? w * .25 : 0))} ${f(y - (broke ? h2 * .3 : 0))} M${f(x)} ${f(y - h2)} L${f(x + 10)} ${f(y - h2 - 2)} M${f(x - w * .25)} ${f(y - h2 * .5)} L${f(x + w * .25)} ${f(y - h2 * .5)}`; }
+    s += `<path d="${fr}" stroke="#0e0a0a" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+    for (let i = 0; i < 6; i++) s += PK.smoke(P, 310 + i * 58, 282, 120, 10, 26, '#3a2e2e', .45, 150 + i);
+    s += PK.fires(P, [[386, 288, .35], [498, 290, .3]], .4, '#ff7a2a');
+    // the wagon, loaded and roped, its team in the traces, the Fourth beside it
+    s += SIL.wagon(170, 318, 86, 1, '#120c0a', {hood: false, load: '#3a2e24', seed: 11, team: 'mule'});
+    s += M(110, 320, 40, 1, '#120c0a', {seed: 13, walk: 0, kit: 'none', head: 'helm'}) + M(84, 322, 41, 1, '#120c0a', {seed: 14, walk: 0, kit: 'spear', head: 'helm'}) + M(60, 320, 38, -1, '#120c0a', {seed: 15, walk: 0, kit: 'staff', head: 'hood', cloak: true});
+    s += M(236, 326, 42, -1, '#120c0a', {seed: 16, walk: .5, kit: 'none', head: 'bare', pack: false}) + M(262, 330, 40, 1, '#120c0a', {seed: 17, walk: 0, kit: 'bow', head: 'hood', cloak: true});
+    s += PK.grass(220, 105, 300, 400, '#1a120e', .8, 3) + PK.stones(60, 106, 300, 400, '#100a08', .5);
+    return s; });
+
+  /* 2 the last morning on the plain: the ruts going up the slope into the Gadrobi Hills and over the top, the wagon and the Fourth on them,
+     and Sethand riding away west without a word */
+  PK.plate('vistas/plain', 'The last morning on the plain: the ruts going up into the Gadrobi Hills, and Sethand riding west', P => {
+    let s = PK.sky(P, [[0, '#7e8ea0'], [.5, '#b4b4aa'], [.78, '#e0cfa8'], [1, '#c4a478']]);
+    s += PK.sun(P, 560, 168, 9, '#fff0c8', .6) + PK.haze(P, 186, 30, '#fff0d0', .35, 520, 200);
+    s += PK.ridge(196, 12, 51, '#9a9284', .5, .8) + PK.ridge(212, 16, 52, '#8a7a66', .7);
+    const H1 = x => hillY(x, 430, 150, 150, 236);
+    s += `<path d="${hillD(430, 150, 150, 236)}" fill="${P.lin([[0, '#7a6448'], [1, '#5a4632']])}"/>` + `<path d="${hillD(430, 150, 150, 236).replace(/^M-10 400 L/, 'M').replace(/ L670 400 Z$/, '')}" stroke="#c8b080" stroke-width="1.2" fill="none" opacity=".5"/>`;
+    { let st = ''; for (let i = 0; i < 60; i++) { const x = 290 + hash(i, 53) * 300, top = H1(x) + 4; if (top > 232) continue; const y = top + hash(i, 54) * (236 - top), r = .6 + hash(i, 55) * 1.6; st += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.6)}" ry="${f(r * .7)}"/>`; } s += `<g fill="#4a3826" opacity=".4">${st}</g>`; }
+    // a cairn on the crest: the old waymark
+    s += `<path d="M${f(424)} ${f(H1(428) + 1)} L426 ${f(H1(428) - 10)} L432 ${f(H1(428) - 11)} L434 ${f(H1(428) + 1)} Z" fill="#4a3c2c"/>`;
+    // the road up the hill: ruts from the hill's foot to its crest, then gone over the top
+    s += ruts(roadPts(380, 238, 432, H1(432) + 1.5, -10, 5, 1.6, H1), '#3a2c1c', 1.4, .55);
+    // the plain: near ground, grass, the ruts coming from under the viewer up to the hill
+    s += `<path d="M-10 400 L-10 252 Q200 236 330 238 Q480 240 670 250 L670 400 Z" fill="${P.lin([[0, '#a88a5c'], [.5, '#8a6c44'], [1, '#4a3824']])}"/>`;
+    s += ruts(roadPts(300, 410, 380, 238, 60, 30, 5), '#3a2a18', 4, .5);
+    s += PK.grass(320, 55, 244, 400, '#6a5434', .7, 3) + PK.stones(90, 56, 244, 400, '#4a3826', .45);
+    // the wagon on the ruts going up, mules leaning into it; the Fourth walking alongside
+    s += SIL.wagon(340, 282, 60, 1, '#1a120c', {hood: '#c8b890', seed: 21, team: 'mule'});
+    s += five(318, 300, 34, 1, '#1a120c', {seed: 2, gap: 16, dy: 1.5});
+    // Sethand, turned west, on his own
+    s += H(96, 270, 26, -1, '#1a120c', {seed: 23, rider: true, cloak: true, phase: .5});
+    s += `<path d="M110 272 Q150 276 190 276" stroke="#6a5434" stroke-width="1" fill="none" opacity=".4"/>`;
+    return s; });
+
+  /* 3 sunrise on the chandler's roof: lamps out, the shapes on the roofs gone, the city waking; the Spawn over the lake */
+  const roofScene = (P, dawn) => {
+    let s = PK.sky(P, dawn ? [[0, '#4a5a78'], [.45, '#a08a90'], [.75, '#f0b070'], [1, '#ffd890']] : [[0, '#3a404c'], [.6, '#6a6e78'], [1, '#9a9a9c']]);
+    if (dawn) s += PK.sun(P, 560, 208, 11, '#ffe0a0', .9) + PK.haze(P, 204, 26, '#ffd090', .45, 520, 220);
+    s += PK.spawn(P, 240, 104, 84, {seed: 7, under: dawn ? '#d09070' : '#7a7a88'});
+    s += `<rect y="214" width="660" height="22" fill="${P.lin([[0, dawn ? '#c8a080' : '#7a7e86'], [1, dawn ? '#6a6070' : '#4a5058']])}"/>`; // the lake
+    s += `<path d="M380 220 L660 220" stroke="${dawn ? '#ffe0a0' : '#b0b4bc'}" stroke-width="1" opacity=".35"/>`;
+    s += daru(P, 232, {fill: dawn ? '#3a3440' : '#3a3e48', p: 0, h: 52, x0: -10, x1: 680, seed: 43});
+    s += PK.ridge(246, 6, 44, dawn ? '#2a2630' : '#2e3038');
+    s += roofs(P, 270, dawn ? '#1a161c' : '#1c1e24', dawn ? '#c89878' : '#8a8e98');
+    // smoke from a kitchen; at sunrise several
+    s += PK.smoke(P, 350, 244, 90, 8, 20, dawn ? '#8a7a80' : '#6a6c74', .4, 171);
+    if (dawn) s += PK.smoke(P, 86, 248, 70, 6, 16, '#8a7a80', .35, 172) + PK.smoke(P, 200, 236, 60, 5, 14, '#8a7a80', .3, 173);
+    else s += PK.lamp(P, 352, 254, 1.3, '#ffb060', 5);
+    // the Fourth on the ridge, sitting and standing, the night over
+    s += M(210, 282, 30, 1, '#0c0a0e', {seed: 41, walk: 0, kit: 'spear', head: 'helm'}) + M(236, 284, 28, -1, '#0c0a0e', {seed: 42, walk: 0, kit: 'none', head: 'hood', cloak: true});
+    s += `<g fill="#0c0a0e"><ellipse cx="262" cy="282" rx="7" ry="4"/><path d="M256 282 Q258 268 264 266 L270 266 Q272 276 270 284 Z"/><ellipse cx="266" cy="262" rx="4" ry="4.4"/></g>`; // one sitting
+    s += M(290, 286, 29, 1, '#0c0a0e', {seed: 43, walk: 0, kit: 'bow', head: 'bare'}) + M(184, 280, 27, 1, '#0c0a0e', {seed: 44, walk: 0, kit: 'staff', head: 'hood', cloak: true});
+    for (let i = 0; i < 4; i++) { const x = 440 + i * 46 + hash(i, 175) * 20, y = 120 + hash(i, 176) * 50; s += `<path d="M${f(x - 5)} ${f(y)} Q${f(x - 2)} ${f(y - 3)} ${f(x)} ${f(y)} Q${f(x + 2)} ${f(y - 3)} ${f(x + 5)} ${f(y)}" stroke="${dawn ? '#3a2a2a' : '#2a2c34'}" stroke-width="1.2" fill="none"/>`; } // gulls
+    return s; };
+  PK.plate('vistas/roofdawn', 'Sunrise on the chandler\'s roof: the lamps out, the roofs empty, the Moon\'s Spawn over the lake', P => roofScene(P, true));
+  PK.plate('vistas/roof', 'Grey dawn on the same roof: the last lamp out, the roofs empty, one kitchen fire', P => roofScene(P, false));
+
+  /* 5 grey dawn on the long ridge: the barrow on the crest, its stones, and the Fourth going west along the ridge, quietly */
+  PK.plate('vistas/barrow', 'Grey dawn on the long ridge: the barrow on the crest, and the Fourth going west along it, quietly', P => {
+    let s = PK.sky(P, [[0, '#4a505c'], [.55, '#86847e'], [.8, '#c0b29a'], [1, '#8a7c66']]);
+    s += PK.haze(P, 210, 22, '#d0c0a0', .3, 470, 240) + PK.ridge(214, 14, 81, '#4a4842', .8) + PK.ridge(226, 10, 82, '#3a3832', .9);
+    s += PK.haze(P, 240, 16, '#a8a8a8', .35, 330, 400); // mist in the valley
+    const R = x => 272 - 40 * Math.exp(-Math.pow((x - 420) / 240, 2));
+    s += `<path d="M-10 400 L-10 ${f(R(-10))} ${Array.from({length: 114}, (_, i) => `L${-10 + i * 6} ${f(R(-10 + i * 6))}`).join(' ')} L670 400 Z" fill="${P.lin([[0, '#2e2a24'], [1, '#141210']])}"/>`;
+    // the barrow: a long mound on the crest, a ring of stones, the door dark and a little colder than it should be
+    s += `<path d="M300 ${f(R(300) + 2)} Q420 ${f(R(420) - 70)} 560 ${f(R(560) + 2)} Z" fill="#2a2620"/><path d="M308 ${f(R(308))} Q420 ${f(R(420) - 70)} 552 ${f(R(552))}" stroke="#a49c8a" stroke-width="1.2" fill="none" opacity=".45"/>`;
+    s += `<path d="M408 ${f(R(408) + 1)} L408 ${f(R(408) - 20)} L434 ${f(R(434) - 20)} L434 ${f(R(434) + 1)} Z" fill="#080808"/><path d="M402 ${f(R(408) - 20)} L440 ${f(R(434) - 21)}" stroke="#4e4a42" stroke-width="5"/><path d="M405 ${f(R(408))} L405 ${f(R(408) - 20)} M437 ${f(R(434))} L437 ${f(R(434) - 20)}" stroke="#4e4a42" stroke-width="4"/>`;
+    s += `<path d="M412 ${f(R(412) - 2)} Q421 ${f(R(421) - 8)} 430 ${f(R(430) - 2)}" stroke="#b8c8d8" stroke-width="1" fill="none" opacity=".35"/>`; // frost on the sill
+    for (let i = 0; i < 11; i++) { const x = 250 + i * 34 + hash(i, 83) * 10, h = 12 + hash(i, 84) * 16; s += `<path d="M${f(x - 3)} ${f(R(x) + 1)} L${f(x - 2)} ${f(R(x) - h)} L${f(x + 2.5)} ${f(R(x) - h - 1)} L${f(x + 3)} ${f(R(x) + 1)} Z" fill="#1c1a18"/>`; }
+    // the Fourth going west along the ridge, small, in file
+    s += five(170, R(170) + 1, 36, -1, '#0e0c0a', {seed: 5, gap: 17});
+    s += PK.grass(240, 85, 260, 400, '#2a2620', .8, 3) + PK.stones(50, 86, 270, 400, '#0e0c0a', .5);
+    return s; });
+
+  /* 6 dawn in a garden with a house in it: the estate's garden after the Fete, and a house standing where there was none, and the Spawn moving */
+  PK.plate('vistas/garden', 'Dawn in a garden with a house in it that was not there last night, and the Moon\'s Spawn moving', P => {
+    let s = PK.sky(P, [[0, '#3e4660'], [.5, '#8a7a8a'], [.8, '#e0a888'], [1, '#f0c8a0']]);
+    s += PK.spawn(P, 150, 76, 70, {seed: 9, under: '#c89080'}) + PK.haze(P, 120, 14, '#c0a8b0', .35, 240, 120); // moving off: a long smear of cloud behind it
+    s += PK.tree(40, 252, 120, '#1a1e1a', 'old', 3) + PK.tree(610, 256, 130, '#1a1e1a', 'old', 4) + PK.tree(560, 250, 90, '#1e221e', 'old', 5);
+    s += `<path d="M-10 254 L670 254 L670 400 L-10 400 Z" fill="${P.lin([[0, '#3a4a34'], [1, '#1a2418']])}"/>`;
+    // the estate's house to the left: a long wall of windows, the lamps of the Fete burned out
+    s += `<path d="M60 254 L60 190 L240 190 L240 254 Z" fill="#1e1c22"/><path d="M52 190 L150 160 L248 190 Z" fill="#18161c"/>`;
+    for (let i = 0; i < 6; i++) s += `<rect x="${72 + i * 28}" y="204" width="12" height="30" fill="#2e2c34"/>`;
+    // the paths and the fountain
+    s += `<path d="M300 400 L330 262 L346 262 L420 400 Z" fill="#6a6250" opacity=".6"/><ellipse cx="340" cy="300" rx="40" ry="9" fill="#3a3a3a"/><ellipse cx="340" cy="298" rx="34" ry="6.5" fill="#8aa0b0" opacity=".7"/><path d="M340 298 L340 276" stroke="#3a3a3a" stroke-width="5"/>`;
+    // the house that was not there: dark timber and stone, a tower crooked as a root, a yard of grey grass, nothing lit
+    s += `<path d="M440 262 L440 206 L470 186 L500 206 L500 262 Z" fill="#141210"/><path d="M482 206 Q478 160 488 132 Q500 120 504 140 Q506 176 500 206 Z" fill="#100e0c"/><path d="M486 132 L496 116 L504 138 Z" fill="#100e0c"/>`;
+    s += `<path d="M430 266 Q470 258 520 264 L522 270 Q470 266 428 272 Z" fill="#2a2a26"/>`;
+    for (let i = 0; i < 6; i++) { const x = 430 + i * 18, y = 264 + (i % 2); s += `<path d="M${x} ${y} Q${x - 6} ${y - 24} ${x + 4} ${y - 36} M${x} ${y - 16} L${x + 8} ${y - 24}" stroke="#0e0c0a" stroke-width="1.6" fill="none"/>`; } // roots or a hedge, twisted
+    s += `<rect x="462" y="232" width="10" height="30" fill="#050504"/>`;
+    // the Fourth at the edge of it all, looking
+    s += five(250, 330, 34, 1, '#0c0e0c', {seed: 9, gap: 15, walk: 0, face: [1, 1, 1, -1, 1]});
+    s += PK.grass(200, 95, 260, 400, '#1a2414', .8, 2);
+    return s; });
+
+  /* 7 noon on a brown hill: the quorls going up, the city small and blue to the west, the Fourth on the hill */
+  const brownHill = (P, o = {}) => {
+    let s = PK.sky(P, [[0, '#5a7ea8'], [.6, '#9ab4cc'], [1, '#cad4d8']]);
+    s += `<rect y="230" width="300" height="14" fill="#7a9cb8" opacity=".8"/>`; // the lake to the west
+    s += daru(P, 234, {x0: 30, x1: 230, h: 30, fill: '#6a7e98', p: 0, seed: 47});
+    s += PK.ridge(244, 8, 91, '#9a8460', .6) + `<path d="${hillD(400, 236, 300, 330)}" fill="${P.lin([[0, '#8a6a42'], [1, '#4a3622']])}"/>`;
+    s += PK.grass(240, 92, 244, 400, '#5a4428', .7, 3);
+    return s; };
+  PK.plate('vistas/hill', 'Noon on a brown hill east of the city, and the quorls going up', P => {
+    let s = brownHill(P);
+    s += SIL.quorl(200, 120, 70, 1, '#0c0a0e', {seed: 1, tilt: -10}) + SIL.quorl(390, 80, 56, 1, '#0c0a0e', {seed: 2, tilt: -14}) + SIL.quorl(520, 150, 80, 1, '#0c0a0e', {seed: 3, tilt: -6}) + SIL.quorl(300, 50, 34, 1, '#0c0a0e', {seed: 4, tilt: -16});
+    s += SIL.quorl(470, 252, 66, -1, '#0c0a0e', {seed: 5, tilt: 0, rider: false}); // one still on the ground, waiting
+    s += five(300, 262, 32, 1, '#120c08', {seed: 7, gap: 14, walk: 0});
+    return s; });
+
+  /* the roads out (the finale's picture, 037) */
+  PK.plate('roads/outlaw', 'North on the backs of the quorls, the brown hill falling away', P => {
+    let s = PK.sky(P, [[0, '#4a72a0'], [.7, '#9ab6d0'], [1, '#d0d8dc']]);
+    s += `<path d="${hillD(260, 330, 260, 380)}" fill="${P.lin([[0, '#7a5c3a'], [1, '#3a2a1a']])}"/>` + `<rect y="352" width="320" height="10" fill="#7a9cb8" opacity=".7"/>` + daru(P, 356, {x0: 20, x1: 200, h: 22, fill: '#6a7e98', p: 0, seed: 48});
+    s += SIL.quorl(220, 200, 150, 1, '#0c0a0e', {seed: 6, tilt: -12}) + SIL.quorl(450, 150, 110, 1, '#0c0a0e', {seed: 7, tilt: -14});
+    for (let i = 0; i < 9; i++) s += SIL.quorl(300 + i * 40 + hash(i, 61) * 30, 70 + hash(i, 62) * 60, 20 + hash(i, 63) * 16, 1, '#1a2030', {seed: 10 + i, tilt: -10, op: .8});
+    return s; });
+  PK.plate('roads/empire', 'The long road north-west, wide of Pale, toward Genabaris and a ship', P => {
+    let s = PK.sky(P, [[0, '#2e3446'], [.5, '#7a6a72'], [.8, '#d08a62'], [1, '#e8a870']]);
+    s += PK.sun(P, 140, 196, 10, '#ffc890', .8) + `<rect y="198" width="660" height="12" fill="${P.lin([[0, '#a07a70'], [1, '#6a5660']])}"/>`; // the sea, far
+    s += PK.ship(P, 110, 204, .32, '#2a2228', '#c8a890') + PK.ship(170, 205, .22, '#2a2228', '#b89880');
+    s += PK.ridge(214, 10, 71, '#4a3a38', .7) + PK.ridge(236, 16, 72, '#3a2c28', .8);
+    s += `<path d="M-10 400 L-10 262 Q200 250 400 256 Q560 262 670 270 L670 400 Z" fill="${P.lin([[0, '#4a3628'], [1, '#1e1610']])}"/>`;
+    const road = roadPts(520, 410, 150, 224, -70, 26, 1.4); s += ruts(road, '#c8a070', 2, .35);
+    s += five(330, 300, 30, -1, '#0e0a0a', {seed: 11, gap: 13, dy: -1});
+    s += PK.grass(220, 73, 256, 400, '#2a1e16', .8, 3);
+    return s; });
+  PK.plate('roads/city', 'Back in at the gate they came in by, Darujhistan blue in the dusk', P => {
+    let s = PK.sky(P, [[0, '#1a2034'], [.6, '#4a4a66'], [1, '#8a6a78']]);
+    s += PK.skyline(P, -10, 680, 210, 49, {fill: '#141a28', lit: '#9ad0ff', p: .1, h: 80, wide: 24, domes: .25, towers: .18, spires: true});
+    s += PK.wall(-10, 670, 232, 290, '#10141e', {cw: 7, towers: [180, 470], tw: 30, th: 34, gx: 330, gw: 50, gh: 56, gcol: '#0a0c12', edge: '#6a7aa0'});
+    s += `<path d="M305 290 L305 252 Q330 232 355 252 L355 290 Z" fill="${P.lin([[0, '#5a7090'], [1, '#2a3446']])}" opacity=".8"/>`; // light through the gate
+    s += PK.gaslamp(P, 280, 290, 40, 1) + PK.gaslamp(P, 380, 290, 40, 2) + PK.gaslamp(P, 120, 292, 34, 3) + PK.gaslamp(P, 560, 292, 34, 4);
+    s += `<path d="M-10 290 L670 290 L670 400 L-10 400 Z" fill="${P.lin([[0, '#2a2e3a'], [1, '#0e1016']])}"/><path d="M290 290 L370 290 L470 400 L190 400 Z" fill="#3a4050" opacity=".5"/>`;
+    s += five(380, 322, 42, 1, '#06080c', {seed: 13, gap: 22, dy: -2});
+    return s; });
+  PK.plate('roads/disband', 'Noon on a brown hill east of Darujhistan: the Fourth stood down, each to a road', P => {
+    let s = brownHill(P);
+    // paths going off the hilltop every way
+    for (const [x1, y1] of [[-10, 300], [120, 400], [420, 400], [670, 320], [640, 400]]) s += `<path d="M330 262 Q${f((330 + x1) / 2 + 20)} ${f((262 + y1) / 2 - 10)} ${x1} ${y1}" stroke="#a08458" stroke-width="2" fill="none" opacity=".45"/>`;
+    s += SIL.quorl(480, 110, 40, 1, '#1a2030', {seed: 21, tilt: -12, op: .8}) + SIL.quorl(540, 80, 30, 1, '#1a2030', {seed: 22, tilt: -14, op: .7});
+    s += M(300, 262, 34, -1, '#120c08', {seed: 51, walk: 0, kit: 'spear', head: 'helm'}) + M(330, 260, 36, 1, '#120c08', {seed: 52, walk: 0, kit: 'none', head: 'helm'});
+    s += M(360, 263, 33, 1, '#120c08', {seed: 53, walk: .6, kit: 'staff', head: 'hood', cloak: true}) + M(274, 265, 32, -1, '#120c08', {seed: 54, walk: .6, kit: 'bow', head: 'hood', cloak: true}) + M(392, 266, 33, 1, '#120c08', {seed: 55, walk: 1, kit: 'none', head: 'bare'});
     return s; });
 }
 
@@ -10293,6 +10643,7 @@ function glossHTML(){
 
 /* what's new: shown once after an update (to a player with a save), and again from the version number on the title */
 const NOTES = [
+  ['13.70.0', ['Pictures: Book One\'s chapter-end and road pictures are repainted. The horses, mules, wagons and people are proper shapes now, and the cart ruts stop at the hilltop instead of running into the sky. The far marchers, wagons and riders in every book\'s chapter pictures are redrawn the same way.']],
   ['13.69.3', ['Book One: the streets and roofs of Darujhistan now show the same Moon\'s Spawn as everywhere else. Their backdrops still had the old plain rock.']],
   ['13.69.2', ['On a narrow phone the place name now sits under the buttons at the top, on its own line, so a long name like Darujhistan no longer breaks in the middle of the word.']],
   ['13.69.1', ['Moon\'s Spawn is the same rock everywhere now: the crown of spires and the long hanging cone from Book One\'s title, in the chapter pictures, the Fete\'s streets and garden, the night of the dragons, the visions, and over Coral in Book Three.']],
