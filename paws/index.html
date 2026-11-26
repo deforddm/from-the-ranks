@@ -19,9 +19,14 @@ p{margin:0;color:#b8b1a3}a{color:#ffcf7a}
    version of the game lives at its own address (./v1.0/, ./v1.1/ ...), and the newest version number is read from GitHub,
    which the service worker does not touch. If GitHub can't be reached, the version written below is opened instead. */
 (function () {
-  var FALLBACK = '1.25';
+  var FALLBACK = '1.26';
   var done = false;
-  function go(v) { if (done) return; done = true; location.replace('./v' + v + '/'); }
+  function open(v) { location.replace('./v' + v + '/'); }
+  /* GitHub's version number can change a minute before the new version's page is up; if it isn't there yet, open the
+     version written below, which is always up because it was published with this page. */
+  function go(v) { if (done) return; done = true;
+    if (v === FALLBACK) return open(v);
+    fetch('./v' + v + '/', { method: 'HEAD', cache: 'no-store' }).then(function (r) { open(r.ok ? v : FALLBACK); }, function () { open(FALLBACK); }); }
   setTimeout(function () { go(FALLBACK); }, 3000);
   fetch('https://raw.githubusercontent.com/deforddm/from-the-ranks/main/paws/latest.json?t=' + Date.now(), { cache: 'no-store' })
     .then(function (r) { return r.ok ? r.json() : null; })
@@ -29,6 +34,6 @@ p{margin:0;color:#b8b1a3}a{color:#ffcf7a}
     .catch(function () { go(FALLBACK); });
 })();
 </script>
-<noscript><p>Paws &amp; Effect needs JavaScript. <a href="./v1.25/">Open version 1.25</a>.</p></noscript>
+<noscript><p>Paws &amp; Effect needs JavaScript. <a href="./v1.26/">Open version 1.26</a>.</p></noscript>
 </body>
 </html>
