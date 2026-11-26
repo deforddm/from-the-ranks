@@ -1907,6 +1907,8 @@ function togglePhoto(on = !S.photo) {
 }
 function savePhoto() {
   if (!S.photo) return;
+  let framed = false; try { framed = window.self !== window.top; } catch (e) { framed = true; }
+  if (framed) { $('photoMsg').textContent = '\u00a0Saving pictures works when the game is open on its own page, like playfromtheranks.com/paws.'; progress('photo'); return; }
   let url = '';
   try { renderer.render(scene, camera); url = renderer.domElement.toDataURL('image/png'); } catch (e) { }
   if (!url) { $('photoMsg').textContent = ' Could not save the picture in this browser.'; return; }
