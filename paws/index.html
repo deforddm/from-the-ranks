@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paws &amp; Effect</title>
+<meta name="description" content="Paws & Effect, a cozy 3D cat simulator you play in your browser on a PC.">
+<style>
+html,body{margin:0;height:100%;background:#10131a;color:#f4efe6;font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;box-sizing:border-box}
+h1{margin:0 0 8px;font-size:34px}h1 span{color:#f2a541}
+p{margin:0;color:#b8b1a3}a{color:#ffcf7a}
+</style>
+</head>
+<body>
+<div><h1>Paws <span>&amp;</span> Effect</h1><p id="msg">Fetching the newest version&hellip;</p></div>
+<script>
+/* This page always opens the newest version. The site's service worker keeps a copy of every page it has served, so each
+   version of the game lives at its own address (./v1.0/, ./v1.1/ ...), and the newest version number is read from GitHub,
+   which the service worker does not touch. If GitHub can't be reached, the version written below is opened instead. */
+(function () {
+  var FALLBACK = '1.0';
+  var done = false;
+  function go(v) { if (done) return; done = true; location.replace('./v' + v + '/'); }
+  setTimeout(function () { go(FALLBACK); }, 3000);
+  fetch('https://raw.githubusercontent.com/deforddm/from-the-ranks/main/paws/latest.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { go(j && /^\d+\.\d+(\.\d+)?$/.test(j.version) ? j.version : FALLBACK); })
+    .catch(function () { go(FALLBACK); });
+})();
+</script>
+<noscript><p>Paws &amp; Effect needs JavaScript. <a href="./v1.0/">Open version 1.0</a>.</p></noscript>
+</body>
+</html>
