@@ -19,7 +19,7 @@ p{margin:0;color:#b8b1a3}a{color:#ffcf7a}
    version of the game lives at its own address (./v1.0/, ./v1.1/ ...), and the newest version number is read from GitHub,
    which the service worker does not touch. If GitHub can't be reached, the version written below is opened instead. */
 (function () {
-  var FALLBACK = '1.43';
+  var FALLBACK = '1.44';
   var done = false;
   function open(v) { location.replace('./v' + v + '/'); }
   /* GitHub's version number can change a minute before the new version's page is up; if it isn't there yet, open the
@@ -34,6 +34,6 @@ p{margin:0;color:#b8b1a3}a{color:#ffcf7a}
     .catch(function () { go(FALLBACK); });
 })();
 </script>
-<noscript><p>Paws &amp; Effect needs JavaScript. <a href="./v1.43/">Open version 1.43</a>.</p></noscript>
+<noscript><p>Paws &amp; Effect needs JavaScript. <a href="./v1.44/">Open version 1.44</a>.</p></noscript>
 </body>
 </html>
